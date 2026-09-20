@@ -18,7 +18,21 @@ export const useAppStore = create((set, get) => ({
     if (get().unsubscribeTasks) get().unsubscribeTasks();
 
     const tasksRef = collection(db, `users/${user.uid}/tasks`);
-    const unsub = onSnapshot(tasksRef, (snapshot) => {
+    const unsub = onSnapshot(tasksRef, async (snapshot) => {
+      if (snapshot.empty && !get()._seeded) {
+        set({ _seeded: true });
+        const defaultTasks = [
+          { title: 'Product Strategy Review', status: 'pending', priority: 'high', createdAt: Date.now() },
+          { title: 'Finalize Mobile Design Tokens', status: 'pending', priority: 'high', createdAt: Date.now() + 1000 },
+          { title: 'Weekly Groceries', status: 'completed', priority: 'normal', createdAt: Date.now() + 2000 }
+        ];
+        for (const t of defaultTasks) {
+          const docRef = doc(collection(db, `users/${user.uid}/tasks`));
+          await setDoc(docRef, t);
+        }
+        return;
+      }
+
       const tasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       // Sort tasks by creation time ascending
       tasks.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
