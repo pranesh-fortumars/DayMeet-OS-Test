@@ -7,6 +7,7 @@ import CalendarScreen from './components/CalendarScreen';
 import TasksScreen from './components/TasksScreen';
 import InsightsScreen from './components/InsightsScreen';
 import FinanceScreen from './components/FinanceScreen';
+import MoreScreen from './components/MoreScreen';
 import AuthScreen from './components/AuthScreen';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -59,6 +60,7 @@ function App() {
             <Route path="/tasks" element={<TasksScreen />} />
             <Route path="/insights" element={<InsightsScreen />} />
             <Route path="/finance" element={<FinanceScreen />} />
+            <Route path="/more" element={<MoreScreen />} />
           </Routes>
         </main>
         <BottomDock />

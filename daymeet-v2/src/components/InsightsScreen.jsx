@@ -18,6 +18,25 @@ export default function InsightsScreen() {
       <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm space-y-3.5">
         <h3 className="text-sm font-bold text-[#181B25]">Weekly Summary</h3>
         <WeeklyTrendChart />
+        
+        {/* 3-Column Metrics Summary Grid */}
+        <div className="grid grid-cols-3 gap-2.5 pt-2 border-t border-[#E5E8F5]">
+          <div className="p-2.5 rounded-xl bg-[#F1F3FF] text-center border border-[#E5E8F5]">
+            <p className="text-[10px] text-[#464555] font-medium">Tasks Velocity</p>
+            <p className="text-base font-extrabold text-[#3525CD] mt-0.5">53 Done</p>
+            <span className="text-[9px] font-bold text-[#10B981]">88% weekly goal</span>
+          </div>
+          <div className="p-2.5 rounded-xl bg-[#F1F3FF] text-center border border-[#E5E8F5]">
+            <p className="text-[10px] text-[#464555] font-medium">Habits Kept</p>
+            <p className="text-base font-extrabold text-[#10B981] mt-0.5">32 / 35</p>
+            <span className="text-[9px] font-bold text-[#10B981]">91% consistency</span>
+          </div>
+          <div className="p-2.5 rounded-xl bg-[#F1F3FF] text-center border border-[#E5E8F5]">
+            <p className="text-[10px] text-[#464555] font-medium">Total Spending</p>
+            <p className="text-base font-extrabold text-[#0288D1] mt-0.5">₹19,050</p>
+            <span className="text-[9px] font-bold text-[#10B981]">₹15.9k under limit</span>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -40,6 +59,38 @@ export default function InsightsScreen() {
           <p className="text-[11px] text-[#464555]">Active Burn</p>
           <p className="text-xl font-extrabold text-[#181B25] mt-1">480 kcal</p>
           <span className="text-[10px] font-bold text-[#F59E0B]">Goal: 600 kcal</span>
+        </div>
+      </div>
+
+      {/* Health Bio-Readiness Graph Card */}
+      <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm mt-4">
+        <h3 className="text-sm font-bold text-[#181B25] mb-2">Readiness & Vitals Curve</h3>
+        <p className="text-xs text-[#464555] mb-4">Peak cognitive window identified between 10:00 AM and 01:00 PM today.</p>
+        <div className="h-28 flex items-end justify-between gap-2 px-2 pt-4 border-b border-[#E5E8F5]">
+          <div className="flex-1 flex flex-col items-center gap-1">
+            <div className="w-full bg-[#3525CD]/20 rounded-t h-16 hover:bg-[#3525CD] transition"></div>
+            <span className="text-[10px] text-[#464555]">6AM</span>
+          </div>
+          <div className="flex-1 flex flex-col items-center gap-1">
+            <div className="w-full bg-[#3525CD] rounded-t h-24"></div>
+            <span className="text-[10px] font-bold text-[#3525CD]">9AM</span>
+          </div>
+          <div className="flex-1 flex flex-col items-center gap-1">
+            <div className="w-full bg-[#3525CD] rounded-t h-26"></div>
+            <span className="text-[10px] font-bold text-[#3525CD]">12PM</span>
+          </div>
+          <div className="flex-1 flex flex-col items-center gap-1">
+            <div className="w-full bg-[#3525CD]/70 rounded-t h-20"></div>
+            <span className="text-[10px] text-[#464555]">3PM</span>
+          </div>
+          <div className="flex-1 flex flex-col items-center gap-1">
+            <div className="w-full bg-[#3525CD]/40 rounded-t h-14"></div>
+            <span className="text-[10px] text-[#464555]">6PM</span>
+          </div>
+          <div className="flex-1 flex flex-col items-center gap-1">
+            <div className="w-full bg-[#3525CD]/20 rounded-t h-10"></div>
+            <span className="text-[10px] text-[#464555]">9PM</span>
+          </div>
         </div>
       </div>
     </div>

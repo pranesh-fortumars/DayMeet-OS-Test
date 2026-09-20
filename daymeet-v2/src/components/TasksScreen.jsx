@@ -60,23 +60,64 @@ export default function TasksScreen() {
       </div>
       
       <div className="space-y-2.5 pt-2">
-        {tasks.map((task) => (
-          <div key={task.id} className={`p-3 rounded-xl border border-[#E5E8F5] shadow-sm flex items-start gap-3 transition ${task.status === 'completed' ? 'bg-[#FAF9FF] opacity-60' : 'bg-white'}`}>
-            <button 
-              onClick={() => completeTask(task.id)}
-              className={`w-5 h-5 mt-0.5 rounded flex items-center justify-center shrink-0 border-2 transition ${task.status === 'completed' ? 'bg-[#10B981] border-[#10B981]' : 'border-[#E5E8F5] bg-[#FAF9FF] hover:border-[#3525CD]'}`}
-            >
-              {task.status === 'completed' && <span className="material-symbols-rounded text-[14px] text-white">check</span>}
-            </button>
-            <div className="flex-1">
-              <p className={`text-sm font-bold ${task.status === 'completed' ? 'text-[#777587] line-through' : 'text-[#181B25]'}`}>{task.title}</p>
-              <p className="text-[10px] text-[#464555] mt-1 flex items-center gap-1">
-                <span className="material-symbols-rounded text-[12px]">schedule</span>
-                {new Date(task.createdAt || Date.now()).toLocaleDateString()}
-              </p>
+        {tasks.map((task) => {
+          // Determine styles based on priority
+          const prio = task.priority || 'Medium';
+          let prioBadge = null;
+          let leftBorder = 'border-l-4 border-l-slate-300';
+          if (prio === 'High') {
+            prioBadge = <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300">HIGH</span>;
+            leftBorder = 'border-l-4 border-l-red-500';
+          } else if (prio === 'Medium') {
+            prioBadge = <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">MED</span>;
+            leftBorder = 'border-l-4 border-l-amber-500';
+          } else {
+            prioBadge = <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300">LOW</span>;
+            leftBorder = 'border-l-4 border-l-blue-500';
+          }
+
+          // Determine styles based on tagType
+          const getTagStyles = (tagType) => {
+            switch(tagType) {
+              case 'meeting': return { bg: '#EDE7F6', text: '#673AB7', line: '#3525CD' };
+              case 'priority': return { bg: '#FFEBEE', text: '#E53935', line: '#E53935' };
+              case 'expense': return { bg: '#E8F5E9', text: '#2E7D32', line: '#2E7D32' };
+              case 'focus': return { bg: '#EDE7F6', text: '#3525CD', line: '#3525CD' };
+              case 'wellness': return { bg: '#E1F5FE', text: '#0288D1', line: '#0288D1' };
+              case 'autopay': return { bg: '#ECEFF1', text: '#455A64', line: '#005338' };
+              case 'travel': return { bg: '#E8EAF6', text: '#3949AB', line: '#5C6BC0' };
+              default: return { bg: '#E5E8F5', text: '#464555', line: '#3525CD' };
+            }
+          };
+          const style = getTagStyles(task.tagType);
+
+          return (
+            <div key={task.id} className={`bg-white dark:bg-[#1E293B] rounded-xl p-3.5 border border-[#E5E8F5] dark:border-slate-700 shadow-sm flex items-center justify-between gap-3 ${leftBorder}`}>
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                <button 
+                  onClick={() => completeTask(task.id)} 
+                  className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 transition ${task.status === 'completed' ? 'bg-[#10B981] border-[#10B981] text-white' : 'bg-[#E5E8F5] dark:bg-slate-800 border-[#C7C4D8] dark:border-slate-600 text-transparent hover:border-[#3525CD]'}`}
+                >
+                  <span className="material-symbols-rounded text-[16px]">{task.status === 'completed' ? 'check' : ''}</span>
+                </button>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <p className={`text-xs font-bold truncate ${task.status === 'completed' ? 'line-through text-[#777587]' : 'text-[#181B25] dark:text-white'}`}>{task.title}</p>
+                    {prioBadge}
+                  </div>
+                  <p className="text-[10px] text-[#464555] dark:text-gray-400 truncate">
+                    {task.subtitle || 'Task'} • Due {task.time || new Date(task.createdAt || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                  </p>
+                </div>
+              </div>
+              {task.tag && (
+                <span className="shrink-0 px-2 py-0.5 rounded text-[10px] font-bold" style={{backgroundColor: style.bg, color: style.text}}>
+                  {task.tag}
+                </span>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
         
         {tasks.length === 0 && (
           <div className="text-center text-[#464555] text-sm py-10">

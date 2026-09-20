@@ -53,10 +53,18 @@ export default function CalendarScreen() {
           <p className="text-[10px] font-medium uppercase">Fri</p>
           <p className="text-lg font-bold leading-none mt-1">25</p>
         </div>
-        {/* Simplified day selectors for React port */}
+        {/* Restored day selectors for React port */}
         <div onClick={() => triggerToast('Weekend Deep Rest Mode')} className="p-3 px-4 rounded-2xl bg-white text-[#464555] border border-[#E5E8F5] text-center min-w-[62px] cursor-pointer hover:border-[#3525CD]">
           <p className="text-[10px] font-medium uppercase">Sat</p>
           <p className="text-lg font-bold leading-none mt-1">26</p>
+        </div>
+        <div onClick={() => triggerToast('Oct 27: Weekly Retrospective & Planning')} className="p-3 px-4 rounded-2xl bg-white text-[#464555] border border-[#E5E8F5] text-center min-w-[62px] cursor-pointer hover:border-[#3525CD]">
+          <p className="text-[10px] font-medium uppercase">Sun</p>
+          <p className="text-lg font-bold leading-none mt-1">27</p>
+        </div>
+        <div onClick={() => triggerToast('Oct 28: Sprint Review kickoff')} className="p-3 px-4 rounded-2xl bg-white text-[#464555] border border-[#E5E8F5] text-center min-w-[62px] cursor-pointer hover:border-[#3525CD]">
+          <p className="text-[10px] font-medium uppercase">Mon</p>
+          <p className="text-lg font-bold leading-none mt-1">28</p>
         </div>
       </div>
 
@@ -86,6 +94,28 @@ export default function CalendarScreen() {
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FFEBEE] text-[#E53935]">PRIORITY</span>
               </div>
               <p className="text-[11px] text-[#464555] mt-0.5">Workspace sync • Due at release freeze</p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5]">
+            <span className="text-xs font-bold text-[#3525CD] w-14">02:00 PM</span>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-bold text-[#181B25]">Deep Work Sanctuary (Focus)</p>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E2DFFF] text-[#3525CD]">FOCUS</span>
+              </div>
+              <p className="text-[11px] text-[#464555] mt-0.5">DND auto-activates • Slack set to in focus</p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5]">
+            <span className="text-xs font-bold text-[#3525CD] w-14">04:30 PM</span>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-bold text-[#181B25]">Team Daily Sync & Demo</p>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EDE7F6] text-[#673AB7]">MEETING</span>
+              </div>
+              <p className="text-[11px] text-[#464555] mt-0.5">Google Meet • Engineering & Design team</p>
             </div>
           </div>
         </div>

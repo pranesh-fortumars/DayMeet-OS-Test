@@ -1,13 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 export default function HomeScreen() {
+  const navigate = useNavigate();
   const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
   
   const triggerToast = (msg) => { triggerHaptic(); console.log('Toast:', msg); };
   const openBriefingModal = () => { triggerHaptic(); console.log('Briefing Modal'); };
-  const switchTab = (tab) => { triggerHaptic(); console.log('Switch Tab:', tab); };
+  const switchTab = (tab) => { triggerHaptic(); navigate(tab === 'home' ? '/' : `/${tab}`); };
   const payBill = (id) => { triggerHaptic(); console.log('Pay Bill:', id); };
   const openQuickScheduleMeetingModal = () => { triggerHaptic(); console.log('Quick Meeting'); };
   
@@ -97,7 +99,19 @@ export default function HomeScreen() {
         </div>
       </div>
 
-      {/* 3. Hero Next Meeting Card */}
+      {/* 3. My Day Widgets Header */}
+      <div className="flex items-center justify-between pt-1">
+        <div className="flex items-center gap-2">
+          <h3 className="text-base font-bold text-[#181B25]">My Day Widgets</h3>
+          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#6FFBBE]/40 text-[#005338]">Live</span>
+        </div>
+        <button onClick={() => triggerToast('Widget customization: Reorder & toggles')} className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#F1F3FF] text-[11px] text-[#464555] font-medium hover:bg-[#E5E8F5] transition">
+          <span className="material-symbols-rounded text-[14px]">tune</span>
+          <span>Customize & Reorder</span>
+        </button>
+      </div>
+
+      {/* 4. Hero Next Meeting Card */}
       <div className="bg-white rounded-[18px] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#E5E8F5]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -131,7 +145,177 @@ export default function HomeScreen() {
         </div>
       </div>
       
-      {/* 4. Quick Capture Hub */}
+      </div>
+      
+      {/* 5. Electricity Bill Due Banner */}
+      <div id="electricity-bill-card" className="bg-[#F1F5FD] rounded-2xl p-3 px-3.5 flex items-center justify-between border border-blue-100 mt-4">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-full bg-[#E0F2FE] text-[#0288D1] flex items-center justify-center">
+            <span className="material-symbols-rounded text-[18px]">bolt</span>
+          </div>
+          <div>
+            <p className="text-xs font-bold text-[#D32F2F]">Electricity Bill Due Tomorrow</p>
+            <p className="text-[11px] text-[#464555]">Tata Power • ₹2,400</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={() => switchTab('finance')} className="text-xs font-bold text-[#3525CD] hover:underline">View</button>
+          <button onClick={() => payBill('b1')} className="h-8 px-3 rounded-full bg-[#181B25] text-white text-[11px] font-bold hover:bg-black transition">
+            Pay Now
+          </button>
+        </div>
+      </div>
+
+      {/* 6. Daily Vitals (4 Streams) 2x2 Bento Grid */}
+      <div className="space-y-2.5 mt-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-base font-bold text-[#181B25]">Daily Vitals</h3>
+          <span className="text-xs text-[#464555]">4 Streams</span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2.5">
+          {/* Bento 1: Focus & Work */}
+          <div onClick={() => switchTab('tasks')} className="bg-white rounded-2xl p-3 border border-[#E5E8F5] shadow-sm hover:border-[#3525CD]/40 cursor-pointer transition">
+            <div className="flex items-center justify-between">
+              <div className="w-7 h-7 rounded-lg bg-[#E5E8F5] text-[#3525CD] flex items-center justify-center">
+                <span className="material-symbols-rounded text-[16px]">filter_center_focus</span>
+              </div>
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#3525CD]/10 text-[#3525CD]">33%</span>
+            </div>
+            <p className="text-[11px] text-[#464555] mt-2">Focus & Work</p>
+            <p className="text-sm font-bold text-[#181B25]">2/6 Tasks</p>
+            <div className="w-full bg-[#E5E8F5] h-1 rounded-full mt-2 overflow-hidden">
+              <div className="bg-[#3525CD] h-full rounded-full" style={{ width: '33%' }}></div>
+            </div>
+            <p className="text-[10px] text-[#464555] mt-1.5 truncate">3 meetings scheduled</p>
+          </div>
+
+          {/* Bento 2: Finance (Daily) */}
+          <div onClick={() => switchTab('finance')} className="bg-white rounded-2xl p-3 border border-[#E5E8F5] shadow-sm hover:border-[#005338]/40 cursor-pointer transition">
+            <div className="flex items-center justify-between">
+              <div className="w-7 h-7 rounded-lg bg-[#E5E8F5] text-[#005338] flex items-center justify-center">
+                <span className="material-symbols-rounded text-[16px]">account_balance_wallet</span>
+              </div>
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#005338]/10 text-[#005338]">Safe</span>
+            </div>
+            <p className="text-[11px] text-[#464555] mt-2">Finance (Daily)</p>
+            <p className="text-sm font-bold text-[#181B25]">₹3,450 / 5k</p>
+            <div className="w-full bg-[#E5E8F5] h-1 rounded-full mt-2 overflow-hidden">
+              <div className="bg-[#005338] h-full rounded-full" style={{ width: '69%' }}></div>
+            </div>
+            <p className="text-[10px] text-[#464555] mt-1.5 truncate">69% of daily ceiling</p>
+          </div>
+
+          {/* Bento 3: Health & Vitality */}
+          <div onClick={() => switchTab('insights')} className="bg-white rounded-2xl p-3 border border-[#E5E8F5] shadow-sm hover:border-[#0288D1]/40 cursor-pointer transition">
+            <div className="flex items-center justify-between">
+              <div className="w-7 h-7 rounded-lg bg-[#E5E8F5] text-[#0288D1] flex items-center justify-center">
+                <span className="material-symbols-rounded text-[16px]">favorite</span>
+              </div>
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#0288D1]/10 text-[#0288D1]">88 Score</span>
+            </div>
+            <p className="text-[11px] text-[#464555] mt-2">Health & Vitality</p>
+            <p className="text-sm font-bold text-[#181B25]">7,845 Steps</p>
+            <div className="w-full bg-[#E5E8F5] h-1 rounded-full mt-2 overflow-hidden">
+              <div className="bg-[#0288D1] h-full rounded-full" style={{ width: '72%' }}></div>
+            </div>
+            <p className="text-[10px] text-[#464555] mt-1.5 truncate">Hydration: 1.8L / 2.5L</p>
+          </div>
+
+          {/* Bento 4: Habits & Goals */}
+          <div onClick={() => triggerToast('Daily Habits: 18-day streak active')} className="bg-white rounded-2xl p-3 border border-[#E5E8F5] shadow-sm hover:border-[#F59E0B]/40 cursor-pointer transition">
+            <div className="flex items-center justify-between">
+              <div className="w-7 h-7 rounded-lg bg-[#E5E8F5] text-[#F59E0B] flex items-center justify-center">
+                <span className="material-symbols-rounded text-[16px]">local_fire_department</span>
+              </div>
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#F59E0B]/10 text-[#D97706]">18d streak</span>
+            </div>
+            <p className="text-[11px] text-[#464555] mt-2">Habits & Goals</p>
+            <p className="text-sm font-bold text-[#181B25]">2 / 3 Done</p>
+            <div className="w-full bg-[#E5E8F5] h-1 rounded-full mt-2 overflow-hidden">
+              <div className="bg-[#F59E0B] h-full rounded-full" style={{ width: '66%' }}></div>
+            </div>
+            <p className="text-[10px] text-[#464555] mt-1.5 truncate">66% consistency</p>
+          </div>
+        </div>
+
+        {/* Bento 5: Daily Habit Check-in Card */}
+        <div className="bg-white rounded-2xl p-3.5 border border-[#E5E8F5] shadow-sm space-y-3 mt-2.5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-[#FFF3E0] text-[#D97706] flex items-center justify-center">
+                <span className="material-symbols-rounded text-[18px]">self_improvement</span>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-[#181B25]">Daily Habit Check-in</p>
+                <p className="text-[10px] text-[#464555]">Single-tap morning routine logging</p>
+              </div>
+            </div>
+            <button onClick={() => triggerToast('Viewing all 5 habits & streaks')} className="text-xs font-bold text-[#3525CD] flex items-center gap-0.5 hover:underline">
+              <span>View All</span>
+              <span className="material-symbols-rounded text-[14px]">chevron_right</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2.5">
+            <div onClick={() => triggerToast('Morning Meditation logged!')} className="p-2.5 rounded-xl border border-[#E5E8F5] bg-[#FAF9FF] hover:border-[#673AB7] cursor-pointer transition flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <div className="w-7 h-7 rounded-full bg-[#EDE7F6] text-[#673AB7] flex items-center justify-center">
+                  <span className="material-symbols-rounded text-[16px]">self_improvement</span>
+                </div>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#3525CD]/10 text-[#3525CD]">Tap to Log</span>
+              </div>
+              <div className="mt-2">
+                <p className="text-xs font-bold text-[#181B25] truncate">Morning Meditation</p>
+                <p className="text-[10px] text-[#464555]">19d streak • 15m</p>
+              </div>
+            </div>
+
+            <div onClick={() => triggerToast('Morning Exercise logged!')} className="p-2.5 rounded-xl border border-[#E5E8F5] bg-[#FAF9FF] hover:border-[#2E7D32] cursor-pointer transition flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <div className="w-7 h-7 rounded-full bg-[#E8F5E9] text-[#2E7D32] flex items-center justify-center">
+                  <span className="material-symbols-rounded text-[16px]">fitness_center</span>
+                </div>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#3525CD]/10 text-[#3525CD]">Tap to Log</span>
+              </div>
+              <div className="mt-2">
+                <p className="text-xs font-bold text-[#181B25] truncate">Morning Exercise</p>
+                <p className="text-[10px] text-[#464555]">14d streak • 30m</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 7. Cross-Module Stream (Full View) */}
+      <div className="space-y-2.5 pt-1 mt-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <h3 className="text-base font-bold text-[#181B25]">Cross-Module Stream</h3>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+          </div>
+          <button onClick={() => switchTab('calendar')} className="text-xs font-bold text-[#3525CD] hover:underline">Full View</button>
+        </div>
+        
+        <div className="space-y-2">
+          {/* Static Mock Cross-Stream Items for V1 parity */}
+          <div className="flex gap-2.5 p-3 rounded-2xl bg-white border border-[#E5E8F5] shadow-sm">
+            <div className="w-8 h-8 rounded-full bg-[#FFEBEE] text-[#E53935] flex items-center justify-center shrink-0">
+              <span className="material-symbols-rounded text-[16px]">coffee</span>
+            </div>
+            <div>
+              <p className="text-xs font-bold text-[#181B25] leading-tight">Expense logged: Blue Tokai Coffee</p>
+              <div className="flex items-center gap-1.5 mt-1 text-[10px] text-[#464555]">
+                <span className="font-semibold text-[#E53935]">-₹280</span>
+                <span>•</span>
+                <span>10 mins ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* 8. Quick Capture Hub */}
       <div className="bg-white rounded-[18px] p-4 border border-[#E5E8F5] shadow-sm mt-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-bold text-[#181B25]">Quick Capture Hub</h3>
