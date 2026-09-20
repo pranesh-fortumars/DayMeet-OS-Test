@@ -1,7 +1,29 @@
 import React from 'react';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 export default function CalendarScreen() {
   const triggerToast = (msg) => console.log('Toast:', msg);
+
+  const scheduleMeetingAlert = async () => {
+    try {
+      const granted = await LocalNotifications.requestPermissions();
+      if (granted.display === 'granted') {
+        await LocalNotifications.schedule({
+          notifications: [
+            {
+              title: 'Meeting starting soon!',
+              body: 'Product Strategy Review starts in 10 minutes.',
+              id: 1,
+              schedule: { at: new Date(Date.now() + 1000 * 5) } // Demo: 5 seconds
+            }
+          ]
+        });
+        alert('Notification scheduled for 5 seconds from now!');
+      }
+    } catch (e) {
+      alert('Notification permission denied or unavailable.');
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -10,9 +32,15 @@ export default function CalendarScreen() {
           <h2 className="text-xl font-black text-[#181B25]">Unified Schedule</h2>
           <p className="text-xs text-[#464555]">All calendar blocks, appointments, and syncs</p>
         </div>
-        <div className="flex items-center gap-1.5 bg-[#EBEDFB] p-1 rounded-xl text-xs font-bold">
-          <button className="px-3 py-1 rounded-lg bg-white text-[#181B25] shadow-xs">Timeline</button>
-          <button onClick={() => triggerToast('Viewing schedule grouped by category')} className="px-3 py-1 rounded-lg text-[#464555] hover:text-[#181B25]">By Category</button>
+        <div className="flex flex-col items-end gap-1.5">
+          <div className="flex items-center gap-1.5 bg-[#EBEDFB] p-1 rounded-xl text-xs font-bold">
+            <button className="px-3 py-1 rounded-lg bg-white text-[#181B25] shadow-xs">Timeline</button>
+            <button onClick={() => triggerToast('Viewing schedule grouped by category')} className="px-3 py-1 rounded-lg text-[#464555] hover:text-[#181B25]">By Category</button>
+          </div>
+          <button onClick={scheduleMeetingAlert} className="px-2 py-1 rounded-lg bg-[#FFEBEE] text-[#E53935] text-[10px] font-bold flex items-center gap-1 shadow-sm">
+            <span className="material-symbols-rounded text-[12px]">notifications_active</span>
+            Notify Me
+          </button>
         </div>
       </div>
 

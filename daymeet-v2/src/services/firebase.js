@@ -1,8 +1,8 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAWbFRUtnifDru5sLAVj67GQC2V6t-h684",
   authDomain: "daymeet-os-test.firebaseapp.com",
@@ -13,6 +13,7 @@ const firebaseConfig = {
   measurementId: "G-RSKDEY98H8"
 };
 
-// Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+export const auth = getAuth(app);
+export const db = getFirestore(app);

@@ -27,6 +27,10 @@ export default function BottomDock() {
           <span className="material-symbols-rounded text-[24px]">insights</span>
           <span className="text-[10px] font-bold mt-0.5">Vitals</span>
         </NavLink>
+        <NavLink to="/finance" onClick={handleNav} className={navClass}>
+          <span className="material-symbols-rounded text-[24px]">account_balance_wallet</span>
+          <span className="text-[10px] font-bold mt-0.5">Finance</span>
+        </NavLink>
       </div>
     </nav>
   );

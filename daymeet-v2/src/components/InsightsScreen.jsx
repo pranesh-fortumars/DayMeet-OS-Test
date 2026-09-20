@@ -1,4 +1,5 @@
 import React from 'react';
+import WeeklyTrendChart from './charts/WeeklyTrendChart';
 
 export default function InsightsScreen() {
   return (
@@ -12,6 +13,11 @@ export default function InsightsScreen() {
           <span className="w-2 h-2 rounded-full bg-[#2E7D32] animate-pulse"></span>
           Oura Ring Active
         </span>
+      </div>
+      
+      <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm space-y-3.5">
+        <h3 className="text-sm font-bold text-[#181B25]">Weekly Summary</h3>
+        <WeeklyTrendChart />
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
