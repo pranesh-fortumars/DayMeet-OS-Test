@@ -144,9 +144,7 @@ export default function HomeScreen() {
           </button>
         </div>
       </div>
-      
-      </div>
-      
+
       {/* 5. Electricity Bill Due Banner */}
       <div id="electricity-bill-card" className="bg-[#F1F5FD] rounded-2xl p-3 px-3.5 flex items-center justify-between border border-blue-100 mt-4">
         <div className="flex items-center gap-2.5">
