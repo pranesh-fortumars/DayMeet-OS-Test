@@ -1,7 +1,4 @@
 {
-  "buildCommand": "cd daymeet-v2 && npm install && npm run build",
-  "outputDirectory": "daymeet-v2/dist",
-  "framework": "vite",
   "rewrites": [
     {
       "source": "/(.*)",
