@@ -1,12 +1,15 @@
 import React from 'react';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 export default function HomeScreen() {
-  const triggerToast = (msg) => console.log('Toast:', msg);
-  const openBriefingModal = () => console.log('Briefing Modal');
-  const switchTab = (tab) => console.log('Switch Tab:', tab);
-  const payBill = (id) => console.log('Pay Bill:', id);
-  const openQuickScheduleMeetingModal = () => console.log('Quick Meeting');
-  const openQuickAddWith = (type) => console.log('Quick Add:', type);
+  const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
+  
+  const triggerToast = (msg) => { triggerHaptic(); console.log('Toast:', msg); };
+  const openBriefingModal = () => { triggerHaptic(); console.log('Briefing Modal'); };
+  const switchTab = (tab) => { triggerHaptic(); console.log('Switch Tab:', tab); };
+  const payBill = (id) => { triggerHaptic(); console.log('Pay Bill:', id); };
+  const openQuickScheduleMeetingModal = () => { triggerHaptic(); console.log('Quick Meeting'); };
+  const openQuickAddWith = (type) => { triggerHaptic(); console.log('Quick Add:', type); };
 
   return (
     <div className="space-y-4">
