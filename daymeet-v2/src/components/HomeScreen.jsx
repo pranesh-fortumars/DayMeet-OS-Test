@@ -1,5 +1,6 @@
 import React from 'react';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 export default function HomeScreen() {
   const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
@@ -9,7 +10,25 @@ export default function HomeScreen() {
   const switchTab = (tab) => { triggerHaptic(); console.log('Switch Tab:', tab); };
   const payBill = (id) => { triggerHaptic(); console.log('Pay Bill:', id); };
   const openQuickScheduleMeetingModal = () => { triggerHaptic(); console.log('Quick Meeting'); };
-  const openQuickAddWith = (type) => { triggerHaptic(); console.log('Quick Add:', type); };
+  
+  const openQuickAddWith = async (type) => { 
+    triggerHaptic(); 
+    if (type === 'Expense' || type === 'Health Entry') {
+      try {
+        const image = await Camera.getPhoto({
+          quality: 90,
+          allowEditing: false,
+          resultType: CameraResultType.Base64,
+          source: CameraSource.Camera
+        });
+        console.log('Captured Document/Receipt for:', type);
+      } catch (e) {
+        console.log('Camera error/cancelled');
+      }
+    } else {
+      console.log('Quick Add:', type); 
+    }
+  };
 
   return (
     <div className="space-y-4">
