@@ -6,7 +6,33 @@ export default {
   ],
   darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+        mono: ['"Space Grotesk"', 'monospace']
+      },
+      colors: {
+        brand: {
+          surface: '#FAF9FF',
+          card: '#FFFFFF',
+          containerHigh: '#E5E8F5',
+          containerLow: '#F1F3FF',
+          onSurface: '#181B25',
+          onSurfaceVariant: '#464555',
+          outlineVariant: '#C7C4D8',
+          primary: '#3525CD',
+          primaryContainer: '#4F46E5',
+          primaryFixed: '#E2DFFF',
+          secondary: '#006591',
+          tertiary: '#005338',
+          tertiaryFixed: '#6FFBBE',
+          emerald: '#10B981',
+          amber: '#F59E0B',
+          rose: '#E53935',
+          sky: '#0288D1'
+        }
+      }
+    }
   },
   plugins: [],
 }

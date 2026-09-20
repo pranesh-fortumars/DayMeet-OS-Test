@@ -1,3 +1,143 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #FAF9FF;
+    color: #181B25;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .strike-line {
+    text-decoration: line-through;
+    color: #777587 !important;
+    opacity: 0.6;
+  }
+}
+
+/* Material Icons Integration */
+.material-symbols-rounded {
+  font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+
+/* ============================================================ */
+/* GLOBAL DARK THEME PALETTE (Adhering to Dark Theme Branding)  */
+/* ============================================================ */
+html.dark {
+  color-scheme: dark;
+}
+html.dark body {
+  background-color: #0F172A !important; /* Tailwind Slate-900 */
+  color: #F8FAFC !important; /* Slate-50 */
+}
+html.dark header {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border-color: #334155 !important; /* Slate-700 */
+}
+html.dark footer, html.dark #bottom-dock {
+  background-color: rgba(30, 41, 59, 0.95) !important; /* Slate-800 */
+  border-color: #334155 !important;
+}
+/* Surface and Card Overrides */
+html.dark .bg-white {
+  background-color: #1E293B !important; /* Slate-800 */
+}
+html.dark .bg-\[\#FAF9FF\], html.dark .bg-\[\#FAF9FF\]\/95 {
+  background-color: #0F172A !important;
+}
+html.dark .bg-\[\#F1F3FF\], html.dark .bg-\[\#EBEDFB\], html.dark .bg-\[\#E5E8F5\], html.dark .bg-\[\#F4F3FB\] {
+  background-color: #334155 !important; /* Slate-700 */
+}
+/* Borders */
+html.dark .border-\[\#E5E8F5\], html.dark .border-\[\#C7C4D8\], html.dark .border-\[\#D7D9E7\] {
+  border-color: #334155 !important;
+}
+/* Text colors */
+html.dark .text-\[\#181B25\] {
+  color: #F8FAFC !important;
+}
+html.dark .text-\[\#464555\] {
+  color: #94A3B8 !important; /* Slate-400 */
+}
+html.dark .text-\[\#777587\] {
+  color: #64748B !important; /* Slate-500 */
+}
+/* Inputs, Selects, Textareas */
+html.dark input, html.dark select, html.dark textarea {
+  background-color: #0F172A !important;
+  border-color: #334155 !important;
+  color: #F8FAFC !important;
+}
+html.dark input::placeholder, html.dark textarea::placeholder {
+  color: #64748B !important;
+}
+/* Modals & Dialogs */
+html.dark #modal-container, html.dark #copilot-sheet, html.dark #search-modal {
+  background-color: #1E293B !important;
+  border-color: #334155 !important;
+}
+html.dark #toast {
+  background-color: #1E293B !important;
+  border-color: #334155 !important;
+  color: #F8FAFC !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+}
+/* Specific Badge & Accent Containers in Dark Mode */
+html.dark .bg-\[\#EDE7F6\] {
+  background-color: rgba(129, 140, 248, 0.18) !important;
+}
+html.dark .text-\[\#673AB7\], html.dark .text-\[\#3525CD\] {
+  color: #818CF8 !important; /* Indigo-400 */
+}
+html.dark .bg-\[\#E8F5E9\], html.dark .bg-\[\#E8F5E9\]\/50 {
+  background-color: rgba(52, 211, 153, 0.18) !important;
+}
+html.dark .text-\[\#2E7D32\], html.dark .text-\[\#005338\] {
+  color: #34D399 !important; /* Emerald-400 */
+}
+html.dark .bg-\[\#E0F2FE\] {
+  background-color: rgba(56, 189, 248, 0.18) !important;
+}
+html.dark .text-\[\#0288D1\], html.dark .text-\[\#006591\] {
+  color: #38BDF8 !important; /* Sky-400 */
+}
+html.dark .bg-\[\#FFF3E0\] {
+  background-color: rgba(245, 158, 11, 0.18) !important;
+}
+html.dark .text-\[\#F57C00\], html.dark .text-\[\#D97706\] {
+  color: #FBBF24 !important; /* Amber-400 */
+}
+html.dark .bg-\[\#E8EAF6\] {
+  background-color: rgba(99, 102, 241, 0.18) !important;
+}
+html.dark .bg-\[\#ECEFF1\] {
+  background-color: #334155 !important;
+}
+html.dark .text-\[\#455A64\] {
+  color: #CBD5E1 !important;
+}
+html.dark .bg-\[\#E2DFFF\] {
+  background-color: rgba(129, 140, 248, 0.25) !important;
+  color: #C7D2FE !important;
+}
+html.dark .hover\:bg-\[\#EBEDFB\]:hover {
+  background-color: #334155 !important;
+}
+html.dark .hover\:border-\[\#3525CD\]:hover {
+  border-color: #818CF8 !important;
+}
