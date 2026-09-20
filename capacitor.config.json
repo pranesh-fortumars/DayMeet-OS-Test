@@ -1,5 +1,9 @@
 {
   "appId": "com.daymeet.superapp",
   "appName": "DayMeet",
-  "webDir": "www"
+  "webDir": "www",
+  "server": {
+    "url": "https://YOUR-PROJECT-URL.vercel.app",
+    "cleartext": true
+  }
 }
