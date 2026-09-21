@@ -71,11 +71,12 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200 bg-[#FAF9FF]">
+    <div className="h-[100dvh] flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200 bg-[#FAF9FF] overflow-hidden">
       <Header />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 pt-3 pb-[100px] flex-1 w-full relative overflow-x-hidden">
+      <main className="max-w-3xl mx-auto flex-1 w-full relative flex flex-col min-h-0">
         <PullToRefresh onRefresh={handleGlobalRefresh}>
-          <Routes>
+          <div className="px-4 sm:px-6 pt-3 pb-[100px]">
+            <Routes>
             <Route path="/" element={<HomeScreen />} />
             <Route path="/calendar" element={<CalendarScreen />} />
             <Route path="/tasks" element={<TasksScreen />} />
@@ -88,6 +89,7 @@ function App() {
             <Route path="/knowledge" element={<KnowledgeVaultScreen />} />
             <Route path="/relationships" element={<RelationshipsScreen />} />
           </Routes>
+          </div>
         </PullToRefresh>
       </main>
       <BottomDock />
