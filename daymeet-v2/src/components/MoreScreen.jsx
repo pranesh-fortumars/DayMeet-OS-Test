@@ -119,12 +119,13 @@ export default function MoreScreen() {
           <p className="text-[10px] text-[#464555]">Boarding pass & packing</p>
         </div>
 
-        <div onClick={() => triggerToast('Decrypted on-device AES Document Vault')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
+        {/* Knowledge Vault */}
+        <div onClick={() => navigate('/knowledge')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
           <div className="w-8 h-8 rounded-xl bg-[#ECEFF1] text-[#455A64] flex items-center justify-center mb-2">
             <span className="material-symbols-rounded text-[18px]">lock</span>
           </div>
-          <p className="text-xs font-bold text-[#181B25]">Document Vault</p>
-          <p className="text-[10px] text-[#464555]">Passports & health cards</p>
+          <p className="text-xs font-bold text-[#181B25]">Knowledge Vault</p>
+          <p className="text-[10px] text-[#464555]">Read-later & secure docs</p>
         </div>
       </div>
 

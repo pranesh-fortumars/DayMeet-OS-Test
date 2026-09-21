@@ -11,6 +11,7 @@ import MoreScreen from './components/MoreScreen';
 import CleanupScreen from './components/CleanupScreen';
 import WeeklyResetScreen from './components/WeeklyResetScreen';
 import GrowthHubScreen from './components/GrowthHubScreen';
+import KnowledgeVaultScreen from './components/KnowledgeVaultScreen';
 import GlobalSmartCapture from './components/GlobalSmartCapture';
 import AuthScreen from './components/AuthScreen';
 import { StatusBar, Style } from '@capacitor/status-bar';
@@ -68,6 +69,7 @@ function App() {
             <Route path="/cleanup" element={<CleanupScreen />} />
             <Route path="/weekly-reset" element={<WeeklyResetScreen />} />
             <Route path="/growth-hub" element={<GrowthHubScreen />} />
+            <Route path="/knowledge" element={<KnowledgeVaultScreen />} />
           </Routes>
         </main>
         <BottomDock />
