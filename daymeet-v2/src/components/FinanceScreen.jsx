@@ -7,6 +7,7 @@ import { useInteraction } from '../hooks/useInteraction';
 export default function FinanceScreen() {
   const [unlocked, setUnlocked] = useState(false);
   const { interact } = useInteraction();
+  const { liquidNetWorth, spending, dailyBudget, upcomingBills } = useAppStore();
 
   const requestBiometric = async () => {
     try {
@@ -50,17 +51,17 @@ export default function FinanceScreen() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm">
           <p className="text-xs text-[#464555] font-medium">Liquid Net Worth</p>
-          <p className="text-2xl font-black text-[#181B25] mt-1">₹1,42,850</p>
+          <p className="text-2xl font-black text-[#181B25] mt-1">₹{liquidNetWorth.toLocaleString()}</p>
           <p className="text-[11px] text-[#464555] mt-0.5">HDFC ••4109 & ICICI ••8912</p>
         </div>
         <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm">
           <p className="text-xs text-[#005338] font-semibold">Today's Total Spend</p>
-          <p className="text-2xl font-black text-[#005338] mt-1">₹3,450</p>
-          <p className="text-[11px] text-[#10B981] mt-0.5">₹1,550 safe buffer remaining</p>
+          <p className="text-2xl font-black text-[#005338] mt-1">₹{spending.toLocaleString()}</p>
+          <p className="text-[11px] text-[#10B981] mt-0.5">₹{(dailyBudget - spending).toLocaleString()} safe buffer remaining</p>
         </div>
         <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm">
           <p className="text-xs text-[#D97706] font-semibold">Upcoming Bills (48h)</p>
-          <p className="text-2xl font-black text-[#181B25] mt-1">₹2,400</p>
+          <p className="text-2xl font-black text-[#181B25] mt-1">₹{upcomingBills.toLocaleString()}</p>
           <p className="text-[11px] text-[#D32F2F] mt-0.5">Tata Power Electricity</p>
         </div>
       </div>

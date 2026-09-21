@@ -3,11 +3,45 @@ import { db, auth } from '../services/firebase';
 import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
 
 export const useAppStore = create((set, get) => ({
-  tasks: [],
-  spending: 3450,
+  // Navigation / UI State
+  modalState: { budgetTarget: false },
+  setModalOpen: (modalId, isOpen) => set((state) => ({ modalState: { ...state.modalState, [modalId]: isOpen } })),
+  
+  // Finance Data
+  spending: 3450, // Today's spending
   dailyBudget: 5000,
+  monthlySpent: 38450,
+  monthlyBudgetTarget: 60000,
+  liquidNetWorth: 142850,
+  upcomingBills: 2400,
+  
+  // Health & Insights Data
   sleepQuality: 85,
+  sleepTime: '7h 20m',
   steps: 7845,
+  stepsGoal: 10000,
+  hydration: 1.8,
+  hydrationGoal: 2.5,
+  activeBurn: 480,
+  activeBurnGoal: 600,
+  weeklySummaryData: [
+    { day: 'Mon', fullDay: 'Monday', tasks: 6, habits: 4, spending: 2100 },
+    { day: 'Tue', fullDay: 'Tuesday', tasks: 8, habits: 5, spending: 1850 },
+    { day: 'Wed', fullDay: 'Wednesday', tasks: 7, habits: 5, spending: 3200 },
+    { day: 'Thu', fullDay: 'Thursday (Today)', tasks: 11, habits: 5, spending: 3450 },
+    { day: 'Fri', fullDay: 'Friday', tasks: 9, habits: 4, spending: 2400 },
+    { day: 'Sat', fullDay: 'Saturday', tasks: 5, habits: 5, spending: 1950 },
+    { day: 'Sun', fullDay: 'Sunday', tasks: 7, habits: 4, spending: 4100 }
+  ],
+  
+  // Habits Data
+  meditationStreak: 19,
+  meditationLogged: false,
+  exerciseStreak: 14,
+  exerciseLogged: false,
+  
+  // Tasks Data
+  tasks: [],
   unsubscribeTasks: null,
 
   initSync: () => {

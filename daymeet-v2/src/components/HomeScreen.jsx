@@ -6,7 +6,7 @@ import { useAppStore } from '../store/useAppStore';
 
 export default function HomeScreen() {
   const navigate = useNavigate();
-  const { setModalOpen } = useAppStore();
+  const { setModalOpen, spending, dailyBudget, steps, stepsGoal, hydration, hydrationGoal, meditationStreak, exerciseStreak, tasks } = useAppStore();
   const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
   
   const triggerToast = (msg) => { triggerHaptic(); console.log('Toast:', msg); };
@@ -78,11 +78,11 @@ export default function HomeScreen() {
             <p className="text-[11px] text-[#464555]">Tasks</p>
           </div>
           <div className="p-1">
-            <p className="text-lg font-bold text-[#181B25] leading-tight">₹3,450</p>
+            <p className="text-lg font-bold text-[#181B25] leading-tight">₹{spending.toLocaleString()}</p>
             <p className="text-[11px] text-[#464555]">Spent</p>
           </div>
           <div className="p-1">
-            <p className="text-lg font-bold text-[#181B25] leading-tight">7.8k</p>
+            <p className="text-lg font-bold text-[#181B25] leading-tight">{steps >= 1000 ? (steps / 1000).toFixed(1) + 'k' : steps}</p>
             <p className="text-[11px] text-[#464555]">Steps</p>
           </div>
         </div>
@@ -199,11 +199,11 @@ export default function HomeScreen() {
               <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#005338]/10 text-[#005338]">Safe</span>
             </div>
             <p className="text-[11px] text-[#464555] mt-2">Finance (Daily)</p>
-            <p className="text-sm font-bold text-[#181B25]">₹3,450 / 5k</p>
+            <p className="text-sm font-bold text-[#181B25]">₹{spending.toLocaleString()} / {dailyBudget / 1000}k</p>
             <div className="w-full bg-[#E5E8F5] h-1 rounded-full mt-2 overflow-hidden">
-              <div className="bg-[#005338] h-full rounded-full" style={{ width: '69%' }}></div>
+              <div className="bg-[#005338] h-full rounded-full" style={{ width: `${Math.min((spending / dailyBudget) * 100, 100)}%` }}></div>
             </div>
-            <p className="text-[10px] text-[#464555] mt-1.5 truncate">69% of daily ceiling</p>
+            <p className="text-[10px] text-[#464555] mt-1.5 truncate">{Math.round((spending / dailyBudget) * 100)}% of daily ceiling</p>
           </div>
 
           {/* Bento 3: Health & Vitality */}
@@ -215,11 +215,11 @@ export default function HomeScreen() {
               <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#0288D1]/10 text-[#0288D1]">88 Score</span>
             </div>
             <p className="text-[11px] text-[#464555] mt-2">Health & Vitality</p>
-            <p className="text-sm font-bold text-[#181B25]">7,845 Steps</p>
+            <p className="text-sm font-bold text-[#181B25]">{steps.toLocaleString()} Steps</p>
             <div className="w-full bg-[#E5E8F5] h-1 rounded-full mt-2 overflow-hidden">
-              <div className="bg-[#0288D1] h-full rounded-full" style={{ width: '72%' }}></div>
+              <div className="bg-[#0288D1] h-full rounded-full" style={{ width: `${Math.min((steps / stepsGoal) * 100, 100)}%` }}></div>
             </div>
-            <p className="text-[10px] text-[#464555] mt-1.5 truncate">Hydration: 1.8L / 2.5L</p>
+            <p className="text-[10px] text-[#464555] mt-1.5 truncate">Hydration: {hydration}L / {hydrationGoal}L</p>
           </div>
 
           {/* Bento 4: Habits & Goals */}
@@ -228,7 +228,7 @@ export default function HomeScreen() {
               <div className="w-7 h-7 rounded-lg bg-[#E5E8F5] text-[#F59E0B] flex items-center justify-center">
                 <span className="material-symbols-rounded text-[16px]">local_fire_department</span>
               </div>
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#F59E0B]/10 text-[#D97706]">18d streak</span>
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#F59E0B]/10 text-[#D97706]">{Math.max(meditationStreak, exerciseStreak)}d streak</span>
             </div>
             <p className="text-[11px] text-[#464555] mt-2">Habits & Goals</p>
             <p className="text-sm font-bold text-[#181B25]">2 / 3 Done</p>
@@ -267,7 +267,7 @@ export default function HomeScreen() {
               </div>
               <div className="mt-2">
                 <p className="text-xs font-bold text-[#181B25] truncate">Morning Meditation</p>
-                <p className="text-[10px] text-[#464555]">19d streak • 15m</p>
+                <p className="text-[10px] text-[#464555]">{meditationStreak}d streak • 15m</p>
               </div>
             </div>
 
@@ -280,7 +280,7 @@ export default function HomeScreen() {
               </div>
               <div className="mt-2">
                 <p className="text-xs font-bold text-[#181B25] truncate">Morning Exercise</p>
-                <p className="text-[10px] text-[#464555]">14d streak • 30m</p>
+                <p className="text-[10px] text-[#464555]">{exerciseStreak}d streak • 30m</p>
               </div>
             </div>
           </div>
@@ -298,20 +298,32 @@ export default function HomeScreen() {
         </div>
         
         <div className="space-y-2">
-          {/* Static Mock Cross-Stream Items for V1 parity */}
-          <div className="flex gap-2.5 p-3 rounded-2xl bg-white border border-[#E5E8F5] shadow-sm">
-            <div className="w-8 h-8 rounded-full bg-[#FFEBEE] text-[#E53935] flex items-center justify-center shrink-0">
-              <span className="material-symbols-rounded text-[16px]">coffee</span>
-            </div>
-            <div>
-              <p className="text-xs font-bold text-[#181B25] leading-tight">Expense logged: Blue Tokai Coffee</p>
-              <div className="flex items-center gap-1.5 mt-1 text-[10px] text-[#464555]">
-                <span className="font-semibold text-[#E53935]">-₹280</span>
-                <span>•</span>
-                <span>10 mins ago</span>
+          {tasks.slice(0, 3).map((task) => (
+            <div key={task.id || task.title} className="flex gap-2.5 p-3 rounded-2xl bg-white border border-[#E5E8F5] shadow-sm active:scale-95 transition cursor-pointer" onClick={() => navigate('/tasks')}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                task.tagType === 'expense' ? 'bg-[#E8F5E9] text-[#2E7D32]' : 
+                task.tagType === 'meeting' ? 'bg-[#EDE7F6] text-[#673AB7]' : 
+                'bg-[#FFEBEE] text-[#E53935]'
+              }`}>
+                <span className="material-symbols-rounded text-[16px]">
+                  {task.tagType === 'expense' ? 'account_balance_wallet' : task.tagType === 'meeting' ? 'videocam' : 'check_circle'}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className={`text-xs font-bold leading-tight truncate ${task.status === 'completed' ? 'line-through text-[#777587]' : 'text-[#181B25]'}`}>{task.title}</p>
+                <div className="flex items-center gap-1.5 mt-1 text-[10px] text-[#464555]">
+                  <span className={`font-semibold ${task.tagType === 'expense' ? 'text-[#2E7D32]' : 'text-[#3525CD]'}`}>{task.time}</span>
+                  <span>•</span>
+                  <span className="truncate">{task.subtitle}</span>
+                </div>
               </div>
             </div>
-          </div>
+          ))}
+          {tasks.length === 0 && (
+            <div className="p-4 text-center text-xs text-[#464555]">
+              No upcoming items in the stream.
+            </div>
+          )}
         </div>
       </div>
       
