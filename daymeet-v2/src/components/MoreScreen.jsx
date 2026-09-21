@@ -75,28 +75,31 @@ export default function MoreScreen() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <div onClick={() => triggerToast('Rules & Automations coming soon')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
+        {/* Weekly Life Reset */}
+        <div onClick={() => navigate('/weekly-reset')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
           <div className="w-8 h-8 rounded-xl bg-[#EDE7F6] text-[#673AB7] flex items-center justify-center mb-2">
-            <span className="material-symbols-rounded text-[18px]">bolt</span>
+            <span className="material-symbols-rounded text-[18px]">model_training</span>
           </div>
-          <p className="text-xs font-bold text-[#181B25]">Rules & Automations</p>
-          <p className="text-[10px] text-[#464555]">When → If → Then engine</p>
+          <p className="text-xs font-bold text-[#181B25]">Weekly Reset</p>
+          <p className="text-[10px] text-[#464555]">Guided review & plan</p>
         </div>
 
-        <div onClick={() => navigate('/finance')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
+        {/* Digital Life Cleanup */}
+        <div onClick={() => navigate('/cleanup')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
           <div className="w-8 h-8 rounded-xl bg-[#E8F5E9] text-[#2E7D32] flex items-center justify-center mb-2">
+            <span className="material-symbols-rounded text-[18px]">cleaning_services</span>
+          </div>
+          <p className="text-xs font-bold text-[#181B25]">Digital Cleanup</p>
+          <p className="text-[10px] text-[#464555]">Clear stale items</p>
+        </div>
+
+        {/* Finance & Ledger */}
+        <div onClick={() => navigate('/finance')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
+          <div className="w-8 h-8 rounded-xl bg-[#E0F2FE] text-[#0288D1] flex items-center justify-center mb-2">
             <span className="material-symbols-rounded text-[18px]">account_balance_wallet</span>
           </div>
           <p className="text-xs font-bold text-[#181B25]">Finance & Ledger</p>
           <p className="text-[10px] text-[#464555]">Daily cap & bank sync</p>
-        </div>
-
-        <div onClick={() => triggerToast('Meetings & MoM coming soon')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
-          <div className="w-8 h-8 rounded-xl bg-[#E0F2FE] text-[#0288D1] flex items-center justify-center mb-2">
-            <span className="material-symbols-rounded text-[18px]">videocam</span>
-          </div>
-          <p className="text-xs font-bold text-[#181B25]">Meetings & MoM</p>
-          <p className="text-[10px] text-[#464555]">AI notes & summaries</p>
         </div>
 
         <div onClick={() => triggerToast('Habit streaks: 18-day streak on 2.5L water')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
