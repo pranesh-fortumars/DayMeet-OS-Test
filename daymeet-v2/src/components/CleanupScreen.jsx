@@ -50,7 +50,7 @@ export default function CleanupScreen() {
         <section className="space-y-3">
           <h2 className="text-sm font-bold text-[#181B25] flex items-center gap-2">
             <span className="material-symbols-rounded text-[18px] text-[#E53935]">warning</span>
-            Stale Tasks (>30 Days)
+            Stale Tasks (&gt;30 Days)
           </h2>
           <div className="space-y-2">
             {staleTasks.map(task => (
