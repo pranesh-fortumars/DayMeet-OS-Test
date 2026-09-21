@@ -23,6 +23,14 @@ import { auth } from './services/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useAppStore } from './store/useAppStore';
 
+// Modals
+import BriefingModal from './components/modals/BriefingModal';
+import QuickAddModal from './components/modals/QuickAddModal';
+import QuickMeetingModal from './components/modals/QuickMeetingModal';
+import SearchModal from './components/modals/SearchModal';
+import BudgetTargetModal from './components/modals/BudgetTargetModal';
+import CopilotModal from './components/modals/CopilotModal';
+
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -84,6 +92,14 @@ function App() {
       </main>
       <BottomDock />
       <GlobalSmartCapture />
+
+      {/* Global Modals */}
+      <BriefingModal />
+      <QuickAddModal />
+      <QuickMeetingModal />
+      <SearchModal />
+      <BudgetTargetModal />
+      <CopilotModal />
     </div>
   );
 }

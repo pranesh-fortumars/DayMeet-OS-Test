@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import BudgetGauge from './charts/BudgetGauge';
 import { Dialog } from '@capacitor/dialog';
+import { useAppStore } from '../store/useAppStore';
 
 export default function FinanceScreen() {
   const [unlocked, setUnlocked] = useState(false);
@@ -67,7 +68,16 @@ export default function FinanceScreen() {
 
       <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm pt-8">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-bold text-[#181B25]">Financial Health</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-bold text-[#181B25]">Financial Health</h3>
+            <button 
+              onClick={() => useAppStore.getState().setModalOpen('budgetTarget', true)}
+              className="w-6 h-6 rounded-md bg-[#F1F3FF] text-[#3525CD] flex items-center justify-center hover:bg-[#E5E8F5] transition"
+              title="Edit Budget Target"
+            >
+              <span className="material-symbols-rounded text-[14px]">edit</span>
+            </button>
+          </div>
           <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E8F5E9] text-[#2E7D32]">Optimal Pace</span>
         </div>
         <BudgetGauge />

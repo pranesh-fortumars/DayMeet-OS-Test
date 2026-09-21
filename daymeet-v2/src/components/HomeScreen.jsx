@@ -2,16 +2,18 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { useAppStore } from '../store/useAppStore';
 
 export default function HomeScreen() {
   const navigate = useNavigate();
+  const { setModalOpen } = useAppStore();
   const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
   
   const triggerToast = (msg) => { triggerHaptic(); console.log('Toast:', msg); };
-  const openBriefingModal = () => { triggerHaptic(); console.log('Briefing Modal'); };
+  const openBriefingModal = () => { triggerHaptic(); setModalOpen('briefing', true); };
   const switchTab = (tab) => { triggerHaptic(); navigate(tab === 'home' ? '/' : `/${tab}`); };
   const payBill = (id) => { triggerHaptic(); console.log('Pay Bill:', id); };
-  const openQuickScheduleMeetingModal = () => { triggerHaptic(); console.log('Quick Meeting'); };
+  const openQuickScheduleMeetingModal = () => { triggerHaptic(); setModalOpen('quickMeeting', true); };
   
   const openQuickAddWith = async (type) => { 
     triggerHaptic(); 
@@ -28,7 +30,7 @@ export default function HomeScreen() {
         console.log('Camera error/cancelled');
       }
     } else {
-      console.log('Quick Add:', type); 
+      setModalOpen('quickAdd', true);
     }
   };
 
