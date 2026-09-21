@@ -102,12 +102,13 @@ export default function MoreScreen() {
           <p className="text-[10px] text-[#464555]">Daily cap & bank sync</p>
         </div>
 
-        <div onClick={() => triggerToast('Habit streaks: 18-day streak on 2.5L water')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
+        {/* Growth Hub */}
+        <div onClick={() => navigate('/growth-hub')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
           <div className="w-8 h-8 rounded-xl bg-[#FFF3E0] text-[#F57C00] flex items-center justify-center mb-2">
-            <span className="material-symbols-rounded text-[18px]">local_fire_department</span>
+            <span className="material-symbols-rounded text-[18px]">psychology</span>
           </div>
-          <p className="text-xs font-bold text-[#181B25]">Habits & Goals</p>
-          <p className="text-[10px] text-[#464555]">Streak tracker & badges</p>
+          <p className="text-xs font-bold text-[#181B25]">Growth Hub</p>
+          <p className="text-[10px] text-[#464555]">Decisions & Experiments</p>
         </div>
 
         <div onClick={() => triggerToast('Chennai flight 6E 412 in 3 days. Packing list ready.')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">

@@ -10,6 +10,7 @@ import FinanceScreen from './components/FinanceScreen';
 import MoreScreen from './components/MoreScreen';
 import CleanupScreen from './components/CleanupScreen';
 import WeeklyResetScreen from './components/WeeklyResetScreen';
+import GrowthHubScreen from './components/GrowthHubScreen';
 import GlobalSmartCapture from './components/GlobalSmartCapture';
 import AuthScreen from './components/AuthScreen';
 import { StatusBar, Style } from '@capacitor/status-bar';
@@ -66,6 +67,7 @@ function App() {
             <Route path="/more" element={<MoreScreen />} />
             <Route path="/cleanup" element={<CleanupScreen />} />
             <Route path="/weekly-reset" element={<WeeklyResetScreen />} />
+            <Route path="/growth-hub" element={<GrowthHubScreen />} />
           </Routes>
         </main>
         <BottomDock />
