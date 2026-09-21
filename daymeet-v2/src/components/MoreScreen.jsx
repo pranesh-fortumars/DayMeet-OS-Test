@@ -111,12 +111,13 @@ export default function MoreScreen() {
           <p className="text-[10px] text-[#464555]">Decisions & Experiments</p>
         </div>
 
-        <div onClick={() => triggerToast('Chennai flight 6E 412 in 3 days. Packing list ready.')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
+        {/* Relationships & Admin */}
+        <div onClick={() => navigate('/relationships')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
           <div className="w-8 h-8 rounded-xl bg-[#E8EAF6] text-[#3949AB] flex items-center justify-center mb-2">
-            <span className="material-symbols-rounded text-[18px]">flight</span>
+            <span className="material-symbols-rounded text-[18px]">diversity_1</span>
           </div>
-          <p className="text-xs font-bold text-[#181B25]">Travel & Trips</p>
-          <p className="text-[10px] text-[#464555]">Boarding pass & packing</p>
+          <p className="text-xs font-bold text-[#181B25]">Relationships & Admin</p>
+          <p className="text-[10px] text-[#464555]">Network, Gifts & Family</p>
         </div>
 
         {/* Knowledge Vault */}
