@@ -63,7 +63,6 @@ function App() {
   }
 
   return (
-  return (
     <div className="min-h-screen flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200 bg-[#FAF9FF]">
       <Header />
       <main className="max-w-3xl mx-auto px-4 sm:px-6 pt-3 pb-[100px] flex-1 w-full relative overflow-x-hidden">
