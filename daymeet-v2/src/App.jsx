@@ -8,6 +8,7 @@ import TasksScreen from './components/TasksScreen';
 import InsightsScreen from './components/InsightsScreen';
 import FinanceScreen from './components/FinanceScreen';
 import MoreScreen from './components/MoreScreen';
+import GlobalSmartCapture from './components/GlobalSmartCapture';
 import AuthScreen from './components/AuthScreen';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -64,6 +65,7 @@ function App() {
           </Routes>
         </main>
         <BottomDock />
+        <GlobalSmartCapture />
       </div>
     </BrowserRouter>
   );

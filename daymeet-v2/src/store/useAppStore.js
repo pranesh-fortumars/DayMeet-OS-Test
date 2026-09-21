@@ -58,5 +58,52 @@ export const useAppStore = create((set, get) => ({
     if (!user) return;
     const taskDoc = doc(db, `users/${user.uid}/tasks`, id);
     await setDoc(taskDoc, { status: 'completed' }, { merge: true });
+  },
+
+  // Life Inbox Actions
+  inbox: [],
+  captureToInbox: (rawText) => {
+    set((state) => ({
+      inbox: [
+        {
+          id: 'inbox_' + Date.now(),
+          rawText,
+          createdAt: Date.now(),
+          status: 'pending' // pending, processing, approved
+        },
+        ...state.inbox
+      ]
+    }));
+  },
+  dismissInboxItem: (id) => {
+    set((state) => ({
+      inbox: state.inbox.filter(item => item.id !== id)
+    }));
+  },
+  processInboxItem: (id, category, action) => {
+    set((state) => ({
+      inbox: state.inbox.map(item => 
+        item.id === id ? { ...item, category, action, status: 'processing' } : item
+      )
+    }));
+  },
+  approveInboxItem: (id) => {
+    const item = get().inbox.find(i => i.id === id);
+    if (!item) return;
+
+    // Simulate routing based on category
+    if (item.category === 'Task') {
+      get().addTask({
+        title: item.rawText,
+        subtitle: 'From Life Inbox',
+        tag: 'Task',
+        tagType: 'priority',
+        priority: 'Medium',
+      });
+    }
+
+    set((state) => ({
+      inbox: state.inbox.filter(i => i.id !== id)
+    }));
   }
 }));
