@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import BudgetGauge from './charts/BudgetGauge';
 import { Dialog } from '@capacitor/dialog';
 import { useAppStore } from '../store/useAppStore';
+import { useInteraction } from '../hooks/useInteraction';
 
 export default function FinanceScreen() {
   const [unlocked, setUnlocked] = useState(false);
+  const { interact } = useInteraction();
 
   const requestBiometric = async () => {
     try {
@@ -37,13 +39,10 @@ export default function FinanceScreen() {
   return (
     <div className="space-y-4 animate-in fade-in zoom-in duration-300">
       <div className="flex items-center justify-between pt-1">
-        <div>
-          <h2 className="text-xl font-black text-[#181B25]">Finance & Ledger</h2>
-          <p className="text-xs text-[#464555]">Daily ₹5,000 ceiling, recurring bills, and accounts</p>
-        </div>
-        <button className="px-3 py-1.5 rounded-xl bg-[#005338] text-white text-xs font-bold flex items-center gap-1 hover:bg-[#00422B]">
-          <span className="material-symbols-rounded text-[14px]">add</span>
-          <span>Log Expense</span>
+        <h2 className="text-xl font-black tracking-tight text-[#181B25]">Finance</h2>
+        <button onClick={() => interact('Log Expense')} className="px-3 py-1.5 rounded-xl bg-[#005338] text-white text-xs font-bold flex items-center gap-1 hover:bg-[#00422B]">
+          <span className="material-symbols-rounded text-[16px]">add</span>
+          Expense
         </button>
       </div>
 
@@ -86,45 +85,25 @@ export default function FinanceScreen() {
       {/* Recent Transactions List */}
       <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm space-y-3">
         <h3 className="text-sm font-bold text-[#181B25]">Recent Ledger Activity</h3>
-        <div className="space-y-2 text-xs">
-          <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5]">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#FFEBEE] text-[#E53935] flex items-center justify-center">
-                <span className="material-symbols-rounded text-[18px]">coffee</span>
+        <div className="space-y-3">
+          {[
+            { name: 'Starbucks', amount: '-₹450', date: 'Today, 09:15 AM', icon: 'local_cafe' },
+            { name: 'Salary', amount: '+₹1,25,000', date: 'Yesterday', icon: 'account_balance' },
+            { name: 'Uber', amount: '-₹320', date: 'Yesterday', icon: 'directions_car' }
+          ].map((txn, i) => (
+            <div key={i} onClick={() => interact(`Transaction ${txn.name}`)} className="flex items-center justify-between bg-[#FAF9FF] p-3 rounded-xl border border-[#E5E8F5] active:scale-95 transition cursor-pointer">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${txn.amount.startsWith('+') ? 'bg-[#E8F5E9] text-[#2E7D32]' : 'bg-[#FFF3E0] text-[#F57C00]'}`}>
+                  <span className="material-symbols-rounded text-[20px]">{txn.icon}</span>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#181B25]">{txn.name}</p>
+                  <p className="text-[10px] text-[#464555]">{txn.date}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-bold text-[#181B25]">Blue Tokai Coffee Roasters</p>
-                <p className="text-[10px] text-[#464555]">Dining • Today, 08:30 AM</p>
-              </div>
+              <span className={`text-sm font-black ${txn.amount.startsWith('+') ? 'text-[#2E7D32]' : 'text-[#181B25]'}`}>{txn.amount}</span>
             </div>
-            <p className="font-bold text-[#E53935]">-₹280</p>
-          </div>
-
-          <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5]">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#FFEBEE] text-[#E53935] flex items-center justify-center">
-                <span className="material-symbols-rounded text-[18px]">local_taxi</span>
-              </div>
-              <div>
-                <p className="font-bold text-[#181B25]">Uber Premier Transit</p>
-                <p className="text-[10px] text-[#464555]">Transportation • Today, 07:45 AM</p>
-              </div>
-            </div>
-            <p className="font-bold text-[#E53935]">-₹450</p>
-          </div>
-
-          <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5]">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#E8F5E9] text-[#2E7D32] flex items-center justify-center">
-                <span className="material-symbols-rounded text-[18px]">payments</span>
-              </div>
-              <div>
-                <p className="font-bold text-[#181B25]">Consulting Client Payment</p>
-                <p className="text-[10px] text-[#464555]">Direct Deposit • Yesterday</p>
-              </div>
-            </div>
-            <p className="font-bold text-[#10B981]">+₹45,000</p>
-          </div>
+          ))}
         </div>
       </div>
     </div>

@@ -1,7 +1,9 @@
 import React from 'react';
 import WeeklyTrendChart from './charts/WeeklyTrendChart';
+import { useInteraction } from '../hooks/useInteraction';
 
 export default function InsightsScreen() {
+  const { interact } = useInteraction();
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between pt-1">
@@ -21,17 +23,17 @@ export default function InsightsScreen() {
         
         {/* 3-Column Metrics Summary Grid */}
         <div className="grid grid-cols-3 gap-2.5 pt-2 border-t border-[#E5E8F5]">
-          <div className="p-2.5 rounded-xl bg-[#F1F3FF] text-center border border-[#E5E8F5]">
+          <div onClick={() => interact('View Tasks Velocity')} className="p-2.5 rounded-xl bg-[#F1F3FF] text-center border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
             <p className="text-[10px] text-[#464555] font-medium">Tasks Velocity</p>
             <p className="text-base font-extrabold text-[#3525CD] mt-0.5">53 Done</p>
             <span className="text-[9px] font-bold text-[#10B981]">88% weekly goal</span>
           </div>
-          <div className="p-2.5 rounded-xl bg-[#F1F3FF] text-center border border-[#E5E8F5]">
+          <div onClick={() => interact('View Habits')} className="p-2.5 rounded-xl bg-[#F1F3FF] text-center border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
             <p className="text-[10px] text-[#464555] font-medium">Habits Kept</p>
             <p className="text-base font-extrabold text-[#10B981] mt-0.5">32 / 35</p>
             <span className="text-[9px] font-bold text-[#10B981]">91% consistency</span>
           </div>
-          <div className="p-2.5 rounded-xl bg-[#F1F3FF] text-center border border-[#E5E8F5]">
+          <div onClick={() => interact('View Total Spending')} className="p-2.5 rounded-xl bg-[#F1F3FF] text-center border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
             <p className="text-[10px] text-[#464555] font-medium">Total Spending</p>
             <p className="text-base font-extrabold text-[#0288D1] mt-0.5">₹19,050</p>
             <span className="text-[9px] font-bold text-[#10B981]">₹15.9k under limit</span>
@@ -40,22 +42,22 @@ export default function InsightsScreen() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] text-center shadow-sm">
+        <div onClick={() => interact('Sleep Metrics')} className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] text-center shadow-sm cursor-pointer active:scale-95 transition">
           <p className="text-[11px] text-[#464555]">Sleep Quality</p>
           <p className="text-xl font-extrabold text-[#181B25] mt-1">7h 20m</p>
           <span className="text-[10px] font-bold text-[#10B981]">85% Optimal</span>
         </div>
-        <div className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] text-center shadow-sm">
+        <div onClick={() => interact('Activity Metrics')} className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] text-center shadow-sm cursor-pointer active:scale-95 transition">
           <p className="text-[11px] text-[#464555]">Steps Walked</p>
           <p className="text-xl font-extrabold text-[#181B25] mt-1">7,845</p>
           <span className="text-[10px] font-bold text-[#3525CD]">Goal: 10,000</span>
         </div>
-        <div className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] text-center shadow-sm">
+        <div onClick={() => interact('Hydration')} className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] text-center shadow-sm cursor-pointer active:scale-95 transition">
           <p className="text-[11px] text-[#464555]">Water Hydration</p>
           <p className="text-xl font-extrabold text-[#181B25] mt-1">1.8 L</p>
           <span className="text-[10px] font-bold text-[#0288D1]">Goal: 2.5 L</span>
         </div>
-        <div className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] text-center shadow-sm">
+        <div onClick={() => interact('Calories Burned')} className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] text-center shadow-sm cursor-pointer active:scale-95 transition">
           <p className="text-[11px] text-[#464555]">Active Burn</p>
           <p className="text-xl font-extrabold text-[#181B25] mt-1">480 kcal</p>
           <span className="text-[10px] font-bold text-[#F59E0B]">Goal: 600 kcal</span>

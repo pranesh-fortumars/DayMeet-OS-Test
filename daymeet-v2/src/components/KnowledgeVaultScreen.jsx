@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useInteraction } from '../hooks/useInteraction';
 
 export default function KnowledgeVaultScreen() {
   const navigate = useNavigate();
+  const { interact } = useInteraction();
   const [activeTab, setActiveTab] = useState('library'); // 'library', 'documents', 'learning'
-
-  const triggerToast = (msg) => {
-    alert(msg);
-  };
 
   const mockArticles = [
     {
@@ -85,21 +83,21 @@ export default function KnowledgeVaultScreen() {
       {/* Tabs */}
       <div className="flex bg-[#E5E8F5] p-1 rounded-xl">
         <button 
-          onClick={() => setActiveTab('library')}
+          onClick={() => { setActiveTab('library'); interact('Tab: Library'); }}
           className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5 ${activeTab === 'library' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
         >
           <span className="material-symbols-rounded text-[14px]">auto_stories</span>
           Library
         </button>
         <button 
-          onClick={() => setActiveTab('documents')}
+          onClick={() => { setActiveTab('documents'); interact('Tab: Documents'); }}
           className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5 ${activeTab === 'documents' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
         >
           <span className="material-symbols-rounded text-[14px]">lock</span>
           Documents
         </button>
         <button 
-          onClick={() => setActiveTab('learning')}
+          onClick={() => { setActiveTab('learning'); interact('Tab: Learning'); }}
           className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5 ${activeTab === 'learning' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
         >
           <span className="material-symbols-rounded text-[14px]">school</span>
@@ -112,14 +110,14 @@ export default function KnowledgeVaultScreen() {
         <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[#181B25]">Read Later</h2>
-            <button onClick={() => triggerToast('Link parser coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
+            <button onClick={() => interact('Link parser coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
               <span className="material-symbols-rounded text-[14px]">add_link</span> Save Link
             </button>
           </div>
 
           <div className="space-y-3">
             {mockArticles.map(article => (
-              <div key={article.id} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm flex gap-4 cursor-pointer hover:border-[#3525CD] transition group">
+              <div key={article.id} onClick={() => interact(`Article: ${article.title}`)} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm flex gap-4 cursor-pointer hover:border-[#3525CD] active:scale-[0.98] transition group">
                 <div className="w-12 h-12 rounded-xl bg-[#F1F3FF] text-[#3525CD] flex items-center justify-center shrink-0">
                   <span className="material-symbols-rounded text-[24px]">article</span>
                 </div>
@@ -155,7 +153,7 @@ export default function KnowledgeVaultScreen() {
         <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[#181B25]">Secure Assets</h2>
-            <button onClick={() => triggerToast('FaceID auth to add document')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
+            <button onClick={() => interact('FaceID auth to add document')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
               <span className="material-symbols-rounded text-[14px]">lock_open</span> Unlock
             </button>
           </div>
@@ -167,7 +165,7 @@ export default function KnowledgeVaultScreen() {
 
           <div className="grid grid-cols-2 gap-3 pt-2">
             {mockDocuments.map(doc => (
-              <div key={doc.id} className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] shadow-sm flex flex-col justify-between h-28 cursor-pointer hover:border-[#3525CD] transition">
+              <div key={doc.id} onClick={() => interact(`Document: ${doc.title}`)} className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] shadow-sm flex flex-col justify-between h-28 cursor-pointer hover:border-[#3525CD] active:scale-[0.95] transition">
                 <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${doc.color}`}>
                   <span className="material-symbols-rounded text-[18px]">{doc.icon}</span>
                 </div>
@@ -186,14 +184,14 @@ export default function KnowledgeVaultScreen() {
         <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[#181B25]">Active Curriculum</h2>
-            <button onClick={() => triggerToast('Course tracker coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
+            <button onClick={() => interact('Course tracker coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
               <span className="material-symbols-rounded text-[14px]">add</span> Add Course
             </button>
           </div>
 
           <div className="space-y-3">
             {mockCourses.map(course => (
-              <div key={course.id} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm space-y-3">
+              <div key={course.id} onClick={() => interact(`Course: ${course.title}`)} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm space-y-3 cursor-pointer active:scale-[0.98] transition">
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-bold text-[#181B25] text-sm leading-tight">{course.title}</h3>

@@ -1,8 +1,9 @@
 import React from 'react';
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { useInteraction } from '../hooks/useInteraction';
 
 export default function CalendarScreen() {
-  const triggerToast = (msg) => console.log('Toast:', msg);
+  const { interact } = useInteraction();
 
   const scheduleMeetingAlert = async () => {
     try {
@@ -34,8 +35,8 @@ export default function CalendarScreen() {
         </div>
         <div className="flex flex-col items-end gap-1.5">
           <div className="flex items-center gap-1.5 bg-[#EBEDFB] p-1 rounded-xl text-xs font-bold">
-            <button className="px-3 py-1 rounded-lg bg-white text-[#181B25] shadow-xs">Timeline</button>
-            <button onClick={() => triggerToast('Viewing schedule grouped by category')} className="px-3 py-1 rounded-lg text-[#464555] hover:text-[#181B25]">By Category</button>
+            <button onClick={() => interact('View Timeline')} className="px-3 py-1 rounded-lg bg-white text-[#181B25] shadow-xs">Timeline</button>
+            <button onClick={() => interact('View by Category')} className="px-3 py-1 rounded-lg text-[#464555] hover:text-[#181B25]">By Category</button>
           </div>
           <button onClick={scheduleMeetingAlert} className="px-2 py-1 rounded-lg bg-[#FFEBEE] text-[#E53935] text-[10px] font-bold flex items-center gap-1 shadow-sm">
             <span className="material-symbols-rounded text-[12px]">notifications_active</span>
@@ -45,24 +46,23 @@ export default function CalendarScreen() {
       </div>
 
       <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-        <div className="p-3 px-4 rounded-2xl bg-[#E2DFFF] text-[#3525CD] border-2 border-[#3525CD] text-center min-w-[62px] cursor-pointer">
+        <div onClick={() => interact('Select Thu 24')} className="p-3 px-4 rounded-2xl bg-[#E2DFFF] text-[#3525CD] border-2 border-[#3525CD] text-center min-w-[62px] cursor-pointer">
           <p className="text-[10px] font-bold uppercase">Thu</p>
           <p className="text-lg font-black leading-none mt-1">24</p>
         </div>
-        <div onClick={() => triggerToast('Oct 25: 2 meetings, 4 tasks')} className="p-3 px-4 rounded-2xl bg-white text-[#464555] border border-[#E5E8F5] text-center min-w-[62px] cursor-pointer hover:border-[#3525CD]">
+        <div onClick={() => interact('Select Fri 25')} className="p-3 px-4 rounded-2xl bg-white text-[#464555] border border-[#E5E8F5] text-center min-w-[62px] cursor-pointer hover:border-[#3525CD] active:scale-95 transition">
           <p className="text-[10px] font-medium uppercase">Fri</p>
           <p className="text-lg font-bold leading-none mt-1">25</p>
         </div>
-        {/* Restored day selectors for React port */}
-        <div onClick={() => triggerToast('Weekend Deep Rest Mode')} className="p-3 px-4 rounded-2xl bg-white text-[#464555] border border-[#E5E8F5] text-center min-w-[62px] cursor-pointer hover:border-[#3525CD]">
+        <div onClick={() => interact('Select Sat 26')} className="p-3 px-4 rounded-2xl bg-white text-[#464555] border border-[#E5E8F5] text-center min-w-[62px] cursor-pointer hover:border-[#3525CD] active:scale-95 transition">
           <p className="text-[10px] font-medium uppercase">Sat</p>
           <p className="text-lg font-bold leading-none mt-1">26</p>
         </div>
-        <div onClick={() => triggerToast('Oct 27: Weekly Retrospective & Planning')} className="p-3 px-4 rounded-2xl bg-white text-[#464555] border border-[#E5E8F5] text-center min-w-[62px] cursor-pointer hover:border-[#3525CD]">
+        <div onClick={() => interact('Select Sun 27')} className="p-3 px-4 rounded-2xl bg-white text-[#464555] border border-[#E5E8F5] text-center min-w-[62px] cursor-pointer hover:border-[#3525CD] active:scale-95 transition">
           <p className="text-[10px] font-medium uppercase">Sun</p>
           <p className="text-lg font-bold leading-none mt-1">27</p>
         </div>
-        <div onClick={() => triggerToast('Oct 28: Sprint Review kickoff')} className="p-3 px-4 rounded-2xl bg-white text-[#464555] border border-[#E5E8F5] text-center min-w-[62px] cursor-pointer hover:border-[#3525CD]">
+        <div onClick={() => interact('Select Mon 28')} className="p-3 px-4 rounded-2xl bg-white text-[#464555] border border-[#E5E8F5] text-center min-w-[62px] cursor-pointer hover:border-[#3525CD] active:scale-95 transition">
           <p className="text-[10px] font-medium uppercase">Mon</p>
           <p className="text-lg font-bold leading-none mt-1">28</p>
         </div>
@@ -75,7 +75,7 @@ export default function CalendarScreen() {
         </div>
 
         <div className="space-y-3">
-          <div className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5]">
+          <div onClick={() => interact('Event: Product Strategy Review')} className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
             <span className="text-xs font-bold text-[#3525CD] w-14">09:30 AM</span>
             <div className="flex-1">
               <div className="flex items-center justify-between">
@@ -86,7 +86,7 @@ export default function CalendarScreen() {
             </div>
           </div>
           
-          <div className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5]">
+          <div onClick={() => interact('Event: Mobile Design Tokens')} className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
             <span className="text-xs font-bold text-[#3525CD] w-14">12:00 PM</span>
             <div className="flex-1">
               <div className="flex items-center justify-between">
@@ -97,7 +97,7 @@ export default function CalendarScreen() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5]">
+          <div onClick={() => interact('Event: Deep Work')} className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
             <span className="text-xs font-bold text-[#3525CD] w-14">02:00 PM</span>
             <div className="flex-1">
               <div className="flex items-center justify-between">
@@ -108,7 +108,7 @@ export default function CalendarScreen() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5]">
+          <div onClick={() => interact('Event: Team Daily Sync')} className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
             <span className="text-xs font-bold text-[#3525CD] w-14">04:30 PM</span>
             <div className="flex-1">
               <div className="flex items-center justify-between">

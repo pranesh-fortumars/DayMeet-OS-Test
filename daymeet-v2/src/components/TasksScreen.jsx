@@ -1,10 +1,12 @@
 import React from 'react';
 import { Geolocation } from '@capacitor/geolocation';
 import { useAppStore } from '../store/useAppStore';
+import { useInteraction } from '../hooks/useInteraction';
 
 export default function TasksScreen() {
   const { tasks, completeTask } = useAppStore();
-  const openQuickAddWith = (type) => console.log('Quick Add:', type);
+  const { interact } = useInteraction();
+  const openQuickAddWith = (type) => interact(`Quick Add: ${type}`);
   
   const setLocationReminder = async () => {
     try {
@@ -36,12 +38,12 @@ export default function TasksScreen() {
       </div>
 
       <div className="flex items-center gap-2">
-        <button className="px-3 py-1 rounded-full text-xs font-bold bg-[#181B25] text-white">All (6)</button>
-        <button className="px-3 py-1 rounded-full text-xs font-medium bg-[#EBEDFB] text-[#464555] hover:bg-[#E5E8F5]">Pending (4)</button>
-        <button className="px-3 py-1 rounded-full text-xs font-medium bg-[#EBEDFB] text-[#464555] hover:bg-[#E5E8F5]">Completed (2)</button>
+        <button onClick={() => interact('Filter: All')} className="px-3 py-1 rounded-full text-xs font-bold bg-[#181B25] text-white">All (6)</button>
+        <button onClick={() => interact('Filter: Pending')} className="px-3 py-1 rounded-full text-xs font-medium bg-[#EBEDFB] text-[#464555] hover:bg-[#E5E8F5]">Pending (4)</button>
+        <button onClick={() => interact('Filter: Completed')} className="px-3 py-1 rounded-full text-xs font-medium bg-[#EBEDFB] text-[#464555] hover:bg-[#E5E8F5]">Completed (2)</button>
       </div>
 
-      <div className="bg-white dark:bg-[#1E293B] rounded-xl p-3 border border-[#E5E8F5] dark:border-slate-700 shadow-sm flex items-center justify-between">
+      <div onClick={() => interact('Toggle Auto-sort')} className="bg-white dark:bg-[#1E293B] rounded-xl p-3 border border-[#E5E8F5] dark:border-slate-700 shadow-sm flex items-center justify-between cursor-pointer active:scale-[0.98] transition">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-[#EDE7F6] dark:bg-slate-800 text-[#3525CD] flex items-center justify-center">
             <span className="material-symbols-rounded text-[18px]">low_priority</span>
@@ -92,10 +94,10 @@ export default function TasksScreen() {
           const style = getTagStyles(task.tagType);
 
           return (
-            <div key={task.id} className={`bg-white dark:bg-[#1E293B] rounded-xl p-3.5 border border-[#E5E8F5] dark:border-slate-700 shadow-sm flex items-center justify-between gap-3 ${leftBorder}`}>
+            <div key={task.id} onClick={() => interact(`View Task: ${task.title}`)} className={`bg-white dark:bg-[#1E293B] rounded-xl p-3.5 border border-[#E5E8F5] dark:border-slate-700 shadow-sm flex items-center justify-between gap-3 cursor-pointer active:scale-[0.98] transition ${leftBorder}`}>
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <button 
-                  onClick={() => completeTask(task.id)} 
+                  onClick={(e) => { e.stopPropagation(); completeTask(task.id); interact(`Complete Task: ${task.title}`); }} 
                   className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 transition ${task.status === 'completed' ? 'bg-[#10B981] border-[#10B981] text-white' : 'bg-[#E5E8F5] dark:bg-slate-800 border-[#C7C4D8] dark:border-slate-600 text-transparent hover:border-[#3525CD]'}`}
                 >
                   <span className="material-symbols-rounded text-[16px]">{task.status === 'completed' ? 'check' : ''}</span>

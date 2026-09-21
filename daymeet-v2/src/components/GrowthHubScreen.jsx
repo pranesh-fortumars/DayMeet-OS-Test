@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useInteraction } from '../hooks/useInteraction';
 
 export default function GrowthHubScreen() {
   const navigate = useNavigate();
+  const { interact } = useInteraction();
   const [activeTab, setActiveTab] = useState('decisions'); // 'decisions', 'experiments', 'challenges'
 
   const mockDecisions = [
@@ -56,9 +58,6 @@ export default function GrowthHubScreen() {
     }
   ];
 
-  const triggerToast = (msg) => {
-    alert(msg);
-  };
 
   return (
     <div className="space-y-5 animate-in fade-in duration-300">
@@ -76,19 +75,19 @@ export default function GrowthHubScreen() {
       {/* Tabs */}
       <div className="flex bg-[#E5E8F5] p-1 rounded-xl">
         <button 
-          onClick={() => setActiveTab('decisions')}
+          onClick={() => { setActiveTab('decisions'); interact('Tab: Decisions'); }}
           className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${activeTab === 'decisions' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
         >
           Decisions
         </button>
         <button 
-          onClick={() => setActiveTab('experiments')}
+          onClick={() => { setActiveTab('experiments'); interact('Tab: Experiments'); }}
           className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${activeTab === 'experiments' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
         >
           Experiments
         </button>
         <button 
-          onClick={() => setActiveTab('challenges')}
+          onClick={() => { setActiveTab('challenges'); interact('Tab: Challenges'); }}
           className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${activeTab === 'challenges' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
         >
           Challenges
@@ -100,14 +99,14 @@ export default function GrowthHubScreen() {
         <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[#181B25]">Decision Journal</h2>
-            <button onClick={() => triggerToast('New decision form coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
+            <button onClick={() => interact('New decision form coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
               <span className="material-symbols-rounded text-[14px]">add</span> Log Decision
             </button>
           </div>
           
           <div className="space-y-3">
             {mockDecisions.map(dec => (
-              <div key={dec.id} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm space-y-3">
+              <div key={dec.id} onClick={() => interact(`Decision: ${dec.title}`)} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm space-y-3 cursor-pointer active:scale-[0.98] transition">
                 <div className="flex justify-between items-start">
                   <h3 className="font-bold text-[#181B25] text-sm leading-tight">{dec.title}</h3>
                   <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FFF3E0] text-[#F57C00]">Review: {dec.reviewDate}</span>
@@ -133,14 +132,14 @@ export default function GrowthHubScreen() {
         <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[#181B25]">Personal Experiments</h2>
-            <button onClick={() => triggerToast('New experiment form coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
+            <button onClick={() => interact('New experiment form coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
               <span className="material-symbols-rounded text-[14px]">science</span> Start
             </button>
           </div>
 
           <div className="space-y-3">
             {mockExperiments.map(exp => (
-              <div key={exp.id} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm relative overflow-hidden">
+              <div key={exp.id} onClick={() => interact(`Experiment: ${exp.title}`)} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm relative overflow-hidden cursor-pointer active:scale-[0.98] transition">
                 {exp.status === 'completed' && (
                   <div className="absolute top-0 right-0 w-16 h-16 bg-[#10B981]/10 rounded-bl-full flex items-start justify-end p-2">
                     <span className="material-symbols-rounded text-[20px] text-[#10B981]">task_alt</span>
@@ -178,14 +177,14 @@ export default function GrowthHubScreen() {
         <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[#181B25]">Active Challenges</h2>
-            <button onClick={() => triggerToast('Challenge catalog coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
+            <button onClick={() => interact('Challenge catalog coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
               <span className="material-symbols-rounded text-[14px]">explore</span> Browse
             </button>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             {mockChallenges.map(chal => (
-              <div key={chal.id} className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] shadow-sm flex flex-col justify-between h-36">
+              <div key={chal.id} onClick={() => interact(`Challenge: ${chal.title}`)} className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] shadow-sm flex flex-col justify-between h-36 cursor-pointer active:scale-[0.95] transition">
                 <div>
                   <h3 className="font-bold text-[#181B25] text-xs leading-tight mb-1">{chal.title}</h3>
                   <p className="text-[9px] text-[#464555] leading-snug">{chal.description}</p>

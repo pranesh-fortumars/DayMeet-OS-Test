@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useInteraction } from '../hooks/useInteraction';
 
 export default function CleanupScreen() {
   const navigate = useNavigate();
+  const { interact } = useInteraction();
   
   // Mock stale data
   const [staleTasks, setStaleTasks] = useState([
@@ -18,9 +20,18 @@ export default function CleanupScreen() {
     { id: 's1', title: 'Netflix', cost: '$15.99/mo', unusedDays: 60 }
   ]);
 
-  const removeTask = (id) => setStaleTasks(prev => prev.filter(t => t.id !== id));
-  const removeReminder = (id) => setExpiredReminders(prev => prev.filter(r => r.id !== id));
-  const removeSub = (id) => setUnusedSubs(prev => prev.filter(s => s.id !== id));
+  const removeTask = (id, keep) => {
+    interact(keep ? `Keep task: ${id}` : `Delete task: ${id}`);
+    setStaleTasks(prev => prev.filter(t => t.id !== id));
+  };
+  const removeReminder = (id) => {
+    interact(`Clear reminder: ${id}`);
+    setExpiredReminders(prev => prev.filter(r => r.id !== id));
+  };
+  const removeSub = (id) => {
+    interact(`Cancel sub: ${id}`);
+    setUnusedSubs(prev => prev.filter(s => s.id !== id));
+  };
 
   const totalItems = staleTasks.length + expiredReminders.length + unusedSubs.length;
 
@@ -60,8 +71,8 @@ export default function CleanupScreen() {
                   <p className="text-[10px] text-[#E53935] font-medium">{task.daysOld} days old</p>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => removeTask(task.id)} className="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-bold hover:bg-gray-200 transition">Keep</button>
-                  <button onClick={() => removeTask(task.id)} className="px-3 py-1.5 rounded-lg bg-[#FFEBEE] text-[#E53935] text-xs font-bold hover:bg-[#FFCDD2] transition flex items-center gap-1">
+                  <button onClick={() => removeTask(task.id, true)} className="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-bold hover:bg-gray-200 active:scale-[0.95] transition">Keep</button>
+                  <button onClick={() => removeTask(task.id, false)} className="px-3 py-1.5 rounded-lg bg-[#FFEBEE] text-[#E53935] text-xs font-bold hover:bg-[#FFCDD2] active:scale-[0.95] transition flex items-center gap-1">
                     <span className="material-symbols-rounded text-[14px]">delete</span> Delete
                   </button>
                 </div>
@@ -85,7 +96,7 @@ export default function CleanupScreen() {
                   <p className="text-[10px] text-[#F57C00] font-medium">Expired {rem.expiredDays} days ago</p>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => removeReminder(rem.id)} className="px-3 py-1.5 rounded-lg bg-[#FFF3E0] text-[#F57C00] text-xs font-bold hover:bg-[#FFE0B2] transition flex items-center gap-1">
+                  <button onClick={() => removeReminder(rem.id)} className="px-3 py-1.5 rounded-lg bg-[#FFF3E0] text-[#F57C00] text-xs font-bold hover:bg-[#FFE0B2] active:scale-[0.95] transition flex items-center gap-1">
                     <span className="material-symbols-rounded text-[14px]">clear_all</span> Clear
                   </button>
                 </div>
@@ -109,7 +120,7 @@ export default function CleanupScreen() {
                   <p className="text-[10px] text-[#3525CD] font-medium">Not used in {sub.unusedDays} days • {sub.cost}</p>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => removeSub(sub.id)} className="px-3 py-1.5 rounded-lg bg-[#F1F3FF] text-[#3525CD] text-xs font-bold hover:bg-[#D9D7FF] transition flex items-center gap-1">
+                  <button onClick={() => removeSub(sub.id)} className="px-3 py-1.5 rounded-lg bg-[#F1F3FF] text-[#3525CD] text-xs font-bold hover:bg-[#D9D7FF] active:scale-[0.95] transition flex items-center gap-1">
                     <span className="material-symbols-rounded text-[14px]">cancel</span> Cancel
                   </button>
                 </div>

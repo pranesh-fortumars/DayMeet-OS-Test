@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useInteraction } from '../hooks/useInteraction';
 
 export default function WeeklyResetScreen() {
   const navigate = useNavigate();
+  const { interact } = useInteraction();
   const [step, setStep] = useState(1);
   const [goals, setGoals] = useState(['', '', '']);
 
@@ -59,7 +61,7 @@ export default function WeeklyResetScreen() {
               </div>
             </div>
           </div>
-          <button onClick={nextStep} className="w-full py-3.5 bg-[#3525CD] text-white text-sm font-bold rounded-2xl hover:bg-[#2B1DAE] transition shadow-sm">
+          <button onClick={() => { interact('Continue to Cleanup'); nextStep(); }} className="w-full py-3.5 bg-[#3525CD] text-white text-sm font-bold rounded-2xl hover:bg-[#2B1DAE] active:scale-[0.98] transition shadow-sm">
             Continue to Cleanup
           </button>
         </div>
@@ -80,17 +82,17 @@ export default function WeeklyResetScreen() {
                 <p className="text-sm font-bold text-[#181B25]">3 items found</p>
                 <p className="text-[11px] text-[#464555]">Old tasks & subscriptions</p>
               </div>
-              <button onClick={() => navigate('/cleanup')} className="px-4 py-2 rounded-xl bg-white border border-[#3525CD] text-[#3525CD] text-xs font-bold hover:bg-[#F1F3FF] transition">
+              <button onClick={() => { interact('Review Cleanup Items'); navigate('/cleanup'); }} className="px-4 py-2 rounded-xl bg-white border border-[#3525CD] text-[#3525CD] text-xs font-bold hover:bg-[#F1F3FF] active:scale-[0.95] transition">
                 Review Items
               </button>
             </div>
           </div>
           
           <div className="flex gap-3">
-            <button onClick={prevStep} className="flex-1 py-3.5 bg-white border border-[#E5E8F5] text-[#464555] text-sm font-bold rounded-2xl hover:bg-gray-50 transition">
+            <button onClick={() => { interact('Back from Cleanup'); prevStep(); }} className="flex-1 py-3.5 bg-white border border-[#E5E8F5] text-[#464555] text-sm font-bold rounded-2xl hover:bg-gray-50 active:scale-[0.98] transition">
               Back
             </button>
-            <button onClick={nextStep} className="flex-1 py-3.5 bg-[#3525CD] text-white text-sm font-bold rounded-2xl hover:bg-[#2B1DAE] transition shadow-sm">
+            <button onClick={() => { interact('Next: Plan Ahead'); nextStep(); }} className="flex-1 py-3.5 bg-[#3525CD] text-white text-sm font-bold rounded-2xl hover:bg-[#2B1DAE] active:scale-[0.98] transition shadow-sm">
               Next: Plan Ahead
             </button>
           </div>
@@ -128,10 +130,10 @@ export default function WeeklyResetScreen() {
           </div>
           
           <div className="flex gap-3">
-            <button onClick={prevStep} className="flex-1 py-3.5 bg-white border border-[#E5E8F5] text-[#464555] text-sm font-bold rounded-2xl hover:bg-gray-50 transition">
+            <button onClick={() => { interact('Back from Plan'); prevStep(); }} className="flex-1 py-3.5 bg-white border border-[#E5E8F5] text-[#464555] text-sm font-bold rounded-2xl hover:bg-gray-50 active:scale-[0.98] transition">
               Back
             </button>
-            <button onClick={completeReset} className="flex-1 py-3.5 bg-[#10B981] text-white text-sm font-bold rounded-2xl hover:bg-[#059669] transition shadow-sm flex items-center justify-center gap-1.5">
+            <button onClick={() => { interact('Finish Reset'); completeReset(); }} className="flex-1 py-3.5 bg-[#10B981] text-white text-sm font-bold rounded-2xl hover:bg-[#059669] active:scale-[0.98] transition shadow-sm flex items-center justify-center gap-1.5">
               <span className="material-symbols-rounded text-[18px]">task_alt</span> Finish Reset
             </button>
           </div>

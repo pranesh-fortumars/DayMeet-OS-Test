@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useInteraction } from '../hooks/useInteraction';
 
 export default function RelationshipsScreen() {
   const navigate = useNavigate();
+  const { interact } = useInteraction();
   const [activeTab, setActiveTab] = useState('network'); // 'network', 'gifts', 'family'
-
-  const triggerToast = (msg) => {
-    alert(msg);
-  };
 
   const mockNetwork = [
     {
@@ -92,21 +90,21 @@ export default function RelationshipsScreen() {
       {/* Tabs */}
       <div className="flex bg-[#E5E8F5] p-1 rounded-xl">
         <button 
-          onClick={() => setActiveTab('network')}
+          onClick={() => { setActiveTab('network'); interact('Tab: Network'); }}
           className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5 ${activeTab === 'network' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
         >
           <span className="material-symbols-rounded text-[14px]">diversity_1</span>
           Network
         </button>
         <button 
-          onClick={() => setActiveTab('gifts')}
+          onClick={() => { setActiveTab('gifts'); interact('Tab: Gifts'); }}
           className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5 ${activeTab === 'gifts' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
         >
           <span className="material-symbols-rounded text-[14px]">featured_seasonal_and_gifts</span>
           Gifts
         </button>
         <button 
-          onClick={() => setActiveTab('family')}
+          onClick={() => { setActiveTab('family'); interact('Tab: Family'); }}
           className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5 ${activeTab === 'family' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
         >
           <span className="material-symbols-rounded text-[14px]">home</span>
@@ -119,14 +117,14 @@ export default function RelationshipsScreen() {
         <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[#181B25]">Personal CRM</h2>
-            <button onClick={() => triggerToast('Add contact form coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
+            <button onClick={() => interact('Add contact form coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
               <span className="material-symbols-rounded text-[14px]">person_add</span> Add Person
             </button>
           </div>
 
           <div className="space-y-3">
             {mockNetwork.map(person => (
-              <div key={person.id} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm flex items-center gap-4">
+              <div key={person.id} onClick={() => interact(`Contact: ${person.name}`)} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm flex items-center gap-4 cursor-pointer active:scale-[0.98] transition">
                 <div className={`w-12 h-12 rounded-full flex items-center justify-center font-black text-lg ${person.avatar}`}>
                   {person.name.charAt(0)}
                 </div>
@@ -160,14 +158,14 @@ export default function RelationshipsScreen() {
         <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[#181B25]">Gift Vault</h2>
-            <button onClick={() => triggerToast('Add gift idea form coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
+            <button onClick={() => interact('Add gift idea form coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
               <span className="material-symbols-rounded text-[14px]">add</span> Add Idea
             </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {mockGifts.map(gift => (
-              <div key={gift.id} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm space-y-2">
+              <div key={gift.id} onClick={() => interact(`Gift: ${gift.idea}`)} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm space-y-2 cursor-pointer active:scale-[0.98] transition">
                 <div className="flex justify-between items-start">
                   <p className="text-[10px] font-bold text-[#3525CD] bg-[#F1F3FF] px-2 py-0.5 rounded">{gift.person}</p>
                   <span className={`text-[9px] font-bold px-2 py-0.5 rounded ${gift.status === 'saving' ? 'bg-[#FFF3E0] text-[#F57C00]' : 'bg-[#E8F5E9] text-[#2E7D32]'}`}>
@@ -192,14 +190,14 @@ export default function RelationshipsScreen() {
         <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[#181B25]">Shared Admin</h2>
-            <button onClick={() => triggerToast('Invite family members coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
+            <button onClick={() => interact('Invite family members coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
               <span className="material-symbols-rounded text-[14px]">group_add</span> Invite
             </button>
           </div>
 
           <div className="space-y-3">
             {mockFamilyHub.map(hub => (
-              <div key={hub.id} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm flex items-center gap-4 cursor-pointer hover:border-[#3525CD] transition">
+              <div key={hub.id} onClick={() => interact(`Family Hub: ${hub.title}`)} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm flex items-center gap-4 cursor-pointer hover:border-[#3525CD] active:scale-[0.98] transition">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${hub.color}`}>
                   <span className="material-symbols-rounded text-[20px]">{hub.icon}</span>
                 </div>
