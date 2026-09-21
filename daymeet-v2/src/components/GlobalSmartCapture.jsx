@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAppStore } from '../store/useAppStore';
 import LifeInboxModal from './LifeInboxModal';
 
@@ -7,25 +7,40 @@ export default function GlobalSmartCapture() {
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [isInboxOpen, setIsInboxOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
-
+  const [selectedImage, setSelectedImage] = useState(null);
+  
+  const fileInputRef = useRef(null);
   const pendingCount = inbox.length;
+
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!inputValue.trim()) return;
-    captureToInbox(inputValue.trim());
+    if (!inputValue.trim() && !selectedImage) return;
+    
+    captureToInbox(inputValue.trim() || 'Attached Image', selectedImage);
+    
     setInputValue('');
+    setSelectedImage(null);
     setIsInputOpen(false);
-    // Optionally auto-open the inbox to show the AI processing
     setIsInboxOpen(true);
+  };
+
+  const closeInput = () => {
+    setIsInputOpen(false);
+    setInputValue('');
+    setSelectedImage(null);
   };
 
   return (
     <>
-      {/* Floating Action Buttons above the BottomDock */}
       <div className="fixed bottom-[80px] right-4 flex flex-col items-end gap-3 z-40 pointer-events-none">
-        
-        {/* Inbox Badge / Opener */}
         {pendingCount > 0 && (
           <button 
             onClick={() => setIsInboxOpen(true)}
@@ -38,7 +53,6 @@ export default function GlobalSmartCapture() {
           </button>
         )}
 
-        {/* Main Smart Capture FAB */}
         <button 
           onClick={() => setIsInputOpen(true)}
           className="pointer-events-auto flex items-center gap-2 h-14 px-5 rounded-full bg-[#3525CD] text-white shadow-[0_8px_24px_rgba(53,37,205,0.4)] hover:bg-[#2B1DAE] active:scale-95 transition-all"
@@ -48,7 +62,6 @@ export default function GlobalSmartCapture() {
         </button>
       </div>
 
-      {/* Smart Capture Input Overlay */}
       {isInputOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
           <div className="bg-white dark:bg-[#1E293B] w-full max-w-lg rounded-3xl p-6 shadow-2xl animate-in slide-in-from-bottom-8 duration-300">
@@ -57,26 +70,48 @@ export default function GlobalSmartCapture() {
                 <span className="material-symbols-rounded text-[#3525CD]">bolt</span>
                 Smart Capture
               </h3>
-              <button onClick={() => setIsInputOpen(false)} className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition">✕</button>
+              <button onClick={closeInput} className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition">✕</button>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-4">
-              <textarea 
-                autoFocus
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder="What's on your mind? (e.g. Renew bike insurance next month, Lunch with Sarah tomorrow at 2pm...)"
-                className="w-full min-h-[120px] p-4 bg-[#FAF9FF] dark:bg-slate-800 border border-[#E5E8F5] dark:border-slate-700 rounded-2xl focus:outline-none focus:border-[#3525CD] dark:focus:border-[#3525CD] resize-none text-sm text-[#181B25] dark:text-white"
-              />
+              <div className="relative">
+                <textarea 
+                  autoFocus
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder="What's on your mind? Or attach a screenshot..."
+                  className="w-full min-h-[120px] p-4 bg-[#FAF9FF] dark:bg-slate-800 border border-[#E5E8F5] dark:border-slate-700 rounded-2xl focus:outline-none focus:border-[#3525CD] dark:focus:border-[#3525CD] resize-none text-sm text-[#181B25] dark:text-white pb-20"
+                />
+                
+                {selectedImage && (
+                  <div className="absolute bottom-4 left-4 relative w-20 h-20 rounded-xl overflow-hidden border-2 border-white shadow-md group">
+                    <img src={selectedImage} alt="Attachment preview" className="w-full h-full object-cover" />
+                    <button type="button" onClick={() => setSelectedImage(null)} className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-white">
+                      <span className="material-symbols-rounded text-[20px]">delete</span>
+                    </button>
+                  </div>
+                )}
+              </div>
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-gray-400">
                   <button type="button" className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition"><span className="material-symbols-rounded text-[20px]">mic</span></button>
-                  <button type="button" className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition"><span className="material-symbols-rounded text-[20px]">image</span></button>
+                  
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    className="hidden" 
+                    ref={fileInputRef} 
+                    onChange={handleImageSelect}
+                  />
+                  <button type="button" onClick={() => fileInputRef.current?.click()} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition text-[#3525CD] bg-[#F1F3FF] dark:bg-[#3525CD]/20">
+                    <span className="material-symbols-rounded text-[20px]">image</span>
+                  </button>
                 </div>
+                
                 <button 
                   type="submit"
-                  disabled={!inputValue.trim()}
+                  disabled={!inputValue.trim() && !selectedImage}
                   className="px-6 py-2.5 bg-[#3525CD] disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl hover:bg-[#2B1DAE] transition flex items-center gap-2"
                 >
                   <span>Send to Inbox</span>
@@ -88,7 +123,6 @@ export default function GlobalSmartCapture() {
         </div>
       )}
 
-      {/* Life Inbox Processing Modal */}
       <LifeInboxModal isOpen={isInboxOpen} onClose={() => setIsInboxOpen(false)} />
     </>
   );

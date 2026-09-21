@@ -62,12 +62,13 @@ export const useAppStore = create((set, get) => ({
 
   // Life Inbox Actions
   inbox: [],
-  captureToInbox: (rawText) => {
+  captureToInbox: (rawText, imageUrl = null) => {
     set((state) => ({
       inbox: [
         {
           id: 'inbox_' + Date.now(),
           rawText,
+          imageUrl,
           createdAt: Date.now(),
           status: 'pending' // pending, processing, approved
         },

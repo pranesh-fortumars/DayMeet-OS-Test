@@ -17,7 +17,20 @@ export default function LifeInboxModal({ isOpen, onClose }) {
           let action = 'Add to Tasks';
           
           const text = pendingItem.rawText.toLowerCase();
-          if (text.includes('meet') || text.includes('call')) {
+          
+          if (pendingItem.imageUrl) {
+            // Simulated visual AI OCR parsing
+            if (text.includes('receipt') || text.includes('bill')) {
+              category = 'Expense';
+              action = 'Log Expense from Image';
+            } else if (text.includes('flight') || text.includes('ticket')) {
+              category = 'Travel';
+              action = 'Extract Itinerary';
+            } else {
+              category = 'Note';
+              action = 'Save to Knowledge Vault';
+            }
+          } else if (text.includes('meet') || text.includes('call')) {
             category = 'Meeting';
             action = 'Create Calendar Event';
           } else if (text.includes('$') || text.includes('₹') || text.includes('buy') || text.includes('pay')) {
@@ -64,16 +77,30 @@ export default function LifeInboxModal({ isOpen, onClose }) {
           </div>
         ) : activeItem ? (
           <div className="space-y-4">
-            <div className="bg-[#FAF9FF] dark:bg-slate-800/50 p-4 rounded-2xl border border-[#E5E8F5] dark:border-slate-700">
-              <p className="text-sm font-medium text-[#181B25] dark:text-white leading-relaxed">
+            <div className="bg-[#FAF9FF] dark:bg-slate-800/50 p-4 rounded-2xl border border-[#E5E8F5] dark:border-slate-700 flex gap-4">
+              {activeItem.imageUrl && (
+                <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 shadow-sm border border-gray-200 dark:border-slate-600">
+                  <img src={activeItem.imageUrl} alt="attachment" className="w-full h-full object-cover" />
+                </div>
+              )}
+              <p className="text-sm font-medium text-[#181B25] dark:text-white leading-relaxed flex-1">
                 "{activeItem.rawText}"
               </p>
             </div>
             
             {activeItem.status === 'pending' ? (
               <div className="flex items-center gap-2 text-xs text-[#3525CD] bg-[#F1F3FF] dark:bg-[#3525CD]/10 p-3 rounded-xl border border-[#D9D7FF] dark:border-[#3525CD]/20">
-                <span className="material-symbols-rounded animate-spin text-[16px]">hourglass_empty</span>
-                <span className="font-semibold">AI is analyzing context...</span>
+                {activeItem.imageUrl ? (
+                  <>
+                    <span className="material-symbols-rounded animate-pulse text-[16px]">document_scanner</span>
+                    <span className="font-semibold">AI OCR is scanning image...</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-rounded animate-spin text-[16px]">hourglass_empty</span>
+                    <span className="font-semibold">AI is analyzing context...</span>
+                  </>
+                )}
               </div>
             ) : (
               <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
