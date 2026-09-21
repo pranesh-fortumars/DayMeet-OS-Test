@@ -15,7 +15,7 @@ export default function BottomDock() {
     }`;
 
   return (
-    <div className="fixed bottom-0 w-full max-w-3xl mx-auto bg-white/80 backdrop-blur-xl border-t border-[#E5E8F5] pb-safe pt-2 px-2 z-40">
+    <nav className="fixed bottom-0 w-full max-w-3xl mx-auto bg-white/80 backdrop-blur-xl border-t border-[#E5E8F5] pb-safe pt-2 px-2 z-40">
       <div className="flex justify-between items-end relative pb-2">
         <NavLink to="/" onClick={handleNav} className={navClass}>
           <span className="material-symbols-rounded text-[24px]">home</span>
