@@ -29,20 +29,7 @@ export default function BottomDock() {
           <span className="material-symbols-rounded text-[24px]">task_alt</span>
           <span className="text-[10px] font-bold mt-0.5">Tasks</span>
         </NavLink>
-        <div className="flex-1 flex justify-center mt-[-20px] gap-2">
-          <button 
-            onClick={() => setModalOpen('quickAdd', true)}
-            className="w-12 h-12 rounded-full bg-[#181B25] shadow-[0_8px_16px_rgba(24,27,37,0.3)] flex items-center justify-center text-white relative hover:scale-105 transition"
-          >
-            <span className="material-symbols-rounded text-[24px]">add</span>
-          </button>
-          <button 
-            onClick={startCapture}
-            className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#3525CD] to-[#673AB7] shadow-[0_8px_16px_rgba(53,37,205,0.3)] flex items-center justify-center text-white relative hover:scale-105 transition"
-          >
-            <span className="material-symbols-rounded text-[24px]">center_focus_strong</span>
-          </button>
-        </div>
+
         <NavLink to="/insights" onClick={handleNav} className={navClass}>
           <span className="material-symbols-rounded text-[24px]">insights</span>
           <span className="text-[10px] font-bold mt-0.5">Vitals</span>
