@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import BottomDock from './components/BottomDock';
 import HomeScreen from './components/HomeScreen';
@@ -109,10 +109,10 @@ function App() {
 // Wrapper component to handle routing context for the hardware back button
 function AppWrapper() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <BackButtonHandler />
       <App />
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
@@ -121,7 +121,7 @@ function BackButtonHandler() {
   
   useEffect(() => {
     const handleBackButton = ({ canGoBack }) => {
-      const path = window.location.pathname;
+      const path = window.location.hash.replace('#', '') || '/';
       const rootPaths = ['/', '/calendar', '/tasks', '/insights', '/finance', '/more'];
       
       if (!rootPaths.includes(path)) {
