@@ -20,7 +20,7 @@ export default defineConfig({
         theme_color: '#3525CD',
         icons: [
           {
-            src: '/vite.svg',
+            src: '/favicon.svg',
             sizes: '192x192',
             type: 'image/svg+xml'
           }

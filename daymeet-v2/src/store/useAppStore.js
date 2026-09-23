@@ -4,8 +4,8 @@ import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
 
 export const useAppStore = create((set, get) => ({
   // Navigation / UI State
-  modalState: { budgetTarget: false },
-  setModalOpen: (modalId, isOpen) => set((state) => ({ modalState: { ...state.modalState, [modalId]: isOpen } })),
+  modals: { budgetTarget: false },
+  setModalOpen: (modalId, isOpen) => set((state) => ({ modals: { ...state.modals, [modalId]: isOpen } })),
   
   // Finance Data
   spending: 3450, // Today's spending
