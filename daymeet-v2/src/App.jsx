@@ -12,6 +12,7 @@ import CleanupScreen from './components/CleanupScreen';
 import WeeklyResetScreen from './components/WeeklyResetScreen';
 import GrowthHubScreen from './components/GrowthHubScreen';
 import KnowledgeVaultScreen from './components/KnowledgeVaultScreen';
+import SecurityVaultScreen from './components/SecurityVaultScreen';
 import DelegationHubScreen from './components/DelegationHubScreen';
 import RelationshipsScreen from './components/RelationshipsScreen';
 import GlobalSmartCapture from './components/GlobalSmartCapture';
@@ -90,6 +91,7 @@ function App() {
             <Route path="/weekly-reset" element={<WeeklyResetScreen />} />
             <Route path="/growth-hub" element={<GrowthHubScreen />} />
             <Route path="/knowledge" element={<KnowledgeVaultScreen />} />
+            <Route path="/security-vault" element={<SecurityVaultScreen />} />
             <Route path="/delegation" element={<DelegationHubScreen />} />
             <Route path="/relationships" element={<RelationshipsScreen />} />
           </Routes>

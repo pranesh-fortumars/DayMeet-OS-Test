@@ -7,6 +7,9 @@ export default function MoreScreen() {
   const { setModalOpen } = useAppStore();
   const [themeMode, setThemeMode] = useState('light');
   const [syncAlerts, setSyncAlerts] = useState(true);
+  const [pomodoroHUD, setPomodoroHUD] = useState(true);
+  const [geoAlerts, setGeoAlerts] = useState(false);
+  const [bioNag, setBioNag] = useState(true);
 
   const triggerToast = (msg) => {
     // We don't have global toast in V2 yet, so we just use console or alert for now
@@ -157,10 +160,22 @@ export default function MoreScreen() {
           <p className="text-xs font-bold text-[#181B25]">Delegation Hub</p>
           <p className="text-[10px] text-[#464555]">Cross-functional tracker</p>
         </div>
+
+        {/* Security Vault */}
+        <div onClick={() => navigate('/security-vault')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#D32F2F] cursor-pointer transition">
+          <div className="w-8 h-8 rounded-xl bg-[#FFEBEE] text-[#D32F2F] flex items-center justify-center mb-2">
+            <span className="material-symbols-rounded text-[18px]">gpp_good</span>
+          </div>
+          <p className="text-xs font-bold text-[#181B25]">E2EE Security Vault</p>
+          <p className="text-[10px] text-[#464555]">Backup & encryption keys</p>
+        </div>
       </div>
 
-      {/* Settings: Device Calendar Alerts */}
-      <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm">
+      {/* Settings: System HUD & Notifications */}
+      <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm space-y-4">
+        <h3 className="text-sm font-bold text-[#181B25]">System HUD & Notifications</h3>
+        
+        {/* Sync Device Calendar */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${syncAlerts ? 'bg-[#E8F5E9] text-[#2E7D32]' : 'bg-[#F1F3FF] text-[#3525CD]'}`}>
@@ -175,6 +190,55 @@ export default function MoreScreen() {
             <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${syncAlerts ? 'translate-x-6' : 'translate-x-0'}`}></div>
           </div>
         </div>
+
+        {/* Persistent Pomodoro HUD */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#EEF2FF] text-[#6366F1] flex items-center justify-center">
+              <span className="material-symbols-rounded text-[22px]">timer</span>
+            </div>
+            <div>
+              <p className="text-xs font-bold text-[#181B25]">Persistent Pomodoro Notifications</p>
+              <p className="text-[10px] text-[#464555]">Keep timer active in Android notification drawer</p>
+            </div>
+          </div>
+          <div onClick={() => setPomodoroHUD(!pomodoroHUD)} className={`w-12 h-6 rounded-full p-0.5 transition-colors relative flex items-center cursor-pointer ${pomodoroHUD ? 'bg-[#3525CD]' : 'bg-gray-300'}`}>
+            <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${pomodoroHUD ? 'translate-x-6' : 'translate-x-0'}`}></div>
+          </div>
+        </div>
+
+        {/* Geofence Smart Alerts */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#16A34A] flex items-center justify-center">
+              <span className="material-symbols-rounded text-[22px]">location_on</span>
+            </div>
+            <div>
+              <p className="text-xs font-bold text-[#181B25]">Geofence Smart Alerts</p>
+              <p className="text-[10px] text-[#464555]">Notify when Context profile automatically switches</p>
+            </div>
+          </div>
+          <div onClick={() => setGeoAlerts(!geoAlerts)} className={`w-12 h-6 rounded-full p-0.5 transition-colors relative flex items-center cursor-pointer ${geoAlerts ? 'bg-[#3525CD]' : 'bg-gray-300'}`}>
+            <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${geoAlerts ? 'translate-x-6' : 'translate-x-0'}`}></div>
+          </div>
+        </div>
+
+        {/* Biometric Nagging */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#FFF7ED] text-[#EA580C] flex items-center justify-center">
+              <span className="material-symbols-rounded text-[22px]">monitor_heart</span>
+            </div>
+            <div>
+              <p className="text-xs font-bold text-[#181B25]">Biometric Inactivity Nagging</p>
+              <p className="text-[10px] text-[#464555]">Ping watch if sedentary for &gt; 70 minutes</p>
+            </div>
+          </div>
+          <div onClick={() => setBioNag(!bioNag)} className={`w-12 h-6 rounded-full p-0.5 transition-colors relative flex items-center cursor-pointer ${bioNag ? 'bg-[#3525CD]' : 'bg-gray-300'}`}>
+            <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${bioNag ? 'translate-x-6' : 'translate-x-0'}`}></div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
