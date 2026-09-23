@@ -4,7 +4,7 @@ import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
 
 export const useAppStore = create((set, get) => ({
   // Navigation / UI State
-  modals: { budgetTarget: false },
+  modals: { budgetTarget: false, focusSanctuary: false, windDown: false },
   setModalOpen: (modalId, isOpen) => set((state) => ({ modals: { ...state.modals, [modalId]: isOpen } })),
   
   // Finance Data

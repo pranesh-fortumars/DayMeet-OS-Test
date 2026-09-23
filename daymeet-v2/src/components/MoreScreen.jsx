@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppStore } from '../store/useAppStore';
 
 export default function MoreScreen() {
   const navigate = useNavigate();
+  const { setModalOpen } = useAppStore();
   const [themeMode, setThemeMode] = useState('light');
   const [syncAlerts, setSyncAlerts] = useState(true);
 
@@ -75,6 +77,24 @@ export default function MoreScreen() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {/* Deep Work Focus Sanctuary */}
+        <div onClick={() => setModalOpen('focusSanctuary', true)} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#6366F1] cursor-pointer transition">
+          <div className="w-8 h-8 rounded-xl bg-[#EEF2FF] text-[#6366F1] flex items-center justify-center mb-2">
+            <span className="material-symbols-rounded text-[18px]">self_improvement</span>
+          </div>
+          <p className="text-xs font-bold text-[#181B25]">Focus Sanctuary</p>
+          <p className="text-[10px] text-[#464555]">Distraction-free timer</p>
+        </div>
+
+        {/* Evening Wind-Down */}
+        <div onClick={() => setModalOpen('windDown', true)} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#8B5CF6] cursor-pointer transition">
+          <div className="w-8 h-8 rounded-xl bg-[#F5F3FF] text-[#8B5CF6] flex items-center justify-center mb-2">
+            <span className="material-symbols-rounded text-[18px]">nightlight</span>
+          </div>
+          <p className="text-xs font-bold text-[#181B25]">Evening Routine</p>
+          <p className="text-[10px] text-[#464555]">Wind-down & log</p>
+        </div>
+
         {/* Weekly Life Reset */}
         <div onClick={() => navigate('/weekly-reset')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
           <div className="w-8 h-8 rounded-xl bg-[#EDE7F6] text-[#673AB7] flex items-center justify-center mb-2">

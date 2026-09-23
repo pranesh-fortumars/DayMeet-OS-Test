@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInteraction } from '../hooks/useInteraction';
+import HabitHeatmap from './charts/HabitHeatmap';
 
 export default function GrowthHubScreen() {
   const navigate = useNavigate();
   const { interact } = useInteraction();
-  const [activeTab, setActiveTab] = useState('decisions'); // 'decisions', 'experiments', 'challenges'
+  const [activeTab, setActiveTab] = useState('horizons'); // 'horizons', 'decisions', 'experiments', 'challenges'
+
+  const mockOKRs = [
+    { id: 'okr1', title: 'Launch MVP to 10k Users', progress: 65, status: 'on-track' },
+    { id: 'okr2', title: 'Achieve 15% Body Fat', progress: 40, status: 'at-risk' },
+    { id: 'okr3', title: 'Read 24 Books This Year', progress: 85, status: 'on-track' },
+  ];
 
   const mockDecisions = [
     {
@@ -73,26 +80,65 @@ export default function GrowthHubScreen() {
       </div>
 
       {/* Tabs */}
-      <div className="flex bg-[#E5E8F5] p-1 rounded-xl">
+      <div className="flex bg-[#E5E8F5] p-1 rounded-xl overflow-x-auto no-scrollbar">
+        <button 
+          onClick={() => { setActiveTab('horizons'); interact('Tab: Horizons'); }}
+          className={`flex-none px-4 py-1.5 text-xs font-bold rounded-lg transition-colors ${activeTab === 'horizons' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
+        >
+          Horizons
+        </button>
         <button 
           onClick={() => { setActiveTab('decisions'); interact('Tab: Decisions'); }}
-          className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${activeTab === 'decisions' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
+          className={`flex-none px-4 py-1.5 text-xs font-bold rounded-lg transition-colors ${activeTab === 'decisions' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
         >
           Decisions
         </button>
         <button 
           onClick={() => { setActiveTab('experiments'); interact('Tab: Experiments'); }}
-          className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${activeTab === 'experiments' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
+          className={`flex-none px-4 py-1.5 text-xs font-bold rounded-lg transition-colors ${activeTab === 'experiments' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
         >
           Experiments
         </button>
         <button 
           onClick={() => { setActiveTab('challenges'); interact('Tab: Challenges'); }}
-          className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${activeTab === 'challenges' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
+          className={`flex-none px-4 py-1.5 text-xs font-bold rounded-lg transition-colors ${activeTab === 'challenges' ? 'bg-white text-[#181B25] shadow-sm' : 'text-[#464555] hover:text-[#181B25]'}`}
         >
           Challenges
         </button>
       </div>
+
+      {/* HORIZONS & OKRS */}
+      {activeTab === 'horizons' && (
+        <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
+          <HabitHeatmap title="Habit Consistency (30 Days)" />
+
+          <div className="flex items-center justify-between mt-6">
+            <h2 className="text-sm font-bold text-[#181B25]">Strategic OKRs (Q4)</h2>
+            <button onClick={() => interact('New OKR')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
+              <span className="material-symbols-rounded text-[14px]">add</span> Add
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {mockOKRs.map(okr => (
+              <div key={okr.id} onClick={() => interact(`OKR: ${okr.title}`)} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm cursor-pointer active:scale-[0.98] transition">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="font-bold text-[#181B25] text-sm leading-tight">{okr.title}</h3>
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${okr.status === 'on-track' ? 'bg-[#E8F5E9] text-[#2E7D32]' : 'bg-[#FFEBEE] text-[#C62828]'}`}>
+                    {okr.progress}%
+                  </span>
+                </div>
+                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div 
+                    className={`h-full rounded-full transition-all ${okr.status === 'on-track' ? 'bg-[#3525CD]' : 'bg-[#EF4444]'}`} 
+                    style={{ width: `${okr.progress}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* DECISION JOURNAL */}
       {activeTab === 'decisions' && (

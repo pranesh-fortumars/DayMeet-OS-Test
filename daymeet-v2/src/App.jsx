@@ -30,6 +30,8 @@ import QuickMeetingModal from './components/modals/QuickMeetingModal';
 import SearchModal from './components/modals/SearchModal';
 import BudgetTargetModal from './components/modals/BudgetTargetModal';
 import CopilotModal from './components/modals/CopilotModal';
+import FocusSanctuaryModal from './components/modals/FocusSanctuaryModal';
+import WindDownModal from './components/modals/WindDownModal';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -102,6 +104,8 @@ function App() {
       <SearchModal />
       <BudgetTargetModal />
       <CopilotModal />
+      <FocusSanctuaryModal />
+      <WindDownModal />
     </div>
   );
 }
