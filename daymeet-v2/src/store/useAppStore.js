@@ -5,7 +5,9 @@ import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
 export const useAppStore = create((set, get) => ({
   // Navigation / UI State
   activeProfile: 'Work', // Work, Personal, Creative, Family
+  currentLocation: 'Office HQ', // Office HQ, Home Base, Coffee Shop, Transit
   setActiveProfile: (profile) => set({ activeProfile: profile }),
+  setCurrentLocation: (loc) => set({ currentLocation: loc }),
   modals: { budgetTarget: false, focusSanctuary: false, windDown: false },
   setModalOpen: (modalId, isOpen) => set((state) => ({ modals: { ...state.modals, [modalId]: isOpen } })),
   

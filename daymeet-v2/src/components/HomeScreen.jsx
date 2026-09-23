@@ -6,7 +6,7 @@ import { useAppStore } from '../store/useAppStore';
 
 export default function HomeScreen() {
   const navigate = useNavigate();
-  const { setModalOpen, spending, dailyBudget, steps, stepsGoal, hydration, hydrationGoal, meditationStreak, exerciseStreak, tasks, activeProfile } = useAppStore();
+  const { setModalOpen, spending, dailyBudget, steps, stepsGoal, hydration, hydrationGoal, meditationStreak, exerciseStreak, tasks, activeProfile, currentLocation, setCurrentLocation, setActiveProfile } = useAppStore();
   const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
   
   const filteredTasks = tasks.filter(t => !t.profile || t.profile === activeProfile);
@@ -56,6 +56,34 @@ export default function HomeScreen() {
           <span className="text-[#C7C4D8]">•</span>
           <span>New York</span>
         </div>
+      </div>
+
+      {/* Geofence & Context Switcher Trigger Card */}
+      <div className="bg-[#181B25] rounded-xl p-3 shadow-md flex items-center justify-between text-white animate-in slide-in-from-top-2 duration-500">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+            <span className="material-symbols-rounded text-[#10B981] text-[18px]">location_on</span>
+          </div>
+          <div>
+            <p className="text-xs font-bold">Arrived at {currentLocation}</p>
+            <p className="text-[10px] text-gray-400">Context active: {activeProfile}</p>
+          </div>
+        </div>
+        <button 
+          onClick={() => {
+            triggerHaptic();
+            if (currentLocation === 'Office HQ') {
+              setCurrentLocation('Home Base');
+              setActiveProfile('Personal');
+            } else {
+              setCurrentLocation('Office HQ');
+              setActiveProfile('Work');
+            }
+          }} 
+          className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-[10px] font-bold"
+        >
+          Simulate Geofence
+        </button>
       </div>
 
       {/* 2. Daily Briefing Card */}

@@ -97,6 +97,41 @@ export default function InsightsScreen() {
         </div>
       </div>
 
+      {/* Deep Sleep Architecture (Biometrics) */}
+      <div className="bg-[#FAF9FF] rounded-2xl p-4 border border-[#E5E8F5] shadow-sm mt-4">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="material-symbols-rounded text-[#673AB7]">bedtime</span>
+          <h3 className="text-sm font-bold text-[#181B25]">Sleep Architecture</h3>
+        </div>
+        
+        <div className="space-y-3">
+          {/* Sleep Stages Bar */}
+          <div>
+            <div className="flex justify-between text-[10px] text-[#464555] mb-1 font-bold">
+              <span>Light (50%)</span>
+              <span>REM (25%)</span>
+              <span>Deep (25%)</span>
+            </div>
+            <div className="w-full h-2.5 rounded-full overflow-hidden flex gap-0.5">
+              <div className="bg-[#818CF8] h-full" style={{ width: '50%' }}></div>
+              <div className="bg-[#C084FC] h-full" style={{ width: '25%' }}></div>
+              <div className="bg-[#312E81] h-full" style={{ width: '25%' }}></div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 pt-2">
+            <div className="bg-white p-2.5 rounded-xl border border-[#E5E8F5]">
+              <p className="text-[10px] text-[#464555] font-medium">HRV (Heart Rate Variability)</p>
+              <p className="text-sm font-bold text-[#181B25] mt-0.5">62 ms <span className="text-[#10B981] text-[10px] font-bold">+4</span></p>
+            </div>
+            <div className="bg-white p-2.5 rounded-xl border border-[#E5E8F5]">
+              <p className="text-[10px] text-[#464555] font-medium">Respiratory Rate</p>
+              <p className="text-sm font-bold text-[#181B25] mt-0.5">14.2 rpm</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Health Bio-Readiness Graph Card */}
       <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm mt-4">
         <h3 className="text-sm font-bold text-[#181B25] mb-2">Readiness & Vitals Curve</h3>
