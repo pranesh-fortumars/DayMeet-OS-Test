@@ -6,8 +6,10 @@ import { useAppStore } from '../store/useAppStore';
 
 export default function HomeScreen() {
   const navigate = useNavigate();
-  const { setModalOpen, spending, dailyBudget, steps, stepsGoal, hydration, hydrationGoal, meditationStreak, exerciseStreak, tasks } = useAppStore();
+  const { setModalOpen, spending, dailyBudget, steps, stepsGoal, hydration, hydrationGoal, meditationStreak, exerciseStreak, tasks, activeProfile } = useAppStore();
   const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
+  
+  const filteredTasks = tasks.filter(t => !t.profile || t.profile === activeProfile);
   
   const triggerToast = (msg) => { triggerHaptic(); console.log('Toast:', msg); };
   const openBriefingModal = () => { triggerHaptic(); setModalOpen('briefing', true); };
@@ -298,7 +300,7 @@ export default function HomeScreen() {
         </div>
         
         <div className="space-y-2">
-          {tasks.slice(0, 3).map((task) => (
+          {filteredTasks.slice(0, 3).map((task) => (
             <div key={task.id || task.title} className="flex gap-2.5 p-3 rounded-2xl bg-white border border-[#E5E8F5] shadow-sm active:scale-95 transition cursor-pointer" onClick={() => navigate('/tasks')}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
                 task.tagType === 'expense' ? 'bg-[#E8F5E9] text-[#2E7D32]' : 
@@ -319,9 +321,9 @@ export default function HomeScreen() {
               </div>
             </div>
           ))}
-          {tasks.length === 0 && (
+          {filteredTasks.length === 0 && (
             <div className="p-4 text-center text-xs text-[#464555]">
-              No upcoming items in the stream.
+              No upcoming items in the stream for this profile.
             </div>
           )}
         </div>

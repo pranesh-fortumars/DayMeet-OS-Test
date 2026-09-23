@@ -19,6 +19,37 @@ export default function InsightsScreen() {
         </span>
       </div>
       
+      <div className="bg-[#1E293B] rounded-2xl p-4 shadow-sm space-y-4 animate-in slide-in-from-bottom-4 duration-300">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="material-symbols-rounded text-[#34D399]">psychology</span>
+          <h3 className="text-sm font-bold text-white">Cognitive Load & Interruption Risk</h3>
+        </div>
+        
+        <div className="space-y-1.5">
+          <div className="flex justify-between text-[11px] font-bold text-white">
+            <span>68% Focus Blocks</span>
+            <span className="text-[#F59E0B]">32% Meetings</span>
+          </div>
+          <div className="w-full h-2 bg-[#334155] rounded-full overflow-hidden flex">
+            <div className="bg-[#6366F1] h-full" style={{ width: '68%' }}></div>
+            <div className="bg-[#F59E0B] h-full" style={{ width: '32%' }}></div>
+          </div>
+        </div>
+
+        <div className="bg-[#0F172A] rounded-xl p-3 border border-[#334155] flex items-start gap-3">
+          <span className="material-symbols-rounded text-[#F59E0B] text-[18px]">warning</span>
+          <div>
+            <h4 className="text-xs font-bold text-white">High Fragmentation Detected</h4>
+            <p className="text-[10px] text-[#94A3B8] mt-0.5 leading-snug">
+              You have 3 gap periods under 30 minutes today. This increases context-switching friction.
+            </p>
+            <button onClick={() => interact('Consolidate Gaps')} className="mt-2 px-3 py-1.5 bg-[#6366F1] hover:bg-[#4F46E5] text-white text-[10px] font-bold rounded-lg transition active:scale-95 shadow-sm">
+              Consolidate Gaps
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm space-y-3.5">
         <h3 className="text-sm font-bold text-[#181B25]">Weekly Summary</h3>
         <WeeklyTrendChart />

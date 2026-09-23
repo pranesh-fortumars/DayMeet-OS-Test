@@ -148,6 +148,15 @@ export default function MoreScreen() {
           <p className="text-xs font-bold text-[#181B25]">Knowledge Vault</p>
           <p className="text-[10px] text-[#464555]">Read-later & secure docs</p>
         </div>
+
+        {/* Autonomous Delegation */}
+        <div onClick={() => navigate('/delegation')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
+          <div className="w-8 h-8 rounded-xl bg-[#E0F7FA] text-[#0097A7] flex items-center justify-center mb-2">
+            <span className="material-symbols-rounded text-[18px]">smart_toy</span>
+          </div>
+          <p className="text-xs font-bold text-[#181B25]">Delegation Hub</p>
+          <p className="text-[10px] text-[#464555]">Cross-functional tracker</p>
+        </div>
       </div>
 
       {/* Settings: Device Calendar Alerts */}
