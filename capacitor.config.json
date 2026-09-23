@@ -1,5 +1,8 @@
 {
   "appId": "com.daymeet.superapp",
   "appName": "DayMeet",
-  "webDir": "daymeet-v2/dist"
+  "webDir": "daymeet-v2/dist",
+  "server": {
+    "url": "https://day-meet-os-test.vercel.app"
+  }
 }
