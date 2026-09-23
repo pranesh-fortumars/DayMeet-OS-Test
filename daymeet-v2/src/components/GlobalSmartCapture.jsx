@@ -55,14 +55,9 @@ export default function GlobalSmartCapture() {
 
         <button 
           onClick={() => setIsInputOpen(true)}
-          className="pointer-events-auto group flex items-center h-14 rounded-full bg-[#3525CD] text-white shadow-[0_8px_24px_rgba(53,37,205,0.4)] hover:bg-[#2B1DAE] active:scale-95 transition-all duration-300 overflow-hidden"
+          className="pointer-events-auto flex items-center justify-center w-14 h-14 rounded-full bg-[#3525CD] text-white shadow-[0_8px_24px_rgba(53,37,205,0.4)] hover:bg-[#2B1DAE] active:scale-95 transition-all duration-300"
         >
-          <div className="w-14 h-14 flex items-center justify-center shrink-0">
-            <span className="material-symbols-rounded text-[28px]">add</span>
-          </div>
-          <span className="text-sm font-bold tracking-wide max-w-0 opacity-0 group-hover:max-w-xs group-hover:opacity-100 group-hover:pr-6 transition-all duration-300 ease-in-out whitespace-nowrap">
-            Capture
-          </span>
+          <span className="material-symbols-rounded text-[28px]">add</span>
         </button>
       </div>
 
