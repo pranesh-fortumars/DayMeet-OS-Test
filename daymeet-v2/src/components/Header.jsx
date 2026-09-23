@@ -23,6 +23,10 @@ export default function Header() {
     Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
   };
 
+  const handleNotificationsClick = () => {
+    window.location.hash = '#/more';
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-[#FAF9FF]/95 backdrop-blur-md border-b border-[#E5E8F5] transition-colors">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 h-[60px] flex items-center justify-between">
@@ -74,7 +78,7 @@ export default function Header() {
             <span className="material-symbols-rounded text-[20px]">search</span>
           </button>
 
-          <button onClick={() => triggerToast('All systems synced')} title="Sync & Notifications" className="w-9 h-9 rounded-full flex items-center justify-center text-[#464555] hover:bg-[#EBEDFB] transition relative">
+          <button onClick={handleNotificationsClick} title="System HUD & Notifications" className="w-9 h-9 rounded-full flex items-center justify-center text-[#464555] hover:bg-[#EBEDFB] transition relative">
             <span className="material-symbols-rounded text-[20px]">notifications</span>
             <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#E53935]"></span>
           </button>
