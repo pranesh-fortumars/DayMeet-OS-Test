@@ -116,7 +116,35 @@ function App() {
     return new Promise(resolve => setTimeout(resolve, 1500));
   };
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-[9999] bg-[#FAF9FF] flex flex-col items-center justify-center overflow-hidden">
+        <div className="relative flex flex-col items-center">
+          {/* Pulsing gradient aura behind the logo */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-gradient-to-tr from-[#3525CD] to-[#6FFBBE] rounded-full blur-[48px] opacity-30 animate-pulse"></div>
+          
+          {/* Bouncing High-Res Logo */}
+          <img 
+            src="/favicon.png" 
+            alt="DayMeet OS" 
+            className="w-28 h-28 rounded-3xl shadow-[0_8px_30px_rgb(53,37,205,0.2)] relative z-10 animate-bounce" 
+            style={{ animationDuration: '2s' }}
+          />
+          
+          {/* App Title */}
+          <h1 className="mt-8 text-2xl font-black text-[#181B25] tracking-tight relative z-10">DayMeet OS</h1>
+          <p className="text-xs text-[#464555] font-medium mt-1 mb-6 relative z-10 tracking-widest uppercase">Initializing</p>
+          
+          {/* Sequential Dot Animation */}
+          <div className="flex items-center gap-1.5 relative z-10">
+            <div className="w-2 h-2 rounded-full bg-[#3525CD] animate-ping" style={{ animationDuration: '1.5s', animationDelay: '0ms' }}></div>
+            <div className="w-2 h-2 rounded-full bg-[#3525CD] animate-ping" style={{ animationDuration: '1.5s', animationDelay: '200ms' }}></div>
+            <div className="w-2 h-2 rounded-full bg-[#3525CD] animate-ping" style={{ animationDuration: '1.5s', animationDelay: '400ms' }}></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!user) {
     return <AuthScreen onAuthSuccess={() => {}} />;
