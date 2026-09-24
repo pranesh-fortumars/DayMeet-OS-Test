@@ -24,6 +24,7 @@ import { App as CapacitorApp } from '@capacitor/app';
 import { auth } from './services/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useAppStore } from './store/useAppStore';
+import { Geolocation } from '@capacitor/geolocation';
 
 // Modals
 import BriefingModal from './components/modals/BriefingModal';
@@ -34,11 +35,12 @@ import BudgetTargetModal from './components/modals/BudgetTargetModal';
 import CopilotModal from './components/modals/CopilotModal';
 import FocusSanctuaryModal from './components/modals/FocusSanctuaryModal';
 import WindDownModal from './components/modals/WindDownModal';
+import NightlyCleanupModal from './components/modals/NightlyCleanupModal';
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const initSync = useAppStore(state => state.initSync);
+  const { initSync, activeProfile, setActiveProfile, setCurrentLocation } = useAppStore();
 
   useEffect(() => {
     const initApp = async () => {
@@ -60,8 +62,34 @@ function App() {
       }
     });
 
-    return () => unsubscribe();
-  }, [initSync]);
+    let geoWatchId = null;
+    const initGeofencing = async () => {
+      try {
+        await Geolocation.requestPermissions();
+        geoWatchId = await Geolocation.watchPosition({ enableHighAccuracy: true }, (position, err) => {
+          if (!position) return;
+          // Mock Geofencing: Switch context if longitude > some arbitrary threshold
+          // In a real app, you'd calculate distance to known HQ/Home coords
+          const isAtOffice = position.coords.longitude % 2 > 1; // Arbitrary toggle based on movement
+          if (isAtOffice && activeProfile !== 'Work') {
+            setCurrentLocation('Office HQ');
+            setActiveProfile('Work');
+          } else if (!isAtOffice && activeProfile !== 'Personal') {
+            setCurrentLocation('Home Base');
+            setActiveProfile('Personal');
+          }
+        });
+      } catch (e) {
+        console.log("Geofencing mocked/disabled without permissions");
+      }
+    };
+    initGeofencing();
+
+    return () => {
+      unsubscribe();
+      if (geoWatchId) Geolocation.clearWatch({ id: geoWatchId });
+    };
+  }, [initSync, activeProfile, setActiveProfile, setCurrentLocation]);
 
   const handleGlobalRefresh = async () => {
     // Simulate a network sync delay
@@ -110,6 +138,7 @@ function App() {
       <CopilotModal />
       <FocusSanctuaryModal />
       <WindDownModal />
+      <NightlyCleanupModal />
     </div>
   );
 }
