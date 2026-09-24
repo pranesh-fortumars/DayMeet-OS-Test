@@ -5,7 +5,7 @@ import { useAppStore } from '../store/useAppStore';
 
 export default function InsightsScreen() {
   const { interact } = useInteraction();
-  const { sleepTime, sleepQuality, steps, stepsGoal, hydration, hydrationGoal, activeBurn, activeBurnGoal } = useAppStore();
+  const { sleepTime, sleepQuality, steps, stepsGoal, hydration, hydrationGoal, activeBurn, activeBurnGoal, meditationStreak, exerciseStreak } = useAppStore();
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between pt-1">
