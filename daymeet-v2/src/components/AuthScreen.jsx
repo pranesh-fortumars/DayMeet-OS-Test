@@ -31,9 +31,7 @@ export default function AuthScreen({ onAuthSuccess }) {
             <span className="material-symbols-rounded">arrow_back</span>
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#3525CD] text-white flex items-center justify-center">
-              <span className="material-symbols-rounded text-[18px]">nest_clock_farsight_analog</span>
-            </div>
+            <img src="/favicon.png" alt="DayMeet" className="w-8 h-8 rounded-lg shadow-sm" />
             <span className="font-bold text-[#181B25] text-lg tracking-tight">DayMeet</span>
           </div>
         </div>
@@ -61,11 +59,8 @@ export default function AuthScreen({ onAuthSuccess }) {
 
               {/* Login Icon Illustration */}
               <div className="relative mb-6">
-                <div className="w-24 h-24 rounded-3xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex items-center justify-center border border-white">
-                   <div className="w-12 h-16 rounded-xl border border-[#E5E8F5] bg-[#F8F9FE] flex flex-col p-1.5 shadow-sm">
-                      <div className="w-full flex-1 rounded-lg bg-[#3525CD] flex items-center justify-center text-white mb-1"><span className="material-symbols-rounded text-[12px]">widgets</span></div>
-                      <div className="w-full h-3 rounded bg-[#181B25]"></div>
-                   </div>
+                <div className="w-24 h-24 rounded-3xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex items-center justify-center border border-white p-4">
+                   <img src="/favicon.png" alt="Logo" className="w-full h-full object-contain rounded-xl shadow-sm" />
                 </div>
                 <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-[#3525CD] text-white border-2 border-[#F8F9FE] flex items-center justify-center">
                   <span className="material-symbols-rounded text-[16px]">bolt</span>
