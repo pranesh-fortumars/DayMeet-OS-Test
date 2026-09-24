@@ -57,7 +57,7 @@ export default function GlobalSmartCapture() {
           onClick={() => setIsInputOpen(true)}
           className="pointer-events-auto flex items-center justify-center w-14 h-14 rounded-full bg-[#3525CD] text-white shadow-[0_8px_24px_rgba(53,37,205,0.4)] hover:bg-[#2B1DAE] active:scale-95 transition-all duration-300"
         >
-          <span className="material-symbols-rounded text-[28px]">add</span>
+          <span className="material-symbols-rounded text-[28px]">center_focus_strong</span>
         </button>
       </div>
 
