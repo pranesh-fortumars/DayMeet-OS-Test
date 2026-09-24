@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { useAppStore } from '../store/useAppStore';
 import LifeInboxModal from './LifeInboxModal';
 
@@ -9,6 +10,8 @@ export default function GlobalSmartCapture() {
   const [isInboxOpen, setIsInboxOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const pressTimer = useRef(null);
   
   const fileInputRef = useRef(null);
   const pendingCount = inbox.length;
@@ -30,11 +33,38 @@ export default function GlobalSmartCapture() {
         source: CameraSource.Camera
       });
       if (image && image.webPath) {
-        captureToInbox('Scanned Document / QR', image.webPath);
-        setIsInboxOpen(true);
+        // Mock OCR Receipt Parsing (Sprint 1)
+        setTimeout(() => {
+          captureToInbox('Receipt Scanned: ₹240 (Starbucks)', image.webPath);
+          setIsInboxOpen(true);
+        }, 800);
       }
     } catch (e) {
       console.log('Camera error/cancelled');
+    }
+  };
+
+  const startPress = () => {
+    pressTimer.current = setTimeout(() => {
+      Haptics.impact({ style: ImpactStyle.Heavy }).catch(() => {});
+      setIsRecording(true);
+    }, 400); // 400ms for long press
+  };
+
+  const endPress = () => {
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+    if (isRecording) {
+      setIsRecording(false);
+      // Mock Whisper AI processing (Sprint 1)
+      setTimeout(() => {
+        captureToInbox('Remind me to call John tomorrow (Voice)', null);
+        setIsInboxOpen(true);
+      }, 600);
+    } else {
+      startDirectScan();
     }
   };
 
@@ -72,10 +102,16 @@ export default function GlobalSmartCapture() {
         )}
 
         <button 
-          onClick={startDirectScan}
-          className="pointer-events-auto flex items-center justify-center w-14 h-14 rounded-full bg-[#3525CD] text-white shadow-[0_8px_24px_rgba(53,37,205,0.4)] hover:bg-[#2B1DAE] active:scale-95 transition-all duration-300"
+          onPointerDown={startPress}
+          onPointerUp={endPress}
+          onPointerLeave={endPress}
+          className={`pointer-events-auto flex items-center justify-center w-14 h-14 rounded-full text-white shadow-[0_8px_24px_rgba(53,37,205,0.4)] transition-all duration-300 select-none touch-none ${
+            isRecording ? 'bg-[#E53935] scale-125 shadow-[0_0_30px_rgba(229,57,53,0.6)] animate-pulse' : 'bg-[#3525CD] hover:bg-[#2B1DAE] active:scale-95'
+          }`}
         >
-          <span className="material-symbols-rounded text-[28px]">center_focus_strong</span>
+          <span className="material-symbols-rounded text-[28px]">
+            {isRecording ? 'mic' : 'center_focus_strong'}
+          </span>
         </button>
       </div>
 
