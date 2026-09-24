@@ -4,7 +4,7 @@ import { useAppStore } from '../store/useAppStore';
 
 export default function MoreScreen() {
   const navigate = useNavigate();
-  const { setModalOpen } = useAppStore();
+  const { setModalOpen, widgets, toggleWidget, globalLockEnabled, toggleGlobalLock } = useAppStore();
   const [themeMode, setThemeMode] = useState('light');
   const [syncAlerts, setSyncAlerts] = useState(true);
   const [pomodoroHUD, setPomodoroHUD] = useState(true);
@@ -223,22 +223,47 @@ export default function MoreScreen() {
           </div>
         </div>
 
-        {/* Biometric Nagging */}
-        <div className="flex items-center justify-between">
+        {/* Global Biometric Lock */}
+        <div className="flex items-center justify-between border-t border-[#E5E8F5] pt-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#FFF7ED] text-[#EA580C] flex items-center justify-center">
-              <span className="material-symbols-rounded text-[22px]">monitor_heart</span>
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${globalLockEnabled ? 'bg-[#FFEBEE] text-[#D32F2F]' : 'bg-gray-100 text-gray-400'}`}>
+              <span className="material-symbols-rounded text-[22px]">lock</span>
             </div>
             <div>
-              <p className="text-xs font-bold text-[#181B25]">Biometric Inactivity Nagging</p>
-              <p className="text-[10px] text-[#464555]">Ping watch if sedentary for &gt; 70 minutes</p>
+              <p className="text-xs font-bold text-[#181B25]">Global Biometric Lock</p>
+              <p className="text-[10px] text-[#464555]">Require FaceID/Fingerprint on app resume</p>
             </div>
           </div>
-          <div onClick={() => setBioNag(!bioNag)} className={`w-12 h-6 rounded-full p-0.5 transition-colors relative flex items-center cursor-pointer ${bioNag ? 'bg-[#3525CD]' : 'bg-gray-300'}`}>
-            <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${bioNag ? 'translate-x-6' : 'translate-x-0'}`}></div>
+          <div onClick={toggleGlobalLock} className={`w-12 h-6 rounded-full p-0.5 transition-colors relative flex items-center cursor-pointer ${globalLockEnabled ? 'bg-[#3525CD]' : 'bg-gray-300'}`}>
+            <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${globalLockEnabled ? 'translate-x-6' : 'translate-x-0'}`}></div>
           </div>
         </div>
+      </div>
 
+      {/* Custom Widget Engine */}
+      <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm space-y-4">
+        <h3 className="text-sm font-bold text-[#181B25]">HomeScreen Widget Engine</h3>
+        
+        {['briefing', 'calendar', 'bills', 'vitals'].map((widgetId) => (
+          <div key={widgetId} className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#F1F3FF] text-[#3525CD] flex items-center justify-center">
+                <span className="material-symbols-rounded text-[22px]">
+                  {widgetId === 'briefing' ? 'auto_awesome' : 
+                   widgetId === 'calendar' ? 'event' : 
+                   widgetId === 'bills' ? 'bolt' : 'favorite'}
+                </span>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-[#181B25] capitalize">{widgetId} Widget</p>
+                <p className="text-[10px] text-[#464555]">Show on HomeScreen</p>
+              </div>
+            </div>
+            <div onClick={() => toggleWidget(widgetId)} className={`w-12 h-6 rounded-full p-0.5 transition-colors relative flex items-center cursor-pointer ${widgets[widgetId] ? 'bg-[#3525CD]' : 'bg-gray-300'}`}>
+              <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${widgets[widgetId] ? 'translate-x-6' : 'translate-x-0'}`}></div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

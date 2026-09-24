@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import BottomDock from './components/BottomDock';
@@ -40,7 +40,8 @@ import NightlyCleanupModal from './components/modals/NightlyCleanupModal';
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { initSync, activeProfile, setActiveProfile, setCurrentLocation } = useAppStore();
+  const [appLocked, setAppLocked] = useState(false);
+  const { initSync, activeProfile, setActiveProfile, setCurrentLocation, globalLockEnabled } = useAppStore();
 
   useEffect(() => {
     const initApp = async () => {
@@ -91,6 +92,25 @@ function App() {
     };
   }, [initSync, activeProfile, setActiveProfile, setCurrentLocation]);
 
+  useEffect(() => {
+    let listener = null;
+    if (globalLockEnabled) {
+      listener = CapacitorApp.addListener('appStateChange', ({ isActive }) => {
+        if (!isActive) {
+          setAppLocked(true);
+        }
+      });
+    }
+    return () => {
+      if (listener) listener.then(l => l.remove()).catch(() => {});
+    };
+  }, [globalLockEnabled]);
+
+  const handleUnlock = () => {
+    // In a real app, you would call native Biometric/FaceID plugin here
+    setAppLocked(false);
+  };
+
   const handleGlobalRefresh = async () => {
     // Simulate a network sync delay
     return new Promise(resolve => setTimeout(resolve, 1500));
@@ -139,6 +159,26 @@ function App() {
       <FocusSanctuaryModal />
       <WindDownModal />
       <NightlyCleanupModal />
+
+      {/* Global Biometric Lock Overlay */}
+      {appLocked && (
+        <div className="fixed inset-0 z-[999] bg-[#FAF9FF] dark:bg-[#0F172A] flex flex-col items-center justify-center p-6 animate-in fade-in duration-200">
+          <div className="w-20 h-20 rounded-full bg-[#FFEBEE] text-[#D32F2F] flex items-center justify-center mb-6">
+            <span className="material-symbols-rounded text-[40px]">lock</span>
+          </div>
+          <h2 className="text-2xl font-black text-[#181B25] dark:text-white mb-2">DayMeet OS Locked</h2>
+          <p className="text-sm text-[#464555] dark:text-slate-400 text-center mb-8">
+            FaceID or Fingerprint required to resume session.
+          </p>
+          <button 
+            onClick={handleUnlock}
+            className="w-full max-w-xs h-[52px] rounded-xl bg-[#181B25] text-white text-sm font-bold flex items-center justify-center gap-2 hover:bg-black transition"
+          >
+            <span className="material-symbols-rounded text-[20px]">fingerprint</span>
+            <span>Authenticate</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
