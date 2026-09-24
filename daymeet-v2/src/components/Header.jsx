@@ -28,7 +28,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#FAF9FF]/95 backdrop-blur-md border-b border-[#E5E8F5] transition-colors">
+    <header className="sticky top-0 z-40 bg-[#FAF9FF] border-b border-[#E5E8F5] transition-colors">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 h-[60px] flex items-center justify-between">
         {/* Brand Logo & Context Switcher */}
         <div className="flex items-center gap-3">
