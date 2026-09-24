@@ -18,6 +18,7 @@ export const useAppStore = create((set, get) => ({
   monthlyBudgetTarget: 60000,
   liquidNetWorth: 142850,
   upcomingBills: 2400,
+  addExpense: (amount) => set((state) => ({ spending: state.spending + amount })),
   
   // Health & Insights Data
   sleepQuality: 85,

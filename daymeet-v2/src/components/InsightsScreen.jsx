@@ -163,6 +163,52 @@ export default function InsightsScreen() {
           </div>
         </div>
       </div>
+
+      {/* Habit Heatmaps (Sprint 3) */}
+      <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm mt-4">
+        <h3 className="text-sm font-bold text-[#181B25] mb-1">Consistency Heatmap</h3>
+        <p className="text-[10px] text-[#464555] mb-3">Your last 365 days of logged habits</p>
+        
+        <div className="space-y-4">
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[11px] font-bold text-[#181B25] flex items-center gap-1"><span className="material-symbols-rounded text-[14px] text-[#673AB7]">self_improvement</span> Meditation</span>
+              <span className="text-[10px] font-bold text-[#673AB7]">{meditationStreak} Day Streak</span>
+            </div>
+            <div className="flex gap-[2px] overflow-x-auto pb-1 scrollbar-hide">
+              {Array.from({ length: 52 }).map((_, col) => (
+                <div key={col} className="flex flex-col gap-[2px]">
+                  {Array.from({ length: 7 }).map((_, row) => {
+                    const isActive = Math.random() > 0.4;
+                    return (
+                      <div key={row} className={`w-2.5 h-2.5 rounded-[2px] ${isActive ? 'bg-[#673AB7]/80' : 'bg-[#E5E8F5]'}`}></div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[11px] font-bold text-[#181B25] flex items-center gap-1"><span className="material-symbols-rounded text-[14px] text-[#2E7D32]">fitness_center</span> Exercise</span>
+              <span className="text-[10px] font-bold text-[#2E7D32]">{exerciseStreak} Day Streak</span>
+            </div>
+            <div className="flex gap-[2px] overflow-x-auto pb-1 scrollbar-hide">
+              {Array.from({ length: 52 }).map((_, col) => (
+                <div key={col} className="flex flex-col gap-[2px]">
+                  {Array.from({ length: 7 }).map((_, row) => {
+                    const isActive = Math.random() > 0.6;
+                    return (
+                      <div key={row} className={`w-2.5 h-2.5 rounded-[2px] ${isActive ? 'bg-[#2E7D32]/80' : 'bg-[#E5E8F5]'}`}></div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
