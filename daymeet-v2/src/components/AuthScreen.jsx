@@ -23,9 +23,13 @@ export default function AuthScreen({ onAuthSuccess }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FE] selection:bg-indigo-500/30 font-sans pb-10">
+    <div className="min-h-screen bg-[#F8F9FE] selection:bg-indigo-500/30 font-sans pb-10 relative overflow-hidden">
+      {/* Animated Background Orbs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#3525CD] rounded-full mix-blend-multiply filter blur-[80px] opacity-20 animate-blob"></div>
+      <div className="absolute top-[20%] right-[-10%] w-[40%] h-[40%] bg-[#10B981] rounded-full mix-blend-multiply filter blur-[80px] opacity-20 animate-blob" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute bottom-[-20%] left-[20%] w-[50%] h-[50%] bg-[#6366F1] rounded-full mix-blend-multiply filter blur-[100px] opacity-20 animate-blob" style={{ animationDelay: '4s' }}></div>
       {/* Top Bar */}
-      <div className="px-5 py-4 flex items-center justify-between sticky top-0 z-10 bg-[#F8F9FE]/90 backdrop-blur-md">
+      <div className="px-5 py-4 flex items-center justify-between sticky top-0 z-20 bg-white/40 backdrop-blur-xl border-b border-white/50">
         <div className="flex items-center gap-3">
           <button className="w-8 h-8 flex items-center justify-center text-[#464555] active:scale-95 transition">
             <span className="material-symbols-rounded">arrow_back</span>
@@ -43,7 +47,7 @@ export default function AuthScreen({ onAuthSuccess }) {
         </div>
       </div>
 
-      <div className="max-w-md mx-auto px-5 pt-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="max-w-md mx-auto px-5 pt-4 relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
         
         {/* Toggle / Tabs (Only in Login mode to switch, or let's use the explicit UI) */}
         
@@ -136,12 +140,15 @@ export default function AuthScreen({ onAuthSuccess }) {
 
             {/* Actions */}
             <div className="space-y-3 mb-8">
-              <button onClick={handleAuthAction} disabled={loading} className="w-full h-14 bg-[#3525CD] hover:bg-[#2A1CA3] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition active:scale-95 disabled:opacity-70">
-                {loading ? 'Authenticating...' : 'Enter DayMeet'}
-                {!loading && <span className="material-symbols-rounded text-[20px]">arrow_forward</span>}
-              </button>
+              <div className="relative group">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#3525CD] to-[#6366F1] rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-500"></div>
+                <button onClick={handleAuthAction} disabled={loading} className="relative w-full h-14 bg-[#181B25] hover:bg-black text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-xl transition active:scale-95 disabled:opacity-70">
+                  {loading ? 'Authenticating...' : 'Enter DayMeet'}
+                  {!loading && <span className="material-symbols-rounded text-[20px]">arrow_forward</span>}
+                </button>
+              </div>
               
-              <button onClick={handleAuthAction} className="w-full h-12 bg-[#F1F3FF] hover:bg-[#E2E6FF] text-[#3525CD] rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition active:scale-95">
+              <button onClick={handleAuthAction} className="w-full h-12 bg-white/60 hover:bg-white text-[#3525CD] rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition active:scale-95 shadow-sm border border-white">
                 <span className="material-symbols-rounded text-[20px]">fingerprint</span>
                 Quick sign-in with Face ID
               </button>
@@ -272,11 +279,14 @@ export default function AuthScreen({ onAuthSuccess }) {
             </div>
 
             {/* Actions */}
-            <div className="space-y-3 mb-6">
-              <button onClick={handleAuthAction} disabled={loading} className="w-full h-14 bg-[#5642F4] hover:bg-[#4733DE] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition active:scale-95 disabled:opacity-70">
-                {loading ? 'Creating Space...' : 'Get Started Free'}
-                {!loading && <span className="material-symbols-rounded text-[20px]">arrow_forward</span>}
-              </button>
+            <div className="space-y-3 mb-6 mt-4">
+              <div className="relative group">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#5642F4] to-[#818CF8] rounded-xl blur opacity-40 group-hover:opacity-60 transition duration-500"></div>
+                <button onClick={handleAuthAction} disabled={loading} className="relative w-full h-14 bg-[#5642F4] hover:bg-[#4733DE] text-white rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-lg transition active:scale-95 disabled:opacity-70">
+                  {loading ? 'Creating Space...' : 'Get Started Free'}
+                  {!loading && <span className="material-symbols-rounded text-[20px]">arrow_forward</span>}
+                </button>
+              </div>
               
               <p className="text-center text-[10px] font-medium text-[#464555] flex items-center justify-center gap-1">
                 <span className="material-symbols-rounded text-[#10B981] text-[12px]">verified</span>
