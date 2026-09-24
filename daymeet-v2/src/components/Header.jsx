@@ -83,6 +83,10 @@ export default function Header() {
             <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#E53935]"></span>
           </button>
 
+          <button onClick={() => window.location.hash = '#/profile'} title="My Profile" className="w-9 h-9 rounded-full overflow-hidden border border-[#E5E8F5] ml-1 flex-shrink-0 active:scale-95 transition shadow-sm">
+            <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Profile" className="w-full h-full object-cover bg-[#F1F3FF]" />
+          </button>
+
           <button onClick={() => setModalOpen('copilot', true)} title="AI Assistant Copilot" className="h-8 px-2.5 rounded-full bg-[#E2DFFF] text-[#3525CD] text-xs font-bold flex items-center gap-1.5 hover:bg-[#DAD7FF] transition ml-1">
             <span className="material-symbols-rounded text-[16px] animate-pulse">auto_awesome</span>
             <span className="hidden sm:inline">AI Copilot</span>

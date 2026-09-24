@@ -15,6 +15,7 @@ import KnowledgeVaultScreen from './components/KnowledgeVaultScreen';
 import SecurityVaultScreen from './components/SecurityVaultScreen';
 import DelegationHubScreen from './components/DelegationHubScreen';
 import RelationshipsScreen from './components/RelationshipsScreen';
+import ProfileScreen from './components/ProfileScreen';
 import GlobalSmartCapture from './components/GlobalSmartCapture';
 import AuthScreen from './components/AuthScreen';
 import PullToRefresh from './components/PullToRefresh';
@@ -170,6 +171,7 @@ function App() {
             <Route path="/security-vault" element={<SecurityVaultScreen />} />
             <Route path="/delegation" element={<DelegationHubScreen />} />
             <Route path="/relationships" element={<RelationshipsScreen />} />
+            <Route path="/profile" element={<ProfileScreen />} />
           </Routes>
           </div>
         </PullToRefresh>
