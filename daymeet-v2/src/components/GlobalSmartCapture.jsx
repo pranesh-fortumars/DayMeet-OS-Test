@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { useAppStore } from '../store/useAppStore';
 import LifeInboxModal from './LifeInboxModal';
 
@@ -17,6 +18,23 @@ export default function GlobalSmartCapture() {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setSelectedImage(imageUrl);
+    }
+  };
+
+  const startDirectScan = async () => {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Uri,
+        source: CameraSource.Camera
+      });
+      if (image && image.webPath) {
+        captureToInbox('Scanned Document / QR', image.webPath);
+        setIsInboxOpen(true);
+      }
+    } catch (e) {
+      console.log('Camera error/cancelled');
     }
   };
 
@@ -54,7 +72,7 @@ export default function GlobalSmartCapture() {
         )}
 
         <button 
-          onClick={() => setIsInputOpen(true)}
+          onClick={startDirectScan}
           className="pointer-events-auto flex items-center justify-center w-14 h-14 rounded-full bg-[#3525CD] text-white shadow-[0_8px_24px_rgba(53,37,205,0.4)] hover:bg-[#2B1DAE] active:scale-95 transition-all duration-300"
         >
           <span className="material-symbols-rounded text-[28px]">center_focus_strong</span>
