@@ -1,24 +1,26 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import BottomDock from './components/BottomDock';
-import HomeScreen from './components/HomeScreen';
-import CalendarScreen from './components/CalendarScreen';
-import TasksScreen from './components/TasksScreen';
-import InsightsScreen from './components/InsightsScreen';
-import FinanceScreen from './components/FinanceScreen';
-import MoreScreen from './components/MoreScreen';
-import CleanupScreen from './components/CleanupScreen';
-import WeeklyResetScreen from './components/WeeklyResetScreen';
-import GrowthHubScreen from './components/GrowthHubScreen';
-import KnowledgeVaultScreen from './components/KnowledgeVaultScreen';
-import SecurityVaultScreen from './components/SecurityVaultScreen';
-import DelegationHubScreen from './components/DelegationHubScreen';
-import RelationshipsScreen from './components/RelationshipsScreen';
-import ProfileScreen from './components/ProfileScreen';
 import GlobalSmartCapture from './components/GlobalSmartCapture';
 import AuthScreen from './components/AuthScreen';
 import PullToRefresh from './components/PullToRefresh';
+
+// Lazy loaded screens
+const HomeScreen = lazy(() => import('./components/HomeScreen'));
+const CalendarScreen = lazy(() => import('./components/CalendarScreen'));
+const TasksScreen = lazy(() => import('./components/TasksScreen'));
+const InsightsScreen = lazy(() => import('./components/InsightsScreen'));
+const FinanceScreen = lazy(() => import('./components/FinanceScreen'));
+const MoreScreen = lazy(() => import('./components/MoreScreen'));
+const CleanupScreen = lazy(() => import('./components/CleanupScreen'));
+const WeeklyResetScreen = lazy(() => import('./components/WeeklyResetScreen'));
+const GrowthHubScreen = lazy(() => import('./components/GrowthHubScreen'));
+const KnowledgeVaultScreen = lazy(() => import('./components/KnowledgeVaultScreen'));
+const SecurityVaultScreen = lazy(() => import('./components/SecurityVaultScreen'));
+const DelegationHubScreen = lazy(() => import('./components/DelegationHubScreen'));
+const RelationshipsScreen = lazy(() => import('./components/RelationshipsScreen'));
+const ProfileScreen = lazy(() => import('./components/ProfileScreen'));
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { App as CapacitorApp } from '@capacitor/app';
@@ -180,22 +182,30 @@ function App() {
       <main className="max-w-3xl mx-auto flex-1 w-full relative flex flex-col min-h-0">
         <PullToRefresh onRefresh={handleGlobalRefresh}>
           <div className="px-4 sm:px-6 pt-3 pb-[100px]">
-            <Routes>
-            <Route path="/" element={<HomeScreen />} />
-            <Route path="/calendar" element={<CalendarScreen />} />
-            <Route path="/tasks" element={<TasksScreen />} />
-            <Route path="/insights" element={<InsightsScreen />} />
-            <Route path="/finance" element={<FinanceScreen />} />
-            <Route path="/more" element={<MoreScreen />} />
-            <Route path="/cleanup" element={<CleanupScreen />} />
-            <Route path="/weekly-reset" element={<WeeklyResetScreen />} />
-            <Route path="/growth-hub" element={<GrowthHubScreen />} />
-            <Route path="/knowledge" element={<KnowledgeVaultScreen />} />
-            <Route path="/security-vault" element={<SecurityVaultScreen />} />
-            <Route path="/delegation" element={<DelegationHubScreen />} />
-            <Route path="/relationships" element={<RelationshipsScreen />} />
-            <Route path="/profile" element={<ProfileScreen />} />
-          </Routes>
+            <Suspense fallback={
+              <div className="flex flex-col items-center justify-center pt-20 animate-pulse space-y-4">
+                <div className="w-12 h-12 rounded-full bg-[#E5E8F5]"></div>
+                <div className="w-32 h-4 rounded-md bg-[#E5E8F5]"></div>
+                <div className="w-48 h-3 rounded-md bg-[#F1F3FF]"></div>
+              </div>
+            }>
+              <Routes>
+                <Route path="/" element={<HomeScreen />} />
+                <Route path="/calendar" element={<CalendarScreen />} />
+                <Route path="/tasks" element={<TasksScreen />} />
+                <Route path="/insights" element={<InsightsScreen />} />
+                <Route path="/finance" element={<FinanceScreen />} />
+                <Route path="/more" element={<MoreScreen />} />
+                <Route path="/cleanup" element={<CleanupScreen />} />
+                <Route path="/weekly-reset" element={<WeeklyResetScreen />} />
+                <Route path="/growth-hub" element={<GrowthHubScreen />} />
+                <Route path="/knowledge" element={<KnowledgeVaultScreen />} />
+                <Route path="/security-vault" element={<SecurityVaultScreen />} />
+                <Route path="/delegation" element={<DelegationHubScreen />} />
+                <Route path="/relationships" element={<RelationshipsScreen />} />
+                <Route path="/profile" element={<ProfileScreen />} />
+              </Routes>
+            </Suspense>
           </div>
         </PullToRefresh>
       </main>

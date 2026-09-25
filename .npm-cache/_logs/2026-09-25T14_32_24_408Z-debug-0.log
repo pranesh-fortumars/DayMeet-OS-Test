@@ -5,15 +5,15 @@
 4 silly config load:file:D:\DayMeet-OS-main\daymeet-v2\.npmrc
 5 silly config load:file:C:\Users\prane\.npmrc
 6 silly config load:file:C:\Users\prane\AppData\Roaming\npm\etc\npmrc
-7 verbose title npm run build
-8 verbose argv "run" "build"
-9 verbose logfile logs-max:10 dir:D:\DayMeet-OS-main\.npm-cache\_logs\2026-09-24T13_56_19_228Z-
-10 verbose logfile D:\DayMeet-OS-main\.npm-cache\_logs\2026-09-24T13_56_19_228Z-debug-0.log
+7 verbose title npm run lint
+8 verbose argv "run" "lint"
+9 verbose logfile logs-max:10 dir:D:\DayMeet-OS-main\.npm-cache\_logs\2026-09-25T14_32_24_408Z-
+10 verbose logfile D:\DayMeet-OS-main\.npm-cache\_logs\2026-09-25T14_32_24_408Z-debug-0.log
 11 silly logfile start cleaning logs, removing 1 files
 12 silly logfile done cleaning log files
 13 verbose cwd D:\DayMeet-OS-main\daymeet-v2
 14 verbose os Windows_NT 10.0.26200
 15 verbose node v20.19.4
 16 verbose npm  v11.14.1
-17 verbose exit 0
-18 info ok
+17 verbose exit 1
+18 verbose code 1
