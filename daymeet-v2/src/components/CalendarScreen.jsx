@@ -1,9 +1,11 @@
 import React from 'react';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { useInteraction } from '../hooks/useInteraction';
+import { useAppStore } from '../store/useAppStore';
 
 export default function CalendarScreen() {
   const { interact } = useInteraction();
+  const { googleCalConnected } = useAppStore();
 
   const scheduleMeetingAlert = async () => {
     try {
@@ -71,10 +73,29 @@ export default function CalendarScreen() {
       <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm space-y-3">
         <div className="flex items-center justify-between pb-2 border-b border-[#F1F3FF]">
           <span className="text-xs font-bold text-[#181B25]">Today's Sequence</span>
-          <span className="text-[11px] text-[#3525CD] font-semibold">Google Calendar Connected</span>
+          {googleCalConnected ? (
+            <span className="text-[11px] text-[#10B981] font-bold flex items-center gap-1"><span className="material-symbols-rounded text-[14px]">sync</span> Google Calendar Live</span>
+          ) : (
+            <span className="text-[11px] text-[#777587] font-semibold">Local Schedule Only</span>
+          )}
         </div>
 
         <div className="space-y-3">
+          {googleCalConnected && (
+            <div onClick={() => interact('Event: Client Sync (GCal)')} className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-[#F1F3FF] to-white border border-[#3525CD]/30 cursor-pointer active:scale-95 transition">
+              <span className="text-xs font-bold text-[#3525CD] w-14">08:00 AM</span>
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-bold text-[#181B25] flex items-center gap-1">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-3 h-3" alt="GCal" /> 
+                    Client Q3 Sync
+                  </p>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E8F5E9] text-[#2E7D32]">GCAL SYNC</span>
+                </div>
+                <p className="text-[11px] text-[#464555] mt-0.5">Google Meet • External • 1hr</p>
+              </div>
+            </div>
+          )}
           <div onClick={() => interact('Event: Product Strategy Review')} className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
             <span className="text-xs font-bold text-[#3525CD] w-14">09:30 AM</span>
             <div className="flex-1">

@@ -18,6 +18,10 @@ export const useAppStore = create((set, get) => ({
   globalLockEnabled: false,
   toggleGlobalLock: () => set((state) => ({ globalLockEnabled: !state.globalLockEnabled })),
   
+  // Third Party Integrations
+  googleCalConnected: false,
+  setGoogleCalConnected: (status) => set({ googleCalConnected: status }),
+
   // Finance Data
   spending: 3450, // Today's spending
   dailyBudget: 5000,

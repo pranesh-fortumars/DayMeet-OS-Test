@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { useInteraction } from '../hooks/useInteraction';
+import { useAppStore } from '../store/useAppStore';
 
 export default function ProfileScreen() {
   const navigate = useNavigate();
   const { interact } = useInteraction();
+  const { googleCalConnected, setGoogleCalConnected } = useAppStore();
+  const [connecting, setConnecting] = React.useState(false);
   
   const handleSignOut = async () => {
     interact('Sign Out Initiated');
@@ -16,6 +19,22 @@ export default function ProfileScreen() {
     } catch (error) {
       console.error('Error signing out', error);
     }
+  };
+
+  const handleConnectGoogleCal = () => {
+    if (googleCalConnected) {
+       setGoogleCalConnected(false);
+       interact('Google Calendar Disconnected');
+       return;
+    }
+    
+    interact('Google Calendar Auth Started');
+    setConnecting(true);
+    setTimeout(() => {
+       setConnecting(false);
+       setGoogleCalConnected(true);
+       interact('Google Calendar Connected');
+    }, 1500);
   };
 
   return (
@@ -83,7 +102,7 @@ export default function ProfileScreen() {
           </div>
         </div>
 
-        <div onClick={() => interact('Connected Integrations')} className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition active:bg-gray-100">
+        <div onClick={() => interact('Connected Integrations')} className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition active:bg-gray-100 border-b border-[#E5E8F5]">
           <div className="flex items-center gap-3">
             <span className="material-symbols-rounded text-[#0288D1]">api</span>
             <span className="text-sm font-bold text-[#181B25]">Connected Apps</span>
@@ -94,6 +113,22 @@ export default function ProfileScreen() {
               <div className="w-5 h-5 rounded-full bg-black flex items-center justify-center border-2 border-white"><span className="material-symbols-rounded text-white text-[10px]">watch</span></div>
             </div>
             <span className="material-symbols-rounded text-[18px] text-[#464555]">chevron_right</span>
+          </div>
+        </div>
+        
+        <div onClick={handleConnectGoogleCal} className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition active:bg-gray-100 bg-[#FAF9FF]">
+          <div className="flex items-center gap-3">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google Calendar" />
+            <span className="text-sm font-bold text-[#181B25]">Google Calendar</span>
+          </div>
+          <div className="flex items-center gap-2">
+            {connecting ? (
+              <span className="text-[11px] text-[#3525CD] font-bold animate-pulse">Connecting...</span>
+            ) : googleCalConnected ? (
+              <span className="text-[11px] font-bold text-[#10B981] flex items-center gap-1"><span className="material-symbols-rounded text-[14px]">check_circle</span> Connected</span>
+            ) : (
+              <span className="text-[11px] font-bold text-[#3525CD] bg-[#F1F3FF] px-2 py-1 rounded-md">Connect</span>
+            )}
           </div>
         </div>
       </div>
