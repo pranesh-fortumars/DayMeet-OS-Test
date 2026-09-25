@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { useInteraction } from '../hooks/useInteraction';
 import { useAppStore } from '../store/useAppStore';
+import CalendarModal from './modals/CalendarModal';
 
 export default function CalendarScreen() {
   const { interact } = useInteraction();
   const { googleCalConnected } = useAppStore();
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
 
   const scheduleMeetingAlert = async () => {
     try {
@@ -37,8 +39,11 @@ export default function CalendarScreen() {
         </div>
         <div className="flex flex-col items-end gap-1.5">
           <div className="flex items-center gap-1.5 bg-[#EBEDFB] p-1 rounded-xl text-xs font-bold">
+            <button onClick={() => setShowCalendarModal(true)} className="px-3 py-1 rounded-lg text-[#464555] hover:text-[#181B25] flex items-center gap-1">
+              <span className="material-symbols-rounded text-[14px]">calendar_month</span>
+              Month
+            </button>
             <button onClick={() => interact('View Timeline')} className="px-3 py-1 rounded-lg bg-white text-[#181B25] shadow-xs">Timeline</button>
-            <button onClick={() => interact('View by Category')} className="px-3 py-1 rounded-lg text-[#464555] hover:text-[#181B25]">By Category</button>
           </div>
           <button onClick={scheduleMeetingAlert} className="px-2 py-1 rounded-lg bg-[#FFEBEE] text-[#E53935] text-[10px] font-bold flex items-center gap-1 shadow-sm">
             <span className="material-symbols-rounded text-[12px]">notifications_active</span>
@@ -141,6 +146,8 @@ export default function CalendarScreen() {
           </div>
         </div>
       </div>
+
+      <CalendarModal isOpen={showCalendarModal} onClose={() => setShowCalendarModal(false)} />
     </div>
   );
 }
