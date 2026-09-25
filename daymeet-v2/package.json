@@ -25,6 +25,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@google/generative-ai": "^0.24.1",
     "@tailwindcss/vite": "^4.3.3",
+    "cordova-plugin-sms-receive": "^2.0.0",
     "firebase": "^12.19.0",
     "jeep-sqlite": "^2.8.0",
     "react": "^19.2.8",

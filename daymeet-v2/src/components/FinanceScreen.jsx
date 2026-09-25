@@ -3,6 +3,7 @@ import BudgetGauge from './charts/BudgetGauge';
 import { useAppStore } from '../store/useAppStore';
 import { useInteraction } from '../hooks/useInteraction';
 import { NativeBiometric } from '@capgo/capacitor-native-biometric';
+import { startSmsListener } from '../services/SmsService';
 
 export default function FinanceScreen() {
   const [unlocked, setUnlocked] = useState(false);
@@ -15,15 +16,41 @@ export default function FinanceScreen() {
   const { liquidNetWorth, spending, dailyBudget, upcomingBills, addExpense } = useAppStore();
 
   const simulateBankSMS = () => {
-    interact('Simulate SMS Received');
+    interact('Simulate SMS Received (Manual)');
     const newTxn = {
       name: 'Amazon.in',
       amount: '-₹1,499',
-      date: 'Just Now (via SMS)',
+      date: 'Just Now (via Mock Button)',
       icon: 'shopping_bag'
     };
     setRecentTxns(prev => [newTxn, ...prev]);
     addExpense(1499);
+  };
+
+  const handleIncomingSms = (body, sender) => {
+    // Regex Engine to extract currency
+    const amountMatch = body.match(/(?:(?:RS|INR|MRP|Rs)\.?\s?)(\d+(:?\,\d+)?(\.\d{1,2})?)/i);
+    const merchantMatch = body.match(/at\s([a-zA-Z0-9\.]+)/i);
+
+    if (amountMatch) {
+      const amountStr = amountMatch[1].replace(',', '');
+      const amount = parseFloat(amountStr);
+      const merchant = merchantMatch ? merchantMatch[1] : sender;
+      
+      const newTxn = {
+        name: merchant,
+        amount: `-₹${amount.toLocaleString()}`,
+        date: 'Just Now (Auto-Sync)',
+        icon: 'account_balance_wallet'
+      };
+      setRecentTxns(prev => [newTxn, ...prev]);
+      addExpense(amount);
+    }
+  };
+
+  const startAutoSync = () => {
+    interact('Enabled SMS Background Sync');
+    startSmsListener(handleIncomingSms);
   };
 
   const requestBiometric = async () => {
@@ -70,7 +97,11 @@ export default function FinanceScreen() {
         <div className="flex gap-2">
           <button onClick={simulateBankSMS} className="px-3 py-1.5 rounded-xl bg-[#F1F5FD] text-[#0288D1] border border-blue-100 text-xs font-bold flex items-center gap-1 hover:bg-[#E0F2FE]">
             <span className="material-symbols-rounded text-[16px]">sms</span>
-            Simulate SMS
+            Mock SMS
+          </button>
+          <button onClick={startAutoSync} className="px-3 py-1.5 rounded-xl bg-[#E8F5E9] text-[#2E7D32] border border-green-100 text-xs font-bold flex items-center gap-1 hover:bg-[#C8E6C9] active:scale-95 transition">
+            <span className="material-symbols-rounded text-[16px]">sync</span>
+            Auto-Sync
           </button>
           <button onClick={() => interact('Log Expense')} className="px-3 py-1.5 rounded-xl bg-[#005338] text-white text-xs font-bold flex items-center gap-1 hover:bg-[#00422B]">
             <span className="material-symbols-rounded text-[16px]">add</span>
