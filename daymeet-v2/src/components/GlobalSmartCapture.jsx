@@ -58,13 +58,14 @@ export default function GlobalSmartCapture() {
     }
     if (isRecording) {
       setIsRecording(false);
-      // Mock Whisper AI processing (Sprint 1)
+      // Mock Whisper AI processing
       setTimeout(() => {
         captureToInbox('Remind me to call John tomorrow (Voice)', null);
         setIsInboxOpen(true);
       }, 600);
     } else {
-      startDirectScan();
+      // Open the smart capture text/image input modal
+      setIsInputOpen(true);
     }
   };
 

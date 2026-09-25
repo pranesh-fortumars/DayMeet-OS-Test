@@ -7,13 +7,13 @@
 6 silly config load:file:C:\Users\prane\AppData\Roaming\npm\etc\npmrc
 7 verbose title npm run build
 8 verbose argv "run" "build"
-9 verbose logfile logs-max:10 dir:D:\DayMeet-OS-main\.npm-cache\_logs\2026-09-24T14_14_23_033Z-
-10 verbose logfile D:\DayMeet-OS-main\.npm-cache\_logs\2026-09-24T14_14_23_033Z-debug-0.log
+9 verbose logfile logs-max:10 dir:D:\DayMeet-OS-main\.npm-cache\_logs\2026-09-25T14_48_25_074Z-
+10 verbose logfile D:\DayMeet-OS-main\.npm-cache\_logs\2026-09-25T14_48_25_074Z-debug-0.log
 11 silly logfile start cleaning logs, removing 1 files
 12 silly logfile done cleaning log files
 13 verbose cwd D:\DayMeet-OS-main\daymeet-v2
 14 verbose os Windows_NT 10.0.26200
 15 verbose node v20.19.4
 16 verbose npm  v11.14.1
-17 verbose exit 0
-18 info ok
+17 verbose exit 3221226505
+18 verbose code 3221226505
