@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { db, auth } from '../services/firebase';
 import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { saveTaskLocally, updateTaskStatusLocally } from '../services/DatabaseService';
 
 export const useAppStore = create((set, get) => ({
   // Navigation / UI State
@@ -99,10 +100,14 @@ export const useAppStore = create((set, get) => ({
     const user = auth.currentUser;
     if (!user) return;
     
+    // OFFLINE-FIRST: Write to local SQLite instantly (0ms latency)
+    const taskDocRef = doc(collection(db, `users/${user.uid}/tasks`));
+    const newTask = { ...task, id: taskDocRef.id, createdAt: Date.now(), status: 'pending' };
+    await saveTaskLocally(newTask);
+
     // Attempt to schedule a local OS notification for this task
     try {
       // For demonstration, if a task is added, we schedule the alert for 5 seconds from now
-      // so the user can see it immediately on their device.
       await LocalNotifications.schedule({
         notifications: [{
           title: 'DayMeet Reminder',
@@ -115,14 +120,18 @@ export const useAppStore = create((set, get) => ({
       console.log('Local notifications not supported in standard web browser', e);
     }
 
-    // We don't set local state manually, Firestore snapshot listener will update it
-    const taskDoc = doc(collection(db, `users/${user.uid}/tasks`));
-    await setDoc(taskDoc, { ...task, createdAt: Date.now(), status: 'pending' });
+    // FIREBASE SYNC: Async background write
+    await setDoc(taskDocRef, newTask);
   },
 
   completeTask: async (id) => {
     const user = auth.currentUser;
     if (!user) return;
+    
+    // OFFLINE-FIRST: Update local SQLite instantly
+    await updateTaskStatusLocally(id, 'completed');
+    
+    // FIREBASE SYNC: Async background update
     const taskDoc = doc(db, `users/${user.uid}/tasks`, id);
     await setDoc(taskDoc, { status: 'completed' }, { merge: true });
   },

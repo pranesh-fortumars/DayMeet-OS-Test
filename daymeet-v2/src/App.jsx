@@ -24,6 +24,7 @@ const ProfileScreen = lazy(() => import('./components/ProfileScreen'));
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { App as CapacitorApp } from '@capacitor/app';
+import { initDB } from './services/DatabaseService';
 import { auth } from './services/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useAppStore } from './store/useAppStore';
@@ -51,6 +52,7 @@ function App() {
   useEffect(() => {
     const initApp = async () => {
       try {
+        await initDB();
         await StatusBar.setStyle({ style: Style.Light });
         await StatusBar.setBackgroundColor({ color: '#FAF9FF' });
         await SplashScreen.hide();
