@@ -41,6 +41,7 @@ export const useAppStore = create((set, get) => ({
   hydrationGoal: 2.5,
   activeBurn: 480,
   activeBurnGoal: 600,
+  setVitals: (vitals) => set((state) => ({ ...state, ...vitals })),
   weeklySummaryData: [
     { day: 'Mon', fullDay: 'Monday', tasks: 6, habits: 4, spending: 2100 },
     { day: 'Tue', fullDay: 'Tuesday', tasks: 8, habits: 5, spending: 1850 },

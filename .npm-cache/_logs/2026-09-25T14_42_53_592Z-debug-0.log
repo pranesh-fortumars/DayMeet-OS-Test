@@ -1,0 +1,22 @@
+0 verbose cli F:\Node js\node.exe C:\Users\prane\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.14.1
+2 info using node@v20.19.4
+3 silly config load:file:C:\Users\prane\AppData\Roaming\npm\node_modules\npm\npmrc
+4 silly config load:file:D:\DayMeet-OS-main\daymeet-v2\.npmrc
+5 silly config load:file:C:\Users\prane\.npmrc
+6 silly config load:file:C:\Users\prane\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm search capacitor health
+8 verbose argv "search" "capacitor" "health"
+9 verbose logfile logs-max:10 dir:D:\DayMeet-OS-main\.npm-cache\_logs\2026-09-25T14_42_53_592Z-
+10 verbose logfile D:\DayMeet-OS-main\.npm-cache\_logs\2026-09-25T14_42_53_592Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly logfile done cleaning log files
+13 silly search searching packages
+14 http fetch GET 200 https://registry.npmjs.org/-/v1/search?text=capacitor+health&size=20&from=0&quality=0.65&popularity=0.98&maintenance=0.5 1730ms (cache miss)
+15 silly search search completed
+16 verbose cwd D:\DayMeet-OS-main\daymeet-v2
+17 verbose os Windows_NT 10.0.26200
+18 verbose node v20.19.4
+19 verbose npm  v11.14.1
+20 verbose exit 0
+21 info ok

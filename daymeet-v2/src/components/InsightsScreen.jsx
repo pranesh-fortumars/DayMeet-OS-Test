@@ -1,22 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import WeeklyTrendChart from './charts/WeeklyTrendChart';
 import { useInteraction } from '../hooks/useInteraction';
 import { useAppStore } from '../store/useAppStore';
+import { syncHealthData } from '../services/HealthService';
 
 export default function InsightsScreen() {
   const { interact } = useInteraction();
+  const [syncing, setSyncing] = useState(false);
   const { sleepTime, sleepQuality, steps, stepsGoal, hydration, hydrationGoal, activeBurn, activeBurnGoal, meditationStreak, exerciseStreak } = useAppStore();
+
+  const handleSync = async () => {
+    interact('Started Native Health Sync');
+    setSyncing(true);
+    await syncHealthData();
+    setSyncing(false);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between pt-1">
         <div>
           <h2 className="text-xl font-black text-[#181B25]">Insights & Analytics</h2>
-          <p className="text-xs text-[#464555]">Cross-stream trends, biometrics & weekly correlation</p>
+          <p className="text-xs text-[#464555]">Cross-stream trends & biometrics</p>
         </div>
-        <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-[#E8F5E9] text-[#2E7D32] flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-[#2E7D32] animate-pulse"></span>
-          Oura Ring Active
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="hidden sm:flex px-2.5 py-1 rounded-full text-xs font-bold bg-[#E8F5E9] text-[#2E7D32] items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-[#2E7D32] animate-pulse"></span>
+            Oura Ring Active
+          </span>
+          <button onClick={handleSync} disabled={syncing} className="px-3 py-1.5 rounded-xl bg-[#F1F5FD] text-[#0288D1] border border-blue-100 text-xs font-bold flex items-center gap-1 hover:bg-[#E0F2FE] active:scale-95 transition disabled:opacity-50">
+            <span className={`material-symbols-rounded text-[16px] ${syncing ? 'animate-spin' : ''}`}>sync</span>
+            {syncing ? 'Syncing...' : 'Sync Device'}
+          </button>
+        </div>
       </div>
       
       <div className="bg-[#1E293B] rounded-2xl p-4 shadow-sm space-y-4 animate-in slide-in-from-bottom-4 duration-300">
