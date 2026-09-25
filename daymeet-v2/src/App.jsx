@@ -27,6 +27,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { useAppStore } from './store/useAppStore';
 import { Geolocation } from '@capacitor/geolocation';
 import { NativeBiometric } from '@capgo/capacitor-native-biometric';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 // Modals
 import BriefingModal from './components/modals/BriefingModal';
@@ -51,6 +52,12 @@ function App() {
         await StatusBar.setStyle({ style: Style.Light });
         await StatusBar.setBackgroundColor({ color: '#FAF9FF' });
         await SplashScreen.hide();
+        
+        // Request Local Notification Permissions
+        const permStatus = await LocalNotifications.requestPermissions();
+        if (permStatus.display === 'granted') {
+          console.log('Notification permissions granted');
+        }
       } catch (e) {
         // Will throw on web, safe to ignore
       }

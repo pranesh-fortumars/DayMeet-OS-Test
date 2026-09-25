@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { db, auth } from '../services/firebase';
 import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 export const useAppStore = create((set, get) => ({
   // Navigation / UI State
@@ -93,6 +94,23 @@ export const useAppStore = create((set, get) => ({
   addTask: async (task) => {
     const user = auth.currentUser;
     if (!user) return;
+    
+    // Attempt to schedule a local OS notification for this task
+    try {
+      // For demonstration, if a task is added, we schedule the alert for 5 seconds from now
+      // so the user can see it immediately on their device.
+      await LocalNotifications.schedule({
+        notifications: [{
+          title: 'DayMeet Reminder',
+          body: task.title,
+          id: Math.floor(Math.random() * 100000),
+          schedule: { at: new Date(Date.now() + 5000) }, // 5 seconds delay
+        }]
+      });
+    } catch (e) {
+      console.log('Local notifications not supported in standard web browser', e);
+    }
+
     // We don't set local state manually, Firestore snapshot listener will update it
     const taskDoc = doc(collection(db, `users/${user.uid}/tasks`));
     await setDoc(taskDoc, { ...task, createdAt: Date.now(), status: 'pending' });
