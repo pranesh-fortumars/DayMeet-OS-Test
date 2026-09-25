@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { auth } from '../services/firebase';
-import { signInAnonymously } from 'firebase/auth';
+import { signInAnonymously, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 export default function AuthScreen({ onAuthSuccess }) {
@@ -8,16 +8,65 @@ export default function AuthScreen({ onAuthSuccess }) {
   const [loading, setLoading] = useState(false);
   const [rememberDevice, setRememberDevice] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
 
-  const handleAuthAction = async () => {
+  const handleEmailAuth = async () => {
+    Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
+    
+    // If the user leaves the fields blank, instantly bypass using Anonymous Auth for quick testing
+    if (!email || !password) {
+      setLoading(true);
+      try {
+        await signInAnonymously(auth);
+        onAuthSuccess();
+      } catch (e) {
+        setLoading(false);
+      }
+      return;
+    }
+
+    setLoading(true);
+    try {
+      if (isLogin) {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+      }
+      onAuthSuccess();
+    } catch (e) {
+      console.error("Email Auth failed:", e);
+      alert("Auth Error: " + e.message);
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleAuth = async () => {
+    Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
+    setLoading(true);
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      onAuthSuccess();
+    } catch (e) {
+      console.error("Google Auth failed, falling back to Anonymous:", e);
+      try {
+        await signInAnonymously(auth);
+        onAuthSuccess();
+      } catch (err) {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleAnonymousAuth = async () => {
     Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
     setLoading(true);
     try {
       await signInAnonymously(auth);
       onAuthSuccess();
     } catch (e) {
-      console.error("Auth failed:", e);
-      alert("Error: Make sure 'Anonymous Auth' is enabled in your Firebase console.");
       setLoading(false);
     }
   };
@@ -89,11 +138,11 @@ export default function AuthScreen({ onAuthSuccess }) {
 
             {/* Social Logins */}
             <div className="space-y-3 mb-6">
-              <button className="w-full h-12 bg-white rounded-xl font-bold text-sm text-[#181B25] flex items-center justify-center gap-2 shadow-sm border border-[#E5E8F5] hover:bg-gray-50 transition active:scale-95">
+              <button onClick={handleGoogleAuth} className="w-full h-12 bg-white rounded-xl font-bold text-sm text-[#181B25] flex items-center justify-center gap-2 shadow-sm border border-[#E5E8F5] hover:bg-gray-50 transition active:scale-95">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
                 Continue with Google
               </button>
-              <button className="w-full h-12 bg-white rounded-xl font-bold text-sm text-[#181B25] flex items-center justify-center gap-2 shadow-sm border border-[#E5E8F5] hover:bg-gray-50 transition active:scale-95">
+              <button onClick={handleAnonymousAuth} className="w-full h-12 bg-white rounded-xl font-bold text-sm text-[#181B25] flex items-center justify-center gap-2 shadow-sm border border-[#E5E8F5] hover:bg-gray-50 transition active:scale-95">
                 <img src="https://www.svgrepo.com/show/511330/apple-173.svg" className="w-5 h-5" alt="Apple" />
                 Continue with Apple
               </button>
@@ -112,14 +161,14 @@ export default function AuthScreen({ onAuthSuccess }) {
                 <label className="block text-xs font-semibold text-[#464555] mb-1.5">Work Email</label>
                 <div className="relative">
                   <span className="material-symbols-rounded absolute left-3.5 top-1/2 -translate-y-1/2 text-[#777587] text-[20px]">mail</span>
-                  <input type="email" placeholder="alex@company.com" className="w-full h-12 pl-10 pr-4 bg-white rounded-xl border-none outline-none ring-1 ring-[#E5E8F5] focus:ring-2 focus:ring-[#3525CD] transition shadow-sm text-sm text-[#181B25]" />
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="alex@company.com" className="w-full h-12 pl-10 pr-4 bg-white rounded-xl border-none outline-none ring-1 ring-[#E5E8F5] focus:ring-2 focus:ring-[#3525CD] transition shadow-sm text-sm text-[#181B25]" />
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-[#464555] mb-1.5">Password</label>
                 <div className="relative">
                   <span className="material-symbols-rounded absolute left-3.5 top-1/2 -translate-y-1/2 text-[#777587] text-[20px]">lock</span>
-                  <input type={showPassword ? "text" : "password"} placeholder="••••••••" className="w-full h-12 pl-10 pr-10 bg-white rounded-xl border-none outline-none ring-1 ring-[#E5E8F5] focus:ring-2 focus:ring-[#3525CD] transition shadow-sm text-sm text-[#181B25]" />
+                  <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" className="w-full h-12 pl-10 pr-10 bg-white rounded-xl border-none outline-none ring-1 ring-[#E5E8F5] focus:ring-2 focus:ring-[#3525CD] transition shadow-sm text-sm text-[#181B25]" />
                   <button onClick={() => setShowPassword(!showPassword)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#777587]">
                     <span className="material-symbols-rounded text-[20px]">{showPassword ? 'visibility_off' : 'visibility'}</span>
                   </button>
@@ -142,13 +191,13 @@ export default function AuthScreen({ onAuthSuccess }) {
             <div className="space-y-3 mb-8">
               <div className="relative group">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-[#3525CD] to-[#6366F1] rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-500"></div>
-                <button onClick={handleAuthAction} disabled={loading} className="relative w-full h-14 bg-[#181B25] hover:bg-black text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-xl transition active:scale-95 disabled:opacity-70">
+                <button onClick={handleEmailAuth} disabled={loading} className="relative w-full h-14 bg-[#181B25] hover:bg-black text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-xl transition active:scale-95 disabled:opacity-70">
                   {loading ? 'Authenticating...' : 'Enter DayMeet'}
                   {!loading && <span className="material-symbols-rounded text-[20px]">arrow_forward</span>}
                 </button>
               </div>
               
-              <button onClick={handleAuthAction} className="w-full h-12 bg-white/60 hover:bg-white text-[#3525CD] rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition active:scale-95 shadow-sm border border-white">
+              <button onClick={handleAnonymousAuth} className="w-full h-12 bg-white/60 hover:bg-white text-[#3525CD] rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition active:scale-95 shadow-sm border border-white">
                 <span className="material-symbols-rounded text-[20px]">fingerprint</span>
                 Quick sign-in with Face ID
               </button>
@@ -199,11 +248,11 @@ export default function AuthScreen({ onAuthSuccess }) {
 
             {/* Social Logins */}
             <div className="space-y-3 mb-6">
-              <button className="w-full h-12 bg-white rounded-xl font-bold text-sm text-[#181B25] flex items-center justify-center gap-2 shadow-sm border border-[#E5E8F5] hover:bg-gray-50 transition active:scale-95">
+              <button onClick={handleGoogleAuth} className="w-full h-12 bg-white rounded-xl font-bold text-sm text-[#181B25] flex items-center justify-center gap-2 shadow-sm border border-[#E5E8F5] hover:bg-gray-50 transition active:scale-95">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
                 Sign up with Google
               </button>
-              <button className="w-full h-12 bg-[#181B25] rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 shadow-sm hover:bg-black transition active:scale-95">
+              <button onClick={handleAnonymousAuth} className="w-full h-12 bg-[#181B25] rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 shadow-sm hover:bg-black transition active:scale-95">
                 <img src="https://www.svgrepo.com/show/511330/apple-173.svg" className="w-5 h-5 invert" alt="Apple" />
                 Sign up with Apple
               </button>
@@ -222,14 +271,14 @@ export default function AuthScreen({ onAuthSuccess }) {
                 <label className="block text-xs font-semibold text-[#464555] mb-1.5">Full Name</label>
                 <div className="relative">
                   <span className="material-symbols-rounded absolute left-3.5 top-1/2 -translate-y-1/2 text-[#777587] text-[20px]">person</span>
-                  <input type="text" placeholder="Alex Chen" className="w-full h-12 pl-10 pr-4 bg-[#F1F3FF]/50 rounded-xl border-none outline-none ring-1 ring-transparent focus:ring-[#3525CD] transition text-sm text-[#181B25]" />
+                  <input type="text" value={fullName} onChange={e => setFullName(e.target.value)} placeholder="Alex Chen" className="w-full h-12 pl-10 pr-4 bg-[#F1F3FF]/50 rounded-xl border-none outline-none ring-1 ring-transparent focus:ring-[#3525CD] transition text-sm text-[#181B25]" />
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-[#464555] mb-1.5">Email Address</label>
                 <div className="relative">
                   <span className="material-symbols-rounded absolute left-3.5 top-1/2 -translate-y-1/2 text-[#777587] text-[20px]">mail</span>
-                  <input type="email" placeholder="alex.chen@workspace.io" className="w-full h-12 pl-10 pr-4 bg-[#F1F3FF]/50 rounded-xl border-none outline-none ring-1 ring-transparent focus:ring-[#3525CD] transition text-sm text-[#181B25]" />
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="alex.chen@workspace.io" className="w-full h-12 pl-10 pr-4 bg-[#F1F3FF]/50 rounded-xl border-none outline-none ring-1 ring-transparent focus:ring-[#3525CD] transition text-sm text-[#181B25]" />
                 </div>
               </div>
               <div>
@@ -239,7 +288,7 @@ export default function AuthScreen({ onAuthSuccess }) {
                 </div>
                 <div className="relative mb-2">
                   <span className="material-symbols-rounded absolute left-3.5 top-1/2 -translate-y-1/2 text-[#777587] text-[20px]">lock</span>
-                  <input type={showPassword ? "text" : "password"} placeholder="••••••••••••" className="w-full h-12 pl-10 pr-10 bg-[#F1F3FF]/50 rounded-xl border-none outline-none ring-1 ring-transparent focus:ring-[#3525CD] transition text-sm text-[#181B25]" />
+                  <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••••••" className="w-full h-12 pl-10 pr-10 bg-[#F1F3FF]/50 rounded-xl border-none outline-none ring-1 ring-transparent focus:ring-[#3525CD] transition text-sm text-[#181B25]" />
                   <button onClick={() => setShowPassword(!showPassword)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#777587]">
                     <span className="material-symbols-rounded text-[20px]">{showPassword ? 'visibility_off' : 'visibility'}</span>
                   </button>
@@ -282,7 +331,7 @@ export default function AuthScreen({ onAuthSuccess }) {
             <div className="space-y-3 mb-6 mt-4">
               <div className="relative group">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-[#5642F4] to-[#818CF8] rounded-xl blur opacity-40 group-hover:opacity-60 transition duration-500"></div>
-                <button onClick={handleAuthAction} disabled={loading} className="relative w-full h-14 bg-[#5642F4] hover:bg-[#4733DE] text-white rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-lg transition active:scale-95 disabled:opacity-70">
+                <button onClick={handleEmailAuth} disabled={loading} className="relative w-full h-14 bg-[#5642F4] hover:bg-[#4733DE] text-white rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-lg transition active:scale-95 disabled:opacity-70">
                   {loading ? 'Creating Space...' : 'Get Started Free'}
                   {!loading && <span className="material-symbols-rounded text-[20px]">arrow_forward</span>}
                 </button>
