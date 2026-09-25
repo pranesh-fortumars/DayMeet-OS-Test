@@ -26,6 +26,7 @@ import { auth } from './services/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useAppStore } from './store/useAppStore';
 import { Geolocation } from '@capacitor/geolocation';
+import { NativeBiometric } from '@capgo/capacitor-native-biometric';
 
 // Modals
 import BriefingModal from './components/modals/BriefingModal';
@@ -107,9 +108,24 @@ function App() {
     };
   }, [globalLockEnabled]);
 
-  const handleUnlock = () => {
-    // In a real app, you would call native Biometric/FaceID plugin here
-    setAppLocked(false);
+  const handleUnlock = async () => {
+    try {
+      const result = await NativeBiometric.isAvailable();
+      if (result.isAvailable) {
+        await NativeBiometric.verifyIdentity({
+          reason: "Unlock DayMeet OS",
+          title: "Biometric Authentication",
+          subtitle: "Confirm your identity to resume session",
+        });
+        setAppLocked(false);
+      } else {
+        // Fallback for Web/Emulators without biometric hardware
+        setAppLocked(false);
+      }
+    } catch (e) {
+      console.error("Biometric failed:", e);
+      // Don't unlock if user cancels or fails
+    }
   };
 
   const handleGlobalRefresh = async () => {

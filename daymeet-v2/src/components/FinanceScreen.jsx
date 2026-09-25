@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import BudgetGauge from './charts/BudgetGauge';
-import { Dialog } from '@capacitor/dialog';
 import { useAppStore } from '../store/useAppStore';
 import { useInteraction } from '../hooks/useInteraction';
+import { NativeBiometric } from '@capgo/capacitor-native-biometric';
 
 export default function FinanceScreen() {
   const [unlocked, setUnlocked] = useState(false);
@@ -29,15 +29,21 @@ export default function FinanceScreen() {
   const requestBiometric = async () => {
     interact('Biometric Scan Initiated');
     try {
-      const { value } = await Dialog.confirm({
-        title: 'Biometric Authentication',
-        message: 'Scan your FaceID or Fingerprint to unlock the Finance Ledger.'
-      });
-      if (value) setUnlocked(true);
+      const result = await NativeBiometric.isAvailable();
+      if (result.isAvailable) {
+        await NativeBiometric.verifyIdentity({
+          reason: "Unlock the Finance Ledger",
+          title: "Biometric Authentication",
+          subtitle: "Confirm your identity to view sensitive data",
+        });
+        setUnlocked(true);
+      } else {
+        // Fallback for Web/Emulators without biometric hardware
+        setUnlocked(true);
+      }
     } catch (e) {
-      console.log('Native dialog failed or canceled, falling back to auto-unlock.', e);
-      // Fallback if plugin is not properly synced on Android
-      setUnlocked(true);
+      console.log('Biometric failed or canceled', e);
+      // User failed or cancelled, do not unlock
     }
   };
 
