@@ -6,6 +6,7 @@ export default function KnowledgeVaultScreen() {
   const navigate = useNavigate();
   const { interact } = useInteraction();
   const [activeTab, setActiveTab] = useState('library'); // 'library', 'documents', 'learning'
+  const [libView, setLibView] = useState('list'); // 'list' | 'graph'
 
   const mockArticles = [
     {
@@ -105,46 +106,112 @@ export default function KnowledgeVaultScreen() {
         </button>
       </div>
 
-      {/* TAB 1: THE LIBRARY (Read Later) */}
+      {/* TAB 1: THE LIBRARY (Read Later / Second Brain) */}
       {activeTab === 'library' && (
         <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-[#181B25]">Read Later</h2>
-            <button onClick={() => interact('Link parser coming soon')} className="text-xs font-bold text-[#3525CD] flex items-center gap-1">
-              <span className="material-symbols-rounded text-[14px]">add_link</span> Save Link
-            </button>
+            <h2 className="text-sm font-bold text-[#181B25]">Neural Library</h2>
+            <div className="flex items-center gap-2 bg-[#F1F3FF] p-1 rounded-xl">
+              <button 
+                onClick={() => { setLibView('list'); interact('Library List View'); }}
+                className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${libView === 'list' ? 'bg-white text-[#3525CD] shadow-sm' : 'text-[#8B899C] hover:text-[#181B25]'}`}
+              >
+                <span className="material-symbols-rounded text-[16px]">view_list</span>
+              </button>
+              <button 
+                onClick={() => { setLibView('graph'); interact('Library Graph View'); }}
+                className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${libView === 'graph' ? 'bg-white text-[#3525CD] shadow-sm' : 'text-[#8B899C] hover:text-[#181B25]'}`}
+              >
+                <span className="material-symbols-rounded text-[16px]">hub</span>
+              </button>
+            </div>
           </div>
 
-          <div className="space-y-3">
-            {mockArticles.map(article => (
-              <div key={article.id} onClick={() => interact(`Article: ${article.title}`)} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm flex gap-4 cursor-pointer hover:border-[#3525CD] active:scale-[0.98] transition group">
-                <div className="w-12 h-12 rounded-xl bg-[#F1F3FF] text-[#3525CD] flex items-center justify-center shrink-0">
-                  <span className="material-symbols-rounded text-[24px]">article</span>
-                </div>
-                <div className="flex-1 space-y-2">
-                  <div>
-                    <h3 className="font-bold text-[#181B25] text-sm leading-tight group-hover:text-[#3525CD] transition-colors">{article.title}</h3>
-                    <p className="text-[10px] text-[#464555]">{article.source} • {article.readTime}</p>
-                  </div>
-                  
-                  {article.progress > 0 ? (
-                    <div className="space-y-1">
-                      <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-[#3525CD] rounded-full" style={{ width: `${article.progress}%` }}></div>
-                      </div>
-                      <p className="text-[9px] font-bold text-[#3525CD]">{article.progress}% completed</p>
-                    </div>
-                  ) : (
-                    <div className="flex gap-1.5 pt-1">
-                      {article.tags.map(tag => (
-                        <span key={tag} className="px-2 py-0.5 rounded text-[9px] font-bold bg-gray-100 text-gray-600">{tag}</span>
-                      ))}
-                    </div>
-                  )}
-                </div>
+          <button onClick={() => interact('Start Spaced Repetition Review')} className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-[#3525CD] to-[#6366F1] text-white rounded-2xl active:scale-95 transition shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                <span className="material-symbols-rounded text-[18px]">psychology</span>
               </div>
-            ))}
-          </div>
+              <div className="text-left">
+                <p className="text-xs font-black">Daily Zettelkasten Review</p>
+                <p className="text-[10px] text-white/80">3 flashcards due (SM-2 Algorithm)</p>
+              </div>
+            </div>
+            <span className="material-symbols-rounded text-[20px]">play_circle</span>
+          </button>
+
+          {libView === 'list' ? (
+            <div className="space-y-3">
+              {mockArticles.map(article => (
+                <div key={article.id} onClick={() => interact(`Article: ${article.title}`)} className="bg-white p-4 rounded-2xl border border-[#E5E8F5] shadow-sm flex gap-4 cursor-pointer hover:border-[#3525CD] active:scale-[0.98] transition group">
+                  <div className="w-12 h-12 rounded-xl bg-[#F1F3FF] text-[#3525CD] flex items-center justify-center shrink-0">
+                    <span className="material-symbols-rounded text-[24px]">article</span>
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <div>
+                      <h3 className="font-bold text-[#181B25] text-sm leading-tight group-hover:text-[#3525CD] transition-colors">{article.title}</h3>
+                      <p className="text-[10px] text-[#464555]">{article.source} • {article.readTime}</p>
+                    </div>
+                    
+                    {article.progress > 0 ? (
+                      <div className="space-y-1">
+                        <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-[#3525CD] rounded-full" style={{ width: `${article.progress}%` }}></div>
+                        </div>
+                        <p className="text-[9px] font-bold text-[#3525CD]">{article.progress}% completed</p>
+                      </div>
+                    ) : (
+                      <div className="flex gap-1.5 pt-1">
+                        {article.tags.map(tag => (
+                          <span key={tag} className="px-2 py-0.5 rounded text-[9px] font-bold bg-gray-100 text-gray-600">{tag}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="w-full h-[280px] bg-[#181B25] rounded-2xl relative overflow-hidden flex items-center justify-center cursor-crosshair">
+              {/* Simulated D3 Force Graph Canvas */}
+              <svg className="absolute inset-0 w-full h-full animate-in zoom-in-90 duration-700 opacity-60">
+                <line x1="20%" y1="30%" x2="50%" y2="50%" stroke="#4F46E5" strokeWidth="2" />
+                <line x1="80%" y1="20%" x2="50%" y2="50%" stroke="#4F46E5" strokeWidth="2" />
+                <line x1="50%" y1="50%" x2="30%" y2="80%" stroke="#4F46E5" strokeWidth="2" strokeDasharray="4" />
+                <line x1="50%" y1="50%" x2="70%" y2="75%" stroke="#4F46E5" strokeWidth="2" />
+              </svg>
+              
+              <div className="absolute top-[30%] left-[20%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-in zoom-in duration-500 delay-100">
+                <div onClick={() => interact('Node: AI Agents')} className="w-4 h-4 bg-[#6366F1] rounded-full shadow-[0_0_15px_rgba(99,102,241,0.8)] cursor-pointer hover:scale-150 transition-transform"></div>
+                <span className="text-[9px] text-white font-bold mt-1 absolute top-4 whitespace-nowrap">AI Agents</span>
+              </div>
+              
+              <div className="absolute top-[20%] left-[80%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-in zoom-in duration-500 delay-200">
+                <div onClick={() => interact('Node: Life OS')} className="w-3 h-3 bg-[#10B981] rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)] cursor-pointer hover:scale-150 transition-transform"></div>
+                <span className="text-[9px] text-white font-bold mt-1 absolute top-3 whitespace-nowrap">Life OS Design</span>
+              </div>
+              
+              <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-in zoom-in duration-500">
+                <div onClick={() => interact('Node: Productivity Hub')} className="w-6 h-6 bg-white rounded-full shadow-[0_0_20px_rgba(255,255,255,0.9)] cursor-pointer hover:scale-125 transition-transform z-10 animate-pulse"></div>
+                <span className="text-[11px] text-white font-black mt-2 absolute top-6 whitespace-nowrap bg-black/50 px-2 py-0.5 rounded">Productivity Hub</span>
+              </div>
+              
+              <div className="absolute top-[80%] left-[30%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-in zoom-in duration-500 delay-300">
+                <div onClick={() => interact('Node: React Patterns')} className="w-3 h-3 bg-[#F59E0B] rounded-full shadow-[0_0_10px_rgba(245,158,11,0.8)] cursor-pointer hover:scale-150 transition-transform"></div>
+                <span className="text-[9px] text-white font-bold mt-1 absolute top-3 whitespace-nowrap">React Patterns</span>
+              </div>
+
+              <div className="absolute top-[75%] left-[70%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-in zoom-in duration-500 delay-150">
+                <div onClick={() => interact('Node: Zettelkasten')} className="w-4 h-4 bg-[#EC4899] rounded-full shadow-[0_0_15px_rgba(236,72,153,0.8)] cursor-pointer hover:scale-150 transition-transform"></div>
+                <span className="text-[9px] text-white font-bold mt-1 absolute top-4 whitespace-nowrap">Zettelkasten Method</span>
+              </div>
+              
+              <div className="absolute bottom-3 right-3 flex items-center gap-1.5 text-[9px] font-bold text-gray-500">
+                <span className="material-symbols-rounded text-[12px]">drag_pan</span>
+                Interactive Graph
+              </div>
+            </div>
+          )}
         </div>
       )}
 
