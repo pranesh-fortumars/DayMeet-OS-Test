@@ -6,22 +6,44 @@ import GlobalSmartCapture from './components/GlobalSmartCapture';
 import AuthScreen from './components/AuthScreen';
 import PullToRefresh from './components/PullToRefresh';
 
+// Handle ChunkLoadErrors gracefully
+const lazyWithRetry = (componentImport) =>
+  lazy(async () => {
+    const pageHasAlreadyBeenForceRefreshed = JSON.parse(
+      window.sessionStorage.getItem('page-has-been-force-refreshed') || 'false'
+    );
+    try {
+      const component = await componentImport();
+      window.sessionStorage.setItem('page-has-been-force-refreshed', 'false');
+      return component;
+    } catch (error) {
+      if (!pageHasAlreadyBeenForceRefreshed) {
+        window.sessionStorage.setItem('page-has-been-force-refreshed', 'true');
+        window.location.reload();
+        // Return a promise that never resolves to prevent React from trying to render
+        return new Promise(() => {});
+      }
+      throw error;
+    }
+  });
+
 // Lazy loaded screens
-const HomeScreen = lazy(() => import('./components/HomeScreen'));
-const CalendarScreen = lazy(() => import('./components/CalendarScreen'));
-const TasksScreen = lazy(() => import('./components/TasksScreen'));
-const InsightsScreen = lazy(() => import('./components/InsightsScreen'));
-const FinanceScreen = lazy(() => import('./components/FinanceScreen'));
-const MoreScreen = lazy(() => import('./components/MoreScreen'));
-const CleanupScreen = lazy(() => import('./components/CleanupScreen'));
-const WeeklyResetScreen = lazy(() => import('./components/WeeklyResetScreen'));
-const GrowthHubScreen = lazy(() => import('./components/GrowthHubScreen'));
-const KnowledgeVaultScreen = lazy(() => import('./components/KnowledgeVaultScreen'));
-const SecurityVaultScreen = lazy(() => import('./components/SecurityVaultScreen'));
-const DelegationHubScreen = lazy(() => import('./components/DelegationHubScreen'));
-const RelationshipsScreen = lazy(() => import('./components/RelationshipsScreen'));
-const ProfileScreen = lazy(() => import('./components/ProfileScreen'));
-const FamilySyncScreen = lazy(() => import('./components/FamilySyncScreen'));
+const HomeScreen = lazyWithRetry(() => import('./components/HomeScreen'));
+const CalendarScreen = lazyWithRetry(() => import('./components/CalendarScreen'));
+const TasksScreen = lazyWithRetry(() => import('./components/TasksScreen'));
+const InsightsScreen = lazyWithRetry(() => import('./components/InsightsScreen'));
+const FinanceScreen = lazyWithRetry(() => import('./components/FinanceScreen'));
+const MoreScreen = lazyWithRetry(() => import('./components/MoreScreen'));
+const CleanupScreen = lazyWithRetry(() => import('./components/CleanupScreen'));
+const WeeklyResetScreen = lazyWithRetry(() => import('./components/WeeklyResetScreen'));
+const GrowthHubScreen = lazyWithRetry(() => import('./components/GrowthHubScreen'));
+const KnowledgeVaultScreen = lazyWithRetry(() => import('./components/KnowledgeVaultScreen'));
+const SecurityVaultScreen = lazyWithRetry(() => import('./components/SecurityVaultScreen'));
+const DelegationHubScreen = lazyWithRetry(() => import('./components/DelegationHubScreen'));
+const RelationshipsScreen = lazyWithRetry(() => import('./components/RelationshipsScreen'));
+const ProfileScreen = lazyWithRetry(() => import('./components/ProfileScreen'));
+const FamilySyncScreen = lazyWithRetry(() => import('./components/FamilySyncScreen'));
+
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { App as CapacitorApp } from '@capacitor/app';
