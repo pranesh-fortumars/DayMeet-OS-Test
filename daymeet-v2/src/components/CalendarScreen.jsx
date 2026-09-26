@@ -3,11 +3,14 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 import { useInteraction } from '../hooks/useInteraction';
 import { useAppStore } from '../store/useAppStore';
 import CalendarModal from './modals/CalendarModal';
+import MeetingWhispererModal from './modals/MeetingWhispererModal';
 
 export default function CalendarScreen() {
   const { interact } = useInteraction();
   const { googleCalConnected } = useAppStore();
   const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [showWhispererModal, setShowWhispererModal] = useState(false);
+  const [scheduleOptimized, setScheduleOptimized] = useState(false);
 
   const scheduleMeetingAlert = async () => {
     try {
@@ -85,6 +88,23 @@ export default function CalendarScreen() {
           )}
         </div>
 
+        {!scheduleOptimized && (
+          <div className="bg-[#FFF5F5] border border-[#FFE0E0] p-3 rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
+            <span className="material-symbols-rounded text-[#E53935] text-[20px]">warning</span>
+            <div className="flex-1">
+              <h4 className="text-xs font-bold text-[#D32F2F]">Schedule Conflict Detected</h4>
+              <p className="text-[10px] text-[#E53935] mt-0.5 mb-2 leading-snug">You have back-to-back priority meetings with zero buffer time.</p>
+              <button 
+                onClick={() => { interact('Triggered Auto-Heal Schedule'); setScheduleOptimized(true); }}
+                className="px-3 py-1.5 bg-[#E53935] text-white text-[10px] font-bold rounded-lg hover:bg-[#D32F2F] active:scale-95 transition shadow-sm flex items-center gap-1"
+              >
+                <span className="material-symbols-rounded text-[14px]">auto_fix_high</span>
+                Auto-Heal Schedule
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="space-y-3">
           {googleCalConnected && (
             <div onClick={() => interact('Event: Client Sync (GCal)')} className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-[#F1F3FF] to-white border border-[#3525CD]/30 cursor-pointer active:scale-95 transition">
@@ -101,19 +121,26 @@ export default function CalendarScreen() {
               </div>
             </div>
           )}
-          <div onClick={() => interact('Event: Product Strategy Review')} className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
-            <span className="text-xs font-bold text-[#3525CD] w-14">09:30 AM</span>
+          <div className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#3525CD]/30 cursor-pointer transition">
+            <span className="text-xs font-bold text-[#3525CD] w-14 mt-1">09:30 AM</span>
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <p className="text-xs font-bold text-[#181B25]">Product Strategy Review</p>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EDE7F6] text-[#673AB7]">MEETING</span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EDE7F6] text-[#673AB7]">ONGOING</span>
               </div>
-              <p className="text-[11px] text-[#464555] mt-0.5">Google Meet • Alex, Sarah, David (45m)</p>
+              <p className="text-[11px] text-[#464555] mt-0.5 mb-2">Google Meet • Alex, Sarah, David</p>
+              <button 
+                onClick={(e) => { e.stopPropagation(); interact('Launch Meeting Whisperer'); setShowWhispererModal(true); }}
+                className="w-full py-2 bg-[#3525CD] hover:bg-[#2B1DAE] text-white text-[11px] font-bold rounded-lg flex items-center justify-center gap-1 active:scale-95 transition shadow-sm"
+              >
+                <span className="material-symbols-rounded text-[14px]">record_voice_over</span>
+                Launch AI Meeting Whisperer
+              </button>
             </div>
           </div>
           
           <div onClick={() => interact('Event: Mobile Design Tokens')} className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
-            <span className="text-xs font-bold text-[#3525CD] w-14">12:00 PM</span>
+            <span className="text-xs font-bold text-[#3525CD] w-14">{scheduleOptimized ? '12:15 PM' : '12:00 PM'}</span>
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <p className="text-xs font-bold text-[#181B25]">Finalize Mobile Design Tokens</p>
@@ -123,8 +150,24 @@ export default function CalendarScreen() {
             </div>
           </div>
 
+          {scheduleOptimized && (
+            <div className="flex items-start gap-3 p-3 rounded-xl bg-[#E8F5E9] border border-[#C8E6C9] animate-in slide-in-from-top-4 fade-in duration-300">
+              <span className="text-xs font-bold text-[#2E7D32] w-14">01:15 PM</span>
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-bold text-[#1B5E20] flex items-center gap-1">
+                    <span className="material-symbols-rounded text-[14px]">self_improvement</span>
+                    Deep Work Decompression
+                  </p>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#C8E6C9] text-[#1B5E20]">BUFFER GUARD</span>
+                </div>
+                <p className="text-[10px] text-[#2E7D32] mt-0.5">Auto-injected 30m buffer to prevent cognitive fatigue</p>
+              </div>
+            </div>
+          )}
+
           <div onClick={() => interact('Event: Deep Work')} className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF9FF] border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
-            <span className="text-xs font-bold text-[#3525CD] w-14">02:00 PM</span>
+            <span className="text-xs font-bold text-[#3525CD] w-14">{scheduleOptimized ? '01:45 PM' : '02:00 PM'}</span>
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <p className="text-xs font-bold text-[#181B25]">Deep Work Sanctuary (Focus)</p>
@@ -148,6 +191,7 @@ export default function CalendarScreen() {
       </div>
 
       <CalendarModal isOpen={showCalendarModal} onClose={() => setShowCalendarModal(false)} />
+      <MeetingWhispererModal isOpen={showWhispererModal} onClose={() => setShowWhispererModal(false)} />
     </div>
   );
 }
