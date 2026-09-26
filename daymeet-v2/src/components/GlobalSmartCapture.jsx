@@ -158,8 +158,11 @@ export default function GlobalSmartCapture() {
                     ref={fileInputRef} 
                     onChange={handleImageSelect}
                   />
-                  <button type="button" onClick={() => fileInputRef.current?.click()} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition text-[#3525CD] bg-[#F1F3FF] dark:bg-[#3525CD]/20">
+                  <button type="button" onClick={() => fileInputRef.current?.click()} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition text-[#3525CD] bg-[#F1F3FF] dark:bg-[#3525CD]/20" title="Upload Image">
                     <span className="material-symbols-rounded text-[20px]">image</span>
+                  </button>
+                  <button type="button" onClick={() => { closeInput(); startDirectScan(); }} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition text-[#3525CD] bg-[#F1F3FF] dark:bg-[#3525CD]/20" title="Live Camera">
+                    <span className="material-symbols-rounded text-[20px]">photo_camera</span>
                   </button>
                 </div>
                 
