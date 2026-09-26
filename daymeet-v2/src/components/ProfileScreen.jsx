@@ -8,8 +8,11 @@ import { useAppStore } from '../store/useAppStore';
 export default function ProfileScreen() {
   const navigate = useNavigate();
   const { interact } = useInteraction();
-  const { googleCalConnected, setGoogleCalConnected } = useAppStore();
+  const { googleCalConnected, setGoogleCalConnected, globalLockEnabled, toggleGlobalLock } = useAppStore();
   const [connecting, setConnecting] = React.useState(false);
+  const [theme, setTheme] = React.useState('System Default');
+  const [voiceIdx, setVoiceIdx] = React.useState(0);
+  const voices = ['British (Nova)', 'American (Echo)', 'Deep (Onyx)', 'Friendly (Alloy)'];
   
   const handleSignOut = async () => {
     interact('Sign Out Initiated');
@@ -35,6 +38,28 @@ export default function ProfileScreen() {
        setGoogleCalConnected(true);
        interact('Google Calendar Connected');
     }, 1500);
+  };
+
+  const handleThemeToggle = (e) => {
+    e.stopPropagation();
+    const nextTheme = theme === 'System Default' ? 'Dark Mode' : theme === 'Dark Mode' ? 'Light Mode' : 'System Default';
+    setTheme(nextTheme);
+    if (nextTheme === 'Dark Mode') document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+    interact(`Appearance changed to ${nextTheme}`);
+  };
+
+  const handleVoiceToggle = (e) => {
+    e.stopPropagation();
+    const nextIdx = (voiceIdx + 1) % voices.length;
+    setVoiceIdx(nextIdx);
+    interact(`AI Voice changed to ${voices[nextIdx]}`);
+  };
+
+  const handleBiometricToggle = (e) => {
+    e.stopPropagation();
+    toggleGlobalLock();
+    interact(`Global Biometric Lock ${!globalLockEnabled ? 'Enabled' : 'Disabled'}`);
   };
 
   return (
@@ -80,24 +105,24 @@ export default function ProfileScreen() {
           <h3 className="text-xs font-bold text-[#464555] uppercase tracking-wider">App Preferences</h3>
         </div>
         
-        <div onClick={() => interact('Appearance')} className="flex items-center justify-between p-4 border-b border-[#E5E8F5] cursor-pointer hover:bg-gray-50 transition active:bg-gray-100">
+        <div onClick={handleThemeToggle} className="flex items-center justify-between p-4 border-b border-[#E5E8F5] cursor-pointer hover:bg-gray-50 transition active:bg-gray-100">
           <div className="flex items-center gap-3">
             <span className="material-symbols-rounded text-[#3525CD]">palette</span>
             <span className="text-sm font-bold text-[#181B25]">Appearance</span>
           </div>
           <div className="flex items-center gap-2 text-[#464555]">
-            <span className="text-[11px]">System Default</span>
+            <span className="text-[11px] font-bold text-[#3525CD] bg-[#F1F3FF] px-2 py-1 rounded-md">{theme}</span>
             <span className="material-symbols-rounded text-[18px]">chevron_right</span>
           </div>
         </div>
 
-        <div onClick={() => interact('AI Copilot Voice')} className="flex items-center justify-between p-4 border-b border-[#E5E8F5] cursor-pointer hover:bg-gray-50 transition active:bg-gray-100">
+        <div onClick={handleVoiceToggle} className="flex items-center justify-between p-4 border-b border-[#E5E8F5] cursor-pointer hover:bg-gray-50 transition active:bg-gray-100">
           <div className="flex items-center gap-3">
             <span className="material-symbols-rounded text-[#673AB7]">record_voice_over</span>
             <span className="text-sm font-bold text-[#181B25]">AI Copilot Voice</span>
           </div>
           <div className="flex items-center gap-2 text-[#464555]">
-            <span className="text-[11px]">British (Nova)</span>
+            <span className="text-[11px] font-bold text-[#673AB7] bg-[#EDE7F6] px-2 py-1 rounded-md">{voices[voiceIdx]}</span>
             <span className="material-symbols-rounded text-[18px]">chevron_right</span>
           </div>
         </div>
@@ -135,12 +160,16 @@ export default function ProfileScreen() {
 
       {/* Security & Support */}
       <div className="bg-white rounded-2xl border border-[#E5E8F5] shadow-sm overflow-hidden">
-        <div onClick={() => interact('Biometrics')} className="flex items-center justify-between p-4 border-b border-[#E5E8F5] cursor-pointer hover:bg-gray-50 transition active:bg-gray-100">
+        <div onClick={handleBiometricToggle} className="flex items-center justify-between p-4 border-b border-[#E5E8F5] cursor-pointer hover:bg-gray-50 transition active:bg-gray-100">
           <div className="flex items-center gap-3">
-            <span className="material-symbols-rounded text-[#10B981]">fingerprint</span>
-            <span className="text-sm font-bold text-[#181B25]">FaceID / Fingerprint</span>
+            <span className={`material-symbols-rounded ${globalLockEnabled ? 'text-[#10B981]' : 'text-[#464555]'}`}>fingerprint</span>
+            <span className="text-sm font-bold text-[#181B25]">Global Biometric Lock</span>
           </div>
-          <span className="material-symbols-rounded text-[18px] text-[#464555]">chevron_right</span>
+          <div className="flex items-center gap-2">
+            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${globalLockEnabled ? 'bg-[#10B981]' : 'bg-gray-200'}`}>
+              <div className={`w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${globalLockEnabled ? 'translate-x-4' : 'translate-x-0'}`}></div>
+            </div>
+          </div>
         </div>
         <div onClick={() => interact('Help Center')} className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition active:bg-gray-100">
           <div className="flex items-center gap-3">
