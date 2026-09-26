@@ -25,7 +25,14 @@ export default function CalendarModal({ isOpen, onClose }) {
 
   // Mock Google Calendar style events for the timeline
   const mockEvents = {
+    2: [
+      { id: 101, title: 'Gandhi Jayanti / Int. Day of Non-Violence', time: 'All Day', duration: '24h', type: 'public', color: 'bg-[#00897B]', text: 'text-white', location: 'India & Global', attendees: [], linkedNodes: 0 },
+    ],
+    12: [
+      { id: 5, title: 'Dentist Appointment', time: '10:00 AM', duration: '1h', type: 'medical_services', color: 'bg-[#0F9D58]', text: 'text-white', location: 'Smile Clinic', attendees: [], linkedNodes: 1 },
+    ],
     24: [
+      { id: 102, title: 'United Nations Day', time: 'All Day', duration: '24h', type: 'public', color: 'bg-[#1E88E5]', text: 'text-white', location: 'Global', attendees: [], linkedNodes: 0 },
       { id: 1, title: 'Product Strategy Review', time: '09:30 AM', duration: '45m', type: 'videocam', color: 'bg-[#4285F4]', text: 'text-white', location: 'Google Meet', attendees: ['AC', 'ML', 'DK'], linkedNodes: 3 },
       { id: 2, title: 'Lunch with Sarah', time: '12:30 PM', duration: '1h', type: 'restaurant', color: 'bg-[#F4B400]', text: 'text-white', location: 'SoHo, NY', attendees: ['SJ'], linkedNodes: 0 },
       { id: 3, title: 'Deep Work Block', time: '02:00 PM', duration: '2h', type: 'laptop_mac', color: 'bg-[#E5E8F5]', text: 'text-[#181B25]', location: 'Office Desk', attendees: [], linkedNodes: 12 },
@@ -33,8 +40,8 @@ export default function CalendarModal({ isOpen, onClose }) {
     28: [
       { id: 4, title: 'Flight to London (LHR)', time: '08:00 AM', duration: '11h', type: 'flight_takeoff', color: 'bg-[#0F172A]', text: 'text-white', location: 'Terminal 4, JFK', attendees: [], linkedNodes: 5 },
     ],
-    12: [
-      { id: 5, title: 'Dentist Appointment', time: '10:00 AM', duration: '1h', type: 'medical_services', color: 'bg-[#0F9D58]', text: 'text-white', location: 'Smile Clinic', attendees: [], linkedNodes: 1 },
+    31: [
+      { id: 103, title: 'Halloween / National Unity Day (India)', time: 'All Day', duration: '24h', type: 'celebration', color: 'bg-[#F4511E]', text: 'text-white', location: 'Global & India', attendees: [], linkedNodes: 0 },
     ]
   };
 
