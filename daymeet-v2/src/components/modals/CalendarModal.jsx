@@ -26,15 +26,15 @@ export default function CalendarModal({ isOpen, onClose }) {
   // Mock Google Calendar style events for the timeline
   const mockEvents = {
     24: [
-      { id: 1, title: 'Product Strategy Review', time: '09:30 AM', duration: '45m', type: 'video', color: 'bg-[#4285F4]', text: 'text-white' },
-      { id: 2, title: 'Lunch with Sarah', time: '12:30 PM', duration: '1h', type: 'restaurant', color: 'bg-[#F4B400]', text: 'text-white' },
-      { id: 3, title: 'Deep Work Block', time: '02:00 PM', duration: '2h', type: 'laptop_mac', color: 'bg-[#E5E8F5]', text: 'text-[#181B25]' },
+      { id: 1, title: 'Product Strategy Review', time: '09:30 AM', duration: '45m', type: 'videocam', color: 'bg-[#4285F4]', text: 'text-white', location: 'Google Meet', attendees: ['AC', 'ML', 'DK'] },
+      { id: 2, title: 'Lunch with Sarah', time: '12:30 PM', duration: '1h', type: 'restaurant', color: 'bg-[#F4B400]', text: 'text-white', location: 'SoHo, NY', attendees: ['SJ'] },
+      { id: 3, title: 'Deep Work Block', time: '02:00 PM', duration: '2h', type: 'laptop_mac', color: 'bg-[#E5E8F5]', text: 'text-[#181B25]', location: 'Office Desk', attendees: [] },
     ],
     28: [
-      { id: 4, title: 'Flight to London (LHR)', time: '08:00 AM', duration: '11h', type: 'flight_takeoff', color: 'bg-[#0F172A]', text: 'text-white' },
+      { id: 4, title: 'Flight to London (LHR)', time: '08:00 AM', duration: '11h', type: 'flight_takeoff', color: 'bg-[#0F172A]', text: 'text-white', location: 'Terminal 4, JFK', attendees: [] },
     ],
     12: [
-      { id: 5, title: 'Dentist Appointment', time: '10:00 AM', duration: '1h', type: 'medical_services', color: 'bg-[#0F9D58]', text: 'text-white' },
+      { id: 5, title: 'Dentist Appointment', time: '10:00 AM', duration: '1h', type: 'medical_services', color: 'bg-[#0F9D58]', text: 'text-white', location: 'Smile Clinic', attendees: [] },
     ]
   };
 
@@ -165,40 +165,65 @@ export default function CalendarModal({ isOpen, onClose }) {
 
           {/* Google Calendar Style Timeline */}
           <div className={`bg-[#FAF9FF] dark:bg-[#0F172A] min-h-[300px] pb-8 rounded-t-[32px] pt-6 px-6 transition-transform duration-500 ${viewMode === 'year' ? 'translate-y-full opacity-0' : 'translate-y-0 opacity-100'}`}>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-black text-[#181B25] dark:text-white flex items-center gap-2">
-                {selectedDate === 24 ? 'Today' : `${months[activeMonth]} ${selectedDate}`}
-                <span className="text-sm font-medium text-gray-400">· {currentEvents.length} events</span>
-              </h3>
-              <button className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-[#3525CD] dark:text-[#818CF8]">
-                <span className="material-symbols-rounded text-[20px]">add</span>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <h3 className="text-lg font-black text-[#181B25] dark:text-white flex items-center gap-2">
+                  {selectedDate === 24 ? 'Today' : `${months[activeMonth]} ${selectedDate}`}
+                  <span className="text-sm font-medium text-gray-400">· {currentEvents.length} events</span>
+                </h3>
+                {selectedDate === 24 && (
+                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#D97706] bg-[#FFF3E0] px-2 py-0.5 rounded-md">
+                    <span className="material-symbols-rounded text-[14px]">wb_sunny</span>
+                    72°
+                  </div>
+                )}
+              </div>
+              <button className="w-7 h-7 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-[#3525CD] dark:text-[#818CF8] hover:scale-110 active:scale-95 transition">
+                <span className="material-symbols-rounded text-[18px]">add</span>
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {currentEvents.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 opacity-60">
-                  <span className="material-symbols-rounded text-5xl text-gray-300 dark:text-gray-600 mb-3">free_cancellation</span>
-                  <p className="text-sm font-medium text-[#464555] dark:text-gray-400">No events scheduled.</p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Enjoy your free time!</p>
+                <div className="flex flex-col items-center justify-center py-8 opacity-60">
+                  <span className="material-symbols-rounded text-4xl text-gray-300 dark:text-gray-600 mb-2">free_cancellation</span>
+                  <p className="text-xs font-medium text-[#464555] dark:text-gray-400">No events scheduled.</p>
+                  <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">Enjoy your free time!</p>
                 </div>
               ) : (
                 currentEvents.map((evt, i) => (
-                  <div key={evt.id} className="flex gap-4 animate-in slide-in-from-right-8 fade-in duration-500" style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'both' }}>
-                    <div className="w-16 flex flex-col items-end text-xs font-bold text-gray-500 dark:text-gray-400 pt-2 shrink-0">
+                  <div key={evt.id} className="flex gap-3 animate-in slide-in-from-right-8 fade-in duration-500" style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'both' }}>
+                    <div className="w-14 flex flex-col items-end text-[11px] font-bold text-gray-500 dark:text-gray-400 pt-1.5 shrink-0">
                       {evt.time.split(' ')[0]}
-                      <span className="text-[10px] uppercase font-semibold">{evt.time.split(' ')[1]}</span>
+                      <span className="text-[9px] uppercase font-semibold">{evt.time.split(' ')[1]}</span>
                     </div>
                     
-                    {/* Material You Event Block */}
-                    <div className={`flex-1 ${evt.color} ${evt.text} rounded-[20px] p-4 shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer`}>
-                      <div className="flex justify-between items-start">
-                        <p className="font-bold leading-tight">{evt.title}</p>
-                        <span className="material-symbols-rounded text-[20px] opacity-80">{evt.type}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 mt-3 text-xs font-medium opacity-90">
-                        <span className="material-symbols-rounded text-[14px]">schedule</span>
-                        {evt.duration}
+                    {/* Compact Material You Event Block */}
+                    <div className={`flex-1 ${evt.color} ${evt.text} rounded-2xl p-3 shadow-sm hover:scale-[1.01] active:scale-[0.98] transition-all cursor-pointer`}>
+                      <div className="flex justify-between items-start gap-2">
+                        <div>
+                          <p className="text-sm font-bold leading-tight">{evt.title}</p>
+                          <div className="flex items-center gap-2 mt-1.5">
+                            <div className="flex items-center gap-1 text-[10px] font-medium opacity-90">
+                              <span className="material-symbols-rounded text-[12px]">schedule</span>
+                              {evt.duration}
+                            </div>
+                            <div className="flex items-center gap-1 text-[10px] font-medium opacity-90">
+                              <span className="material-symbols-rounded text-[12px]">location_on</span>
+                              <span className="truncate max-w-[90px]">{evt.location}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end gap-2 shrink-0">
+                          <span className="material-symbols-rounded text-[18px] opacity-80">{evt.type}</span>
+                          {evt.attendees.length > 0 && (
+                            <div className="flex items-center -space-x-1.5 opacity-90">
+                              {evt.attendees.map((att, idx) => (
+                                <div key={idx} className="w-5 h-5 rounded-full bg-white/20 border border-white/40 flex items-center justify-center text-[8px] font-bold backdrop-blur-sm shadow-sm">{att}</div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
