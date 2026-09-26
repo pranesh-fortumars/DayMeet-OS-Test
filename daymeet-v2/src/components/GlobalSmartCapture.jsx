@@ -11,6 +11,7 @@ export default function GlobalSmartCapture() {
   const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
+  const [isDictating, setIsDictating] = useState(false);
   const pressTimer = useRef(null);
   
   const fileInputRef = useRef(null);
@@ -22,6 +23,39 @@ export default function GlobalSmartCapture() {
       const imageUrl = URL.createObjectURL(file);
       setSelectedImage(imageUrl);
     }
+  };
+
+  const startDictation = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Voice dictation is not supported on this device/browser combination.");
+      return;
+    }
+    
+    Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
+    setIsDictating(true);
+    
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+    
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setInputValue((prev) => prev ? `${prev} ${transcript}` : transcript);
+      setIsDictating(false);
+      Haptics.impact({ style: ImpactStyle.Medium }).catch(() => {});
+    };
+    
+    recognition.onerror = () => {
+      setIsDictating(false);
+    };
+    
+    recognition.onend = () => {
+      setIsDictating(false);
+    };
+    
+    recognition.start();
   };
 
   const startDirectScan = async () => {
@@ -149,7 +183,9 @@ export default function GlobalSmartCapture() {
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-gray-400">
-                  <button type="button" className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition"><span className="material-symbols-rounded text-[20px]">mic</span></button>
+                  <button type="button" onClick={startDictation} className={`p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition ${isDictating ? 'text-[#E53935] bg-[#FFEBEE] animate-pulse' : ''}`} title="Voice Dictation">
+                    <span className="material-symbols-rounded text-[20px]">mic</span>
+                  </button>
                   
                   <input 
                     type="file" 
