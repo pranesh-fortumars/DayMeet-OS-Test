@@ -12,6 +12,10 @@ export default function FinanceScreen() {
     { name: 'Salary', amount: '+₹1,25,000', date: 'Yesterday', icon: 'account_balance' },
     { name: 'Uber', amount: '-₹320', date: 'Yesterday', icon: 'directions_car' }
   ]);
+  const [mockSubscriptions, setMockSubscriptions] = useState([
+    { id: 1, name: 'Netflix Premium', amount: '₹649/mo', status: 'Active', icon: 'movie', color: 'bg-[#FFEBEE] text-[#E53935]', lastUsed: '2 days ago' },
+    { id: 2, name: 'Adobe Creative Cloud', amount: '₹4,230/mo', status: 'Zombie', icon: 'design_services', color: 'bg-[#E0F2FE] text-[#0288D1]', lastUsed: '45 days ago' }
+  ]);
   const { interact } = useInteraction();
   const { liquidNetWorth, spending, dailyBudget, upcomingBills, addExpense } = useAppStore();
 
@@ -118,14 +122,61 @@ export default function FinanceScreen() {
           <p className="text-[11px] text-[#464555] mt-0.5">HDFC ••4109 & ICICI ••8912</p>
         </div>
         <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm">
-          <p className="text-xs text-[#005338] font-semibold">Today's Total Spend</p>
-          <p className="text-2xl font-black text-[#005338] mt-1">₹{spending.toLocaleString()}</p>
-          <p className="text-[11px] text-[#10B981] mt-0.5">₹{(dailyBudget - spending).toLocaleString()} safe buffer remaining</p>
+          <p className="text-xs text-[#005338] font-semibold flex items-center gap-1"><span className="material-symbols-rounded text-[14px]">verified_user</span> Safe-Spend Allowance</p>
+          <p className="text-2xl font-black text-[#005338] mt-1">₹{(dailyBudget - spending).toLocaleString()}</p>
+          <p className="text-[11px] text-[#10B981] mt-0.5">₹{spending.toLocaleString()} burned today</p>
         </div>
         <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm">
           <p className="text-xs text-[#D97706] font-semibold">Upcoming Bills (48h)</p>
           <p className="text-2xl font-black text-[#181B25] mt-1">₹{upcomingBills.toLocaleString()}</p>
-          <p className="text-[11px] text-[#D32F2F] mt-0.5">Tata Power Electricity</p>
+          <p className="text-[11px] text-[#D32F2F] mt-0.5 animate-pulse">Tata Power Electricity</p>
+        </div>
+      </div>
+
+      {/* Subscription Radar & Zombie Hunter */}
+      <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold text-[#181B25] flex items-center gap-1.5">
+            <span className="material-symbols-rounded text-[#3525CD] text-[18px]">radar</span>
+            Subscription Radar
+          </h3>
+          <span className="text-[10px] font-bold text-[#D32F2F] bg-[#FFF5F5] px-2 py-1 rounded-lg flex items-center gap-1">
+            <span className="w-1.5 h-1.5 bg-[#D32F2F] rounded-full animate-ping"></span> 1 Zombie Found
+          </span>
+        </div>
+
+        <div className="space-y-3">
+          {mockSubscriptions.map(sub => (
+            <div key={sub.id} className={`p-3 rounded-xl border flex flex-col gap-3 ${sub.status === 'Zombie' ? 'bg-[#FFF5F5] border-[#FFE0E0]' : 'bg-[#FAF9FF] border-[#E5E8F5]'}`}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${sub.color}`}>
+                    <span className="material-symbols-rounded text-[16px]">{sub.icon}</span>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-[#181B25]">{sub.name}</p>
+                    <p className="text-[10px] text-[#464555]">Last Used: {sub.lastUsed}</p>
+                  </div>
+                </div>
+                <span className="text-xs font-black text-[#181B25]">{sub.amount}</span>
+              </div>
+              
+              {sub.status === 'Zombie' && (
+                <div className="pt-2 border-t border-[#FFE0E0] flex flex-col gap-2">
+                  <p className="text-[10px] text-[#D32F2F] font-bold leading-snug">
+                    <span className="material-symbols-rounded text-[12px] inline align-middle mr-1">warning</span>
+                    Zombie Flag: Zero app usage detected in 45 days. High burn rate risk.
+                  </p>
+                  <button 
+                    onClick={() => { interact('Cancelled Zombie Subscription'); setMockSubscriptions(prev => prev.filter(s => s.id !== sub.id)) }}
+                    className="w-full py-1.5 bg-[#E53935] hover:bg-[#D32F2F] text-white text-[10px] font-bold rounded-lg active:scale-95 transition shadow-sm"
+                  >
+                    1-Tap Cancel Subscription
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 

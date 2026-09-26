@@ -139,8 +139,17 @@ export default function MoreScreen() {
           <div className="w-8 h-8 rounded-xl bg-[#E8EAF6] text-[#3949AB] flex items-center justify-center mb-2">
             <span className="material-symbols-rounded text-[18px]">diversity_1</span>
           </div>
-          <p className="text-xs font-bold text-[#181B25]">Relationships & Admin</p>
-          <p className="text-[10px] text-[#464555]">Network, Gifts & Family</p>
+          <p className="text-xs font-bold text-[#181B25]">Relationships</p>
+          <p className="text-[10px] text-[#464555]">Network & Gifts</p>
+        </div>
+
+        {/* Household Sync */}
+        <div onClick={() => navigate('/household')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
+          <div className="w-8 h-8 rounded-xl bg-[#FFF5F5] text-[#E53935] flex items-center justify-center mb-2">
+            <span className="material-symbols-rounded text-[18px]">home_work</span>
+          </div>
+          <p className="text-xs font-bold text-[#181B25]">Household Sync</p>
+          <p className="text-[10px] text-[#464555]">Chores & Groceries</p>
         </div>
 
         {/* Knowledge Vault */}

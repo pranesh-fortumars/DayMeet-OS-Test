@@ -21,6 +21,7 @@ const SecurityVaultScreen = lazy(() => import('./components/SecurityVaultScreen'
 const DelegationHubScreen = lazy(() => import('./components/DelegationHubScreen'));
 const RelationshipsScreen = lazy(() => import('./components/RelationshipsScreen'));
 const ProfileScreen = lazy(() => import('./components/ProfileScreen'));
+const FamilySyncScreen = lazy(() => import('./components/FamilySyncScreen'));
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { App as CapacitorApp } from '@capacitor/app';
@@ -206,6 +207,7 @@ function App() {
                 <Route path="/delegation" element={<DelegationHubScreen />} />
                 <Route path="/relationships" element={<RelationshipsScreen />} />
                 <Route path="/profile" element={<ProfileScreen />} />
+                <Route path="/household" element={<FamilySyncScreen />} />
               </Routes>
             </Suspense>
           </div>
