@@ -7,6 +7,7 @@ import { useAppStore } from '../store/useAppStore';
 export default function HomeScreen() {
   const navigate = useNavigate();
   const { setModalOpen, spending, dailyBudget, steps, stepsGoal, hydration, hydrationGoal, meditationStreak, exerciseStreak, tasks, activeProfile, currentLocation, setCurrentLocation, setActiveProfile, widgets } = useAppStore();
+  const [isTravelMode, setIsTravelMode] = useState(true);
   const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
   
   const filteredTasks = tasks.filter(t => !t.profile || t.profile === activeProfile);
@@ -57,6 +58,71 @@ export default function HomeScreen() {
           <span>New York</span>
         </div>
       </div>
+
+      {/* 1.5 Boarding Pass & Travel Nomad Concierge (Travel Mode) */}
+      {isTravelMode && (
+        <div className="bg-gradient-to-r from-[#0F172A] to-[#1E293B] rounded-[20px] p-4 shadow-xl text-white animate-in slide-in-from-top-4 duration-500 overflow-hidden relative">
+          <div className="absolute -right-10 -top-10 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
+          
+          <div className="flex items-center justify-between mb-3 relative z-10">
+            <span className="px-2 py-1 rounded-md text-[10px] font-black bg-white/10 text-white tracking-widest uppercase flex items-center gap-1">
+              <span className="material-symbols-rounded text-[14px]">flight_takeoff</span>
+              Boarding Now
+            </span>
+            <span className="text-[10px] text-gray-400 font-bold">Gate closes in 45m</span>
+          </div>
+          
+          <div className="flex items-center justify-between relative z-10">
+            <div>
+              <p className="text-3xl font-black tracking-tighter">JFK</p>
+              <p className="text-[10px] text-gray-400">New York, US</p>
+            </div>
+            
+            <div className="flex-1 px-4">
+              <div className="flex items-center justify-center gap-2">
+                <div className="h-px bg-white/20 flex-1"></div>
+                <span className="material-symbols-rounded text-[#38BDF8] rotate-90">flight</span>
+                <div className="h-px bg-white/20 flex-1"></div>
+              </div>
+              <p className="text-center text-[10px] font-bold text-gray-400 mt-1">11h 20m</p>
+            </div>
+            
+            <div className="text-right">
+              <p className="text-3xl font-black tracking-tighter">LHR</p>
+              <p className="text-[10px] text-gray-400">London, UK</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between mt-4 p-3 bg-white/5 rounded-xl border border-white/10 relative z-10">
+            <div>
+              <p className="text-[10px] text-gray-400">Flight</p>
+              <p className="text-sm font-bold">BA 112</p>
+            </div>
+            <div>
+              <p className="text-[10px] text-gray-400">Gate</p>
+              <p className="text-sm font-bold text-[#38BDF8]">42B</p>
+            </div>
+            <div>
+              <p className="text-[10px] text-gray-400">Seat</p>
+              <p className="text-sm font-bold">14F</p>
+            </div>
+            <button className="w-8 h-8 rounded-lg bg-white text-black flex items-center justify-center shadow-lg active:scale-95 transition">
+              <span className="material-symbols-rounded text-[20px]">qr_code_2</span>
+            </button>
+          </div>
+          
+          <div className="flex gap-2 mt-3 relative z-10">
+            <button onClick={() => triggerToast('Currency Converter: USD to GBP')} className="flex-1 py-1.5 rounded-lg bg-white/10 text-white text-[10px] font-bold flex items-center justify-center gap-1 hover:bg-white/20">
+              <span className="material-symbols-rounded text-[14px]">currency_exchange</span>
+              Convert £
+            </button>
+            <button onClick={() => { triggerToast('Timezone shifting Protocol Active'); setIsTravelMode(false); }} className="flex-1 py-1.5 rounded-lg bg-white/10 text-white text-[10px] font-bold flex items-center justify-center gap-1 hover:bg-white/20">
+              <span className="material-symbols-rounded text-[14px]">bedtime</span>
+              Jetlag Protocol
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Geofence & Context Switcher Trigger Card */}
       <div className="bg-[#181B25] rounded-xl p-3 shadow-md flex items-center justify-between text-white animate-in slide-in-from-top-2 duration-500">

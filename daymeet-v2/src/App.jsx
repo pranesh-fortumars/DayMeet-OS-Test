@@ -48,7 +48,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [appLocked, setAppLocked] = useState(false);
-  const { initSync, activeProfile, setActiveProfile, setCurrentLocation, globalLockEnabled } = useAppStore();
+  const { initSync, activeProfile, setActiveProfile, setCurrentLocation, globalLockEnabled, detoxMode } = useAppStore();
 
   useEffect(() => {
     const initApp = async () => {
@@ -180,7 +180,7 @@ function App() {
   }
 
   return (
-    <div className="h-[100dvh] flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200 bg-[#FAF9FF] overflow-hidden">
+    <div className={`h-[100dvh] flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200 bg-[#FAF9FF] overflow-hidden ${detoxMode ? 'grayscale transition-all duration-1000' : 'transition-all duration-1000'}`}>
       <Header />
       <main className="max-w-3xl mx-auto flex-1 w-full relative flex flex-col min-h-0">
         <PullToRefresh onRefresh={handleGlobalRefresh}>

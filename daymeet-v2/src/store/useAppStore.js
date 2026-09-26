@@ -19,6 +19,9 @@ export const useAppStore = create((set, get) => ({
   globalLockEnabled: false,
   toggleGlobalLock: () => set((state) => ({ globalLockEnabled: !state.globalLockEnabled })),
   
+  detoxMode: false,
+  toggleDetoxMode: () => set((state) => ({ detoxMode: !state.detoxMode })),
+  
   // Third Party Integrations
   googleCalConnected: false,
   setGoogleCalConnected: (status) => set({ googleCalConnected: status }),

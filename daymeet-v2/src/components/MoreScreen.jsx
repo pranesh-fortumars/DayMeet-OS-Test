@@ -4,7 +4,7 @@ import { useAppStore } from '../store/useAppStore';
 
 export default function MoreScreen() {
   const navigate = useNavigate();
-  const { setModalOpen, widgets, toggleWidget, globalLockEnabled, toggleGlobalLock } = useAppStore();
+  const { setModalOpen, widgets, toggleWidget, globalLockEnabled, toggleGlobalLock, detoxMode, toggleDetoxMode } = useAppStore();
   const [themeMode, setThemeMode] = useState('light');
   const [syncAlerts, setSyncAlerts] = useState(true);
   const [pomodoroHUD, setPomodoroHUD] = useState(true);
@@ -245,6 +245,22 @@ export default function MoreScreen() {
           </div>
           <div onClick={toggleGlobalLock} className={`w-12 h-6 rounded-full p-0.5 transition-colors relative flex items-center cursor-pointer ${globalLockEnabled ? 'bg-[#3525CD]' : 'bg-gray-300'}`}>
             <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${globalLockEnabled ? 'translate-x-6' : 'translate-x-0'}`}></div>
+          </div>
+        </div>
+
+        {/* Digital Detox Enforcer */}
+        <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${detoxMode ? 'bg-[#181B25] text-white' : 'bg-gray-100 text-gray-400'}`}>
+              <span className="material-symbols-rounded text-[22px]">visibility_off</span>
+            </div>
+            <div>
+              <p className="text-xs font-bold text-[#181B25]">Greyscale Detox Protocol</p>
+              <p className="text-[10px] text-[#464555]">Forces 100% monochrome to reduce dopamine</p>
+            </div>
+          </div>
+          <div onClick={toggleDetoxMode} className={`w-12 h-6 rounded-full p-0.5 transition-colors relative flex items-center cursor-pointer ${detoxMode ? 'bg-[#181B25]' : 'bg-gray-300'}`}>
+            <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${detoxMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
           </div>
         </div>
       </div>
