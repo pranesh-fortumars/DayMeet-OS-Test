@@ -30,7 +30,7 @@ export default function GlobalSmartCapture() {
         quality: 90,
         allowEditing: false,
         resultType: CameraResultType.Uri,
-        source: CameraSource.Camera
+        source: CameraSource.Prompt
       });
       if (image && image.webPath) {
         // Mock OCR Receipt Parsing (Sprint 1)

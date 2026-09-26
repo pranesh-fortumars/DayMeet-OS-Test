@@ -26,7 +26,7 @@ export default function HomeScreen() {
           quality: 90,
           allowEditing: false,
           resultType: CameraResultType.Base64,
-          source: CameraSource.Camera
+          source: CameraSource.Prompt
         });
         console.log('Captured Document/Receipt for:', type);
       } catch (e) {
