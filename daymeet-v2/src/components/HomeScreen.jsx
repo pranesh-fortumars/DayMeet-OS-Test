@@ -61,62 +61,62 @@ export default function HomeScreen() {
 
       {/* 1.5 Boarding Pass & Travel Nomad Concierge (Travel Mode) */}
       {isTravelMode && (
-        <div className="bg-gradient-to-r from-[#0F172A] to-[#1E293B] rounded-[20px] p-4 shadow-xl text-white animate-in slide-in-from-top-4 duration-500 overflow-hidden relative">
-          <div className="absolute -right-10 -top-10 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
+        <div className="bg-white dark:bg-gradient-to-r dark:from-[#0F172A] dark:to-[#1E293B] border border-[#E5E8F5] dark:border-transparent rounded-[20px] p-4 shadow-sm dark:shadow-xl text-[#181B25] dark:text-white animate-in slide-in-from-top-4 duration-500 overflow-hidden relative">
+          <div className="absolute -right-10 -top-10 w-32 h-32 bg-[#F1F3FF] dark:bg-white/5 rounded-full blur-2xl"></div>
           
           <div className="flex items-center justify-between mb-3 relative z-10">
-            <span className="px-2 py-1 rounded-md text-[10px] font-black bg-white/10 text-white tracking-widest uppercase flex items-center gap-1">
+            <span className="px-2 py-1 rounded-md text-[10px] font-black bg-[#E5E8F5] dark:bg-white/10 text-[#181B25] dark:text-white tracking-widest uppercase flex items-center gap-1">
               <span className="material-symbols-rounded text-[14px]">flight_takeoff</span>
               Boarding Now
             </span>
-            <span className="text-[10px] text-gray-400 font-bold">Gate closes in 45m</span>
+            <span className="text-[10px] text-[#464555] dark:text-gray-400 font-bold">Gate closes in 45m</span>
           </div>
           
           <div className="flex items-center justify-between relative z-10">
             <div>
               <p className="text-3xl font-black tracking-tighter">JFK</p>
-              <p className="text-[10px] text-gray-400">New York, US</p>
+              <p className="text-[10px] text-[#464555] dark:text-gray-400">New York, US</p>
             </div>
             
             <div className="flex-1 px-4">
               <div className="flex items-center justify-center gap-2">
-                <div className="h-px bg-white/20 flex-1"></div>
+                <div className="h-px bg-[#E5E8F5] dark:bg-white/20 flex-1"></div>
                 <span className="material-symbols-rounded text-[#38BDF8] rotate-90">flight</span>
-                <div className="h-px bg-white/20 flex-1"></div>
+                <div className="h-px bg-[#E5E8F5] dark:bg-white/20 flex-1"></div>
               </div>
-              <p className="text-center text-[10px] font-bold text-gray-400 mt-1">11h 20m</p>
+              <p className="text-center text-[10px] font-bold text-[#464555] dark:text-gray-400 mt-1">11h 20m</p>
             </div>
             
             <div className="text-right">
               <p className="text-3xl font-black tracking-tighter">LHR</p>
-              <p className="text-[10px] text-gray-400">London, UK</p>
+              <p className="text-[10px] text-[#464555] dark:text-gray-400">London, UK</p>
             </div>
           </div>
           
-          <div className="flex items-center justify-between mt-4 p-3 bg-white/5 rounded-xl border border-white/10 relative z-10">
+          <div className="flex items-center justify-between mt-4 p-3 bg-[#F1F3FF] dark:bg-white/5 rounded-xl border border-[#E5E8F5] dark:border-white/10 relative z-10">
             <div>
-              <p className="text-[10px] text-gray-400">Flight</p>
-              <p className="text-sm font-bold">BA 112</p>
+              <p className="text-[10px] text-[#464555] dark:text-gray-400">Flight</p>
+              <p className="text-sm font-bold text-[#181B25] dark:text-white">BA 112</p>
             </div>
             <div>
-              <p className="text-[10px] text-gray-400">Gate</p>
+              <p className="text-[10px] text-[#464555] dark:text-gray-400">Gate</p>
               <p className="text-sm font-bold text-[#38BDF8]">42B</p>
             </div>
             <div>
-              <p className="text-[10px] text-gray-400">Seat</p>
-              <p className="text-sm font-bold">14F</p>
+              <p className="text-[10px] text-[#464555] dark:text-gray-400">Seat</p>
+              <p className="text-sm font-bold text-[#181B25] dark:text-white">14F</p>
             </div>
-            <button className="w-8 h-8 rounded-lg bg-white text-black flex items-center justify-center shadow-lg active:scale-95 transition">
+            <button className="w-8 h-8 rounded-lg bg-[#181B25] text-white dark:bg-white dark:text-black flex items-center justify-center shadow-lg active:scale-95 transition">
               <span className="material-symbols-rounded text-[20px]">qr_code_2</span>
             </button>
           </div>
           
           <div className="flex gap-2 mt-3 relative z-10">
-            <button onClick={() => triggerToast('Currency Converter: USD to GBP')} className="flex-1 py-1.5 rounded-lg bg-white/10 text-white text-[10px] font-bold flex items-center justify-center gap-1 hover:bg-white/20">
+            <button onClick={() => triggerToast('Currency Converter: USD to GBP')} className="flex-1 py-1.5 rounded-lg bg-[#F1F3FF] dark:bg-white/10 text-[#181B25] dark:text-white text-[10px] font-bold flex items-center justify-center gap-1 hover:bg-[#E5E8F5] dark:hover:bg-white/20 transition">
               <span className="material-symbols-rounded text-[14px]">currency_exchange</span>
               Convert £
             </button>
-            <button onClick={() => { triggerToast('Timezone shifting Protocol Active'); setIsTravelMode(false); }} className="flex-1 py-1.5 rounded-lg bg-white/10 text-white text-[10px] font-bold flex items-center justify-center gap-1 hover:bg-white/20">
+            <button onClick={() => { triggerToast('Timezone shifting Protocol Active'); setIsTravelMode(false); }} className="flex-1 py-1.5 rounded-lg bg-[#F1F3FF] dark:bg-white/10 text-[#181B25] dark:text-white text-[10px] font-bold flex items-center justify-center gap-1 hover:bg-[#E5E8F5] dark:hover:bg-white/20 transition">
               <span className="material-symbols-rounded text-[14px]">bedtime</span>
               Jetlag Protocol
             </button>
@@ -125,14 +125,14 @@ export default function HomeScreen() {
       )}
 
       {/* Geofence & Context Switcher Trigger Card */}
-      <div className="bg-[#181B25] rounded-xl p-3 shadow-md flex items-center justify-between text-white animate-in slide-in-from-top-2 duration-500">
+      <div className="bg-white dark:bg-[#181B25] border border-[#E5E8F5] dark:border-transparent rounded-xl p-3 shadow-sm dark:shadow-md flex items-center justify-between text-[#181B25] dark:text-white animate-in slide-in-from-top-2 duration-500">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-[#F1F3FF] dark:bg-white/10 flex items-center justify-center">
             <span className="material-symbols-rounded text-[#10B981] text-[18px]">location_on</span>
           </div>
           <div>
             <p className="text-xs font-bold">Arrived at {currentLocation}</p>
-            <p className="text-[10px] text-gray-400">Context active: {activeProfile}</p>
+            <p className="text-[10px] text-[#464555] dark:text-gray-400">Context active: {activeProfile}</p>
           </div>
         </div>
         <button 
@@ -146,7 +146,7 @@ export default function HomeScreen() {
               setActiveProfile('Work');
             }
           }} 
-          className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-[10px] font-bold"
+          className="px-3 py-1.5 rounded-lg bg-[#F1F3FF] dark:bg-white/10 hover:bg-[#E5E8F5] dark:hover:bg-white/20 transition text-[#181B25] dark:text-white text-[10px] font-bold"
         >
           Simulate Geofence
         </button>
