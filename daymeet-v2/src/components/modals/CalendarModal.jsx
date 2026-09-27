@@ -127,7 +127,7 @@ export default function CalendarModal({ isOpen, onClose }) {
                       onClick={() => handleSelectDate(date)}
                       className={`relative w-10 h-10 mx-auto flex items-center justify-center rounded-full text-[15px] cursor-pointer transition-all duration-300 group ${
                         isSelected && !isToday
-                          ? 'bg-[#181B25] dark:bg-white text-white dark:text-black font-bold shadow-md transform scale-110' 
+                          ? 'bg-[#3525CD] text-white font-bold shadow-[0_4px_12px_rgba(53,37,205,0.4)] transform scale-110' 
                           : isToday 
                             ? 'bg-[#DB4437] text-white font-bold shadow-[0_4px_12px_rgba(219,68,55,0.4)] transform scale-110' // Google Calendar Red for Today
                             : 'text-[#181B25] dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-slate-700'
