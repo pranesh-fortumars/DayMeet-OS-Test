@@ -330,6 +330,14 @@ function App() {
               <span className="material-symbols-rounded text-[20px]">fingerprint</span>
               <span>Scan to Authenticate</span>
             </button>
+
+            {/* Developer/Emergency Bypass */}
+            <button 
+              onClick={() => setAppLocked(false)}
+              className="mt-6 text-[10px] font-bold tracking-widest text-[#464555] hover:text-[#181B25] uppercase underline decoration-[#E5E8F5] underline-offset-4 active:scale-95 transition"
+            >
+              Developer Bypass
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

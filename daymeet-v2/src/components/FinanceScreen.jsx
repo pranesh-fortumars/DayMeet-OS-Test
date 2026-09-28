@@ -96,6 +96,14 @@ export default function FinanceScreen() {
           <span className="material-symbols-rounded text-[18px]">fingerprint</span>
           Authenticate
         </button>
+
+        {/* Developer/Emergency Bypass */}
+        <button 
+          onClick={() => setUnlocked(true)}
+          className="mt-6 text-[10px] font-bold tracking-widest text-[#464555] hover:text-[#181B25] uppercase underline decoration-[#E5E8F5] underline-offset-4 active:scale-95 transition"
+        >
+          Developer Bypass
+        </button>
       </div>
     );
   }
