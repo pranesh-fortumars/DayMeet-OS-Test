@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, Suspense, lazy } from 'react';
-import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
 import BottomDock from './components/BottomDock';
 import GlobalSmartCapture from './components/GlobalSmartCapture';
@@ -67,11 +68,26 @@ import FocusSanctuaryModal from './components/modals/FocusSanctuaryModal';
 import WindDownModal from './components/modals/WindDownModal';
 import NightlyCleanupModal from './components/modals/NightlyCleanupModal';
 
+const PageTransition = ({ children }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15, scale: 0.98, filter: 'blur(4px)' }}
+      animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+      exit={{ opacity: 0, y: -15, scale: 0.98, filter: 'blur(4px)' }}
+      transition={{ type: 'spring', stiffness: 350, damping: 28, mass: 0.8 }}
+      className="w-full h-full"
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [appLocked, setAppLocked] = useState(false);
   const timeOfDay = useTimeOfDay();
+  const location = useLocation();
   const { initSync, activeProfile, setActiveProfile, setCurrentLocation, globalLockEnabled, detoxMode } = useAppStore();
 
   useEffect(() => {
@@ -216,23 +232,25 @@ function App() {
                 <div className="w-48 h-3 rounded-md bg-[#F1F3FF]"></div>
               </div>
             }>
-              <Routes>
-                <Route path="/" element={<HomeScreen />} />
-                <Route path="/calendar" element={<CalendarScreen />} />
-                <Route path="/tasks" element={<TasksScreen />} />
-                <Route path="/insights" element={<InsightsScreen />} />
-                <Route path="/finance" element={<FinanceScreen />} />
-                <Route path="/more" element={<MoreScreen />} />
-                <Route path="/cleanup" element={<CleanupScreen />} />
-                <Route path="/weekly-reset" element={<WeeklyResetScreen />} />
-                <Route path="/growth-hub" element={<GrowthHubScreen />} />
-                <Route path="/knowledge" element={<KnowledgeVaultScreen />} />
-                <Route path="/security-vault" element={<SecurityVaultScreen />} />
-                <Route path="/delegation" element={<DelegationHubScreen />} />
-                <Route path="/relationships" element={<RelationshipsScreen />} />
-                <Route path="/profile" element={<ProfileScreen />} />
-                <Route path="/household" element={<FamilySyncScreen />} />
-              </Routes>
+              <AnimatePresence mode="wait">
+                <Routes location={location} key={location.pathname}>
+                  <Route path="/" element={<PageTransition><HomeScreen /></PageTransition>} />
+                  <Route path="/calendar" element={<PageTransition><CalendarScreen /></PageTransition>} />
+                  <Route path="/tasks" element={<PageTransition><TasksScreen /></PageTransition>} />
+                  <Route path="/insights" element={<PageTransition><InsightsScreen /></PageTransition>} />
+                  <Route path="/finance" element={<PageTransition><FinanceScreen /></PageTransition>} />
+                  <Route path="/more" element={<PageTransition><MoreScreen /></PageTransition>} />
+                  <Route path="/cleanup" element={<PageTransition><CleanupScreen /></PageTransition>} />
+                  <Route path="/weekly-reset" element={<PageTransition><WeeklyResetScreen /></PageTransition>} />
+                  <Route path="/growth-hub" element={<PageTransition><GrowthHubScreen /></PageTransition>} />
+                  <Route path="/knowledge" element={<PageTransition><KnowledgeVaultScreen /></PageTransition>} />
+                  <Route path="/security-vault" element={<PageTransition><SecurityVaultScreen /></PageTransition>} />
+                  <Route path="/delegation" element={<PageTransition><DelegationHubScreen /></PageTransition>} />
+                  <Route path="/relationships" element={<PageTransition><RelationshipsScreen /></PageTransition>} />
+                  <Route path="/profile" element={<PageTransition><ProfileScreen /></PageTransition>} />
+                  <Route path="/household" element={<PageTransition><FamilySyncScreen /></PageTransition>} />
+                </Routes>
+              </AnimatePresence>
             </Suspense>
           </div>
         </PullToRefresh>
