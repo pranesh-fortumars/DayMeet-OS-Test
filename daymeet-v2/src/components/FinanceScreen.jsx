@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BudgetGauge from './charts/BudgetGauge';
+import SpendingChart from './charts/SpendingChart';
 import { useAppStore } from '../store/useAppStore';
 import { useInteraction } from '../hooks/useInteraction';
 import { NativeBiometric } from '@capgo/capacitor-native-biometric';
@@ -180,21 +181,21 @@ export default function FinanceScreen() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm pt-8">
-        <div className="flex items-center justify-between mb-4">
+      <div className="bg-white dark:bg-[#1E293B] rounded-2xl p-4 border border-[#E5E8F5] dark:border-slate-700 shadow-sm pt-5">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-bold text-[#181B25]">Financial Health</h3>
+            <h3 className="text-sm font-bold text-[#181B25] dark:text-white">Spending Trajectory</h3>
             <button 
               onClick={() => useAppStore.getState().setModalOpen('budgetTarget', true)}
-              className="w-6 h-6 rounded-md bg-[#F1F3FF] text-[#3525CD] flex items-center justify-center hover:bg-[#E5E8F5] transition"
+              className="w-6 h-6 rounded-md bg-[#F1F3FF] dark:bg-slate-800 text-[#3525CD] dark:text-[#818CF8] flex items-center justify-center hover:bg-[#E5E8F5] dark:hover:bg-slate-700 transition"
               title="Edit Budget Target"
             >
               <span className="material-symbols-rounded text-[14px]">edit</span>
             </button>
           </div>
-          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E8F5E9] text-[#2E7D32]">Optimal Pace</span>
+          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E8F5E9] dark:bg-[#005338]/30 text-[#2E7D32] dark:text-[#34D399]">Optimal Pace</span>
         </div>
-        <BudgetGauge />
+        <SpendingChart />
       </div>
 
       {/* Recent Transactions List */}

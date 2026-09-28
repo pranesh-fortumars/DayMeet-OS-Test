@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import WeeklyTrendChart from './charts/WeeklyTrendChart';
+import HealthRing from './charts/HealthRing';
 import { useInteraction } from '../hooks/useInteraction';
 import { useAppStore } from '../store/useAppStore';
 import { syncHealthData } from '../services/HealthService';
@@ -91,25 +92,49 @@ export default function InsightsScreen() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div onClick={() => interact('Sleep Metrics')} className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] text-center shadow-sm cursor-pointer active:scale-95 transition">
-          <p className="text-[11px] text-[#464555]">Sleep Quality</p>
-          <p className="text-xl font-extrabold text-[#181B25] mt-1">{sleepTime}</p>
-          <span className="text-[10px] font-bold text-[#10B981]">{sleepQuality}% Optimal</span>
+        <div onClick={() => interact('Sleep Metrics')}>
+          <HealthRing 
+            title="Sleep Quality" 
+            value={`${sleepQuality}%`} 
+            unit="Optimal" 
+            goal="85%" 
+            progress={sleepQuality} 
+            color="#3525CD" 
+            icon="bedtime" 
+          />
         </div>
-        <div onClick={() => interact('Activity Metrics')} className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] text-center shadow-sm cursor-pointer active:scale-95 transition">
-          <p className="text-[11px] text-[#464555]">Steps Walked</p>
-          <p className="text-xl font-extrabold text-[#181B25] mt-1">{steps.toLocaleString()}</p>
-          <span className="text-[10px] font-bold text-[#3525CD]">Goal: {stepsGoal.toLocaleString()}</span>
+        <div onClick={() => interact('Activity Metrics')}>
+          <HealthRing 
+            title="Steps" 
+            value={steps.toLocaleString()} 
+            unit="steps" 
+            goal={stepsGoal.toLocaleString()} 
+            progress={(steps / stepsGoal) * 100} 
+            color="#10B981" 
+            icon="directions_walk" 
+          />
         </div>
-        <div onClick={() => interact('Hydration')} className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] text-center shadow-sm cursor-pointer active:scale-95 transition">
-          <p className="text-[11px] text-[#464555]">Water Hydration</p>
-          <p className="text-xl font-extrabold text-[#181B25] mt-1">{hydration} L</p>
-          <span className="text-[10px] font-bold text-[#0288D1]">Goal: {hydrationGoal} L</span>
+        <div onClick={() => interact('Hydration')}>
+          <HealthRing 
+            title="Hydration" 
+            value={`${hydration}L`} 
+            unit="L" 
+            goal={hydrationGoal} 
+            progress={(hydration / hydrationGoal) * 100} 
+            color="#0288D1" 
+            icon="water_drop" 
+          />
         </div>
-        <div onClick={() => interact('Calories Burned')} className="bg-white p-3.5 rounded-2xl border border-[#E5E8F5] text-center shadow-sm cursor-pointer active:scale-95 transition">
-          <p className="text-[11px] text-[#464555]">Active Burn</p>
-          <p className="text-xl font-extrabold text-[#181B25] mt-1">{activeBurn} kcal</p>
-          <span className="text-[10px] font-bold text-[#F59E0B]">Goal: {activeBurnGoal} kcal</span>
+        <div onClick={() => interact('Calories Burned')}>
+          <HealthRing 
+            title="Active Burn" 
+            value={activeBurn} 
+            unit="kcal" 
+            goal={activeBurnGoal} 
+            progress={(activeBurn / activeBurnGoal) * 100} 
+            color="#F59E0B" 
+            icon="local_fire_department" 
+          />
         </div>
       </div>
 
