@@ -3,18 +3,33 @@ import { useAppStore } from '../../store/useAppStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function QuickAddModal() {
-  const { modals, setModalOpen } = useAppStore();
+  const { modals, setModalOpen, addTask } = useAppStore();
   const isOpen = modals.quickAdd;
   const [activeCategory, setActiveCategory] = useState('Task');
   const [priority, setPriority] = useState('p2');
+  const [inputText, setInputText] = useState('');
 
   const handleClose = () => {
     setModalOpen('quickAdd', false);
+    setTimeout(() => setInputText(''), 300); // Reset input after exit animation
   };
 
   const handleCreate = () => {
-    // Mock create action
-    console.log(`Created: ${activeCategory} with priority ${priority}`);
+    if (!inputText.trim()) return;
+    
+    if (activeCategory === 'Task') {
+      addTask({
+        title: inputText,
+        subtitle: 'Created via Quick Add',
+        tag: 'Task',
+        tagType: 'priority',
+        priority: priority.toUpperCase(),
+        profile: 'Personal'
+      });
+    } else {
+      console.log(`Created: ${activeCategory} -> ${inputText}`);
+    }
+    
     handleClose();
   };
 
@@ -73,6 +88,8 @@ export default function QuickAddModal() {
           <div className="bg-[#FAF9FF] border border-[#E5E8F5] focus-within:border-[#3525CD] focus-within:ring-2 focus-within:ring-[#3525CD]/20 rounded-2xl p-4 transition-all duration-200 shadow-inner">
             <textarea 
               autoFocus
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
               placeholder={`E.g. Pay internet bill tomorrow...`}
               className="w-full text-base font-medium text-[#181B25] placeholder-gray-400 bg-transparent border-none resize-none focus:ring-0 focus:outline-none outline-none p-0"
               rows="3"
