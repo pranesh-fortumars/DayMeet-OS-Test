@@ -6,8 +6,11 @@ import { useInteraction } from '../hooks/useInteraction';
 import { NativeBiometric } from '@capgo/capacitor-native-biometric';
 import { startSmsListener } from '../services/SmsService';
 
+import PinFallbackModal from './modals/PinFallbackModal';
+
 export default function FinanceScreen() {
   const [unlocked, setUnlocked] = useState(false);
+  const [showPinModal, setShowPinModal] = useState(false);
   const [recentTxns, setRecentTxns] = useState([
     { name: 'Starbucks', amount: '-₹450', date: 'Today, 09:15 AM', icon: 'local_cafe' },
     { name: 'Salary', amount: '+₹1,25,000', date: 'Yesterday', icon: 'account_balance' },
@@ -63,7 +66,7 @@ export default function FinanceScreen() {
     
     // Fail-safe: If the native biometric plugin hangs indefinitely, unlock after 2.5s
     const fallbackTimer = setTimeout(() => {
-      setUnlocked(true);
+      setShowPinModal(true);
     }, 2500);
 
     try {
@@ -74,18 +77,22 @@ export default function FinanceScreen() {
           title: "Biometric Authentication",
           subtitle: "Confirm your identity to view sensitive data",
         });
+        clearTimeout(fallbackTimer);
+        setUnlocked(true);
+      } else {
+        clearTimeout(fallbackTimer);
+        setShowPinModal(true);
       }
-      clearTimeout(fallbackTimer);
-      setUnlocked(true);
     } catch (e) {
       console.log('Biometric failed or canceled', e);
       clearTimeout(fallbackTimer);
-      setUnlocked(true);
+      setShowPinModal(true);
     }
   };
 
   if (!unlocked) {
     return (
+      <>
       <div className="flex flex-col items-center justify-center pt-20">
         <div className="w-16 h-16 rounded-full bg-[#FFEBEE] text-[#E53935] flex items-center justify-center mb-4">
           <span className="material-symbols-rounded text-[32px]">lock</span>
@@ -99,12 +106,18 @@ export default function FinanceScreen() {
 
         {/* Developer/Emergency Bypass */}
         <button 
-          onClick={() => setUnlocked(true)}
+          onClick={() => setShowPinModal(true)}
           className="mt-6 text-[10px] font-bold tracking-widest text-[#464555] hover:text-[#181B25] uppercase underline decoration-[#E5E8F5] underline-offset-4 active:scale-95 transition"
         >
-          Developer Bypass
+          Master PIN Fallback
         </button>
       </div>
+      <PinFallbackModal 
+        isOpen={showPinModal} 
+        onSuccess={() => { setShowPinModal(false); setUnlocked(true); }} 
+        onCancel={() => setShowPinModal(false)} 
+      />
+    </>
     );
   }
 

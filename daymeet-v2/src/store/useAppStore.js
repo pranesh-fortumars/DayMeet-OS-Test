@@ -18,6 +18,8 @@ export const useAppStore = create((set, get) => ({
   toggleWidget: (widget) => set((state) => ({ widgets: { ...state.widgets, [widget]: !state.widgets[widget] } })),
   globalLockEnabled: false,
   toggleGlobalLock: () => set((state) => ({ globalLockEnabled: !state.globalLockEnabled })),
+  appPin: null,
+  setAppPin: (pin) => set({ appPin: pin }),
   
   detoxMode: false,
   toggleDetoxMode: () => set((state) => ({ detoxMode: !state.detoxMode })),

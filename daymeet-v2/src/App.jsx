@@ -7,6 +7,7 @@ import GlobalSmartCapture from './components/GlobalSmartCapture';
 import AuthScreen from './components/AuthScreen';
 import PullToRefresh from './components/PullToRefresh';
 import { useTimeOfDay } from './hooks/useTimeOfDay';
+import PinFallbackModal from './components/modals/PinFallbackModal';
 
 // Handle ChunkLoadErrors gracefully
 const lazyWithRetry = (componentImport) =>
@@ -160,10 +161,12 @@ function App() {
     };
   }, [globalLockEnabled]);
 
+  const [showPinModal, setShowPinModal] = useState(false);
+
   const handleUnlock = async () => {
-    // Fail-safe: If the native biometric plugin hangs indefinitely, unlock after 2.5s
+    // Fail-safe: If the native biometric plugin hangs indefinitely, prompt for PIN after 2.5s
     const fallbackTimer = setTimeout(() => {
-      setAppLocked(false);
+      setShowPinModal(true);
     }, 2500);
 
     try {
@@ -174,13 +177,16 @@ function App() {
           title: "Biometric Authentication",
           subtitle: "Confirm your identity to resume session",
         });
+        clearTimeout(fallbackTimer);
+        setAppLocked(false);
+      } else {
+        clearTimeout(fallbackTimer);
+        setShowPinModal(true);
       }
-      clearTimeout(fallbackTimer);
-      setAppLocked(false);
     } catch (e) {
       console.error("Biometric failed:", e);
       clearTimeout(fallbackTimer);
-      setAppLocked(false); 
+      setShowPinModal(true); 
     }
   };
 
@@ -333,14 +339,19 @@ function App() {
 
             {/* Developer/Emergency Bypass */}
             <button 
-              onClick={() => setAppLocked(false)}
+              onClick={() => setShowPinModal(true)}
               className="mt-6 text-[10px] font-bold tracking-widest text-[#464555] hover:text-[#181B25] uppercase underline decoration-[#E5E8F5] underline-offset-4 active:scale-95 transition"
             >
-              Developer Bypass
+              Master PIN Fallback
             </button>
           </motion.div>
         )}
       </AnimatePresence>
+      <PinFallbackModal 
+        isOpen={showPinModal} 
+        onSuccess={() => { setShowPinModal(false); setAppLocked(false); }} 
+        onCancel={() => setShowPinModal(false)} 
+      />
     </div>
   );
 }
