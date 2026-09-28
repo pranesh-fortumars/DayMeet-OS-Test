@@ -35,6 +35,23 @@ export default function CopilotModal() {
     }
 
     try {
+      // PHASE 3 BACKEND INTEGRATION: Try hitting the secure Vercel API first
+      try {
+        const response = await fetch('/api/copilot', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, state: { tasksCount: 6 } }) // Passing context to backend
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          return data.reply;
+        }
+      } catch (backendError) {
+        console.log('Secure backend not reachable locally. Falling back to local client processing for safety.');
+      }
+
+      // SAFE FALLBACK: If Vercel API isn't running locally, fall back to the safe client-side mock
       const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
       if (!apiKey) {
         return "I've processed that for you! (Note: I am running in mock mode. Add `VITE_GEMINI_API_KEY` to your .env to connect me to a real Google Gemini LLM.)";
