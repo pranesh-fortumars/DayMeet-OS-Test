@@ -219,8 +219,17 @@ function App() {
     return <AuthScreen onAuthSuccess={() => {}} />;
   }
 
+  const getThemeFilter = () => {
+    switch(activeProfile) {
+      case 'Personal': return 'hue-rotate-[15deg]';
+      case 'Creative': return 'hue-rotate-[-45deg] saturate-150'; // Warmer/Amber
+      case 'Family': return 'hue-rotate-[90deg]'; // Greener
+      default: return 'hue-rotate-0';
+    }
+  };
+
   return (
-    <div className={`h-[100dvh] flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200 time-gradient-transition bg-mesh-${timeOfDay} overflow-hidden ${detoxMode ? 'grayscale transition-all duration-1000' : 'transition-all duration-1000'}`}>
+    <div className={`h-[100dvh] flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200 time-gradient-transition bg-mesh-${timeOfDay} overflow-hidden transition-all duration-[3000ms] ease-in-out ${getThemeFilter()} ${detoxMode ? 'grayscale' : ''}`}>
       <Header />
       <main className="max-w-3xl mx-auto flex-1 w-full relative flex flex-col min-h-0">
         <PullToRefresh onRefresh={handleGlobalRefresh}>
@@ -270,24 +279,56 @@ function App() {
       <NightlyCleanupModal />
 
       {/* Global Biometric Lock Overlay */}
-      {appLocked && (
-        <div className="fixed inset-0 z-[999] bg-[#FAF9FF] dark:bg-[#0F172A] flex flex-col items-center justify-center p-6 animate-in fade-in duration-200">
-          <div className="w-20 h-20 rounded-full bg-[#FFEBEE] text-[#D32F2F] flex items-center justify-center mb-6">
-            <span className="material-symbols-rounded text-[40px]">lock</span>
-          </div>
-          <h2 className="text-2xl font-black text-[#181B25] dark:text-white mb-2">DayMeet OS Locked</h2>
-          <p className="text-sm text-[#464555] dark:text-slate-400 text-center mb-8">
-            FaceID or Fingerprint required to resume session.
-          </p>
-          <button 
-            onClick={handleUnlock}
-            className="w-full max-w-xs h-[52px] rounded-xl bg-[#181B25] text-white text-sm font-bold flex items-center justify-center gap-2 hover:bg-black transition"
+      <AnimatePresence>
+        {appLocked && (
+          <motion.div 
+            initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+            animate={{ opacity: 1, backdropFilter: 'blur(20px)' }}
+            exit={{ opacity: 0, backdropFilter: 'blur(0px)', scale: 1.05 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-[9999] bg-[#FAF9FF]/80 dark:bg-[#0F172A]/80 flex flex-col items-center justify-center p-6"
           >
-            <span className="material-symbols-rounded text-[20px]">fingerprint</span>
-            <span>Authenticate</span>
-          </button>
-        </div>
-      )}
+            {/* Animated Scanner Ring */}
+            <div className="relative w-32 h-32 mb-8 flex items-center justify-center">
+              <motion.div 
+                animate={{ rotate: 360 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 rounded-full border-2 border-dashed border-[#3525CD]/30 dark:border-[#818CF8]/30"
+              />
+              <motion.div 
+                animate={{ scale: [0.95, 1.05, 0.95], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-2 rounded-full bg-gradient-to-tr from-[#3525CD]/20 to-[#673AB7]/20 blur-md"
+              />
+              
+              {/* Central Lock Icon with Sweeping Scanner Line */}
+              <div className="relative w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 shadow-xl flex items-center justify-center overflow-hidden border border-white/50 dark:border-slate-600">
+                <span className="material-symbols-rounded text-[32px] text-[#3525CD] dark:text-[#818CF8]">lock</span>
+                
+                {/* Laser Sweep */}
+                <motion.div 
+                  animate={{ top: ['-10%', '110%', '-10%'] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                  className="absolute left-0 right-0 h-0.5 bg-[#6FFBBE] shadow-[0_0_8px_2px_rgba(111,251,190,0.8)]"
+                />
+              </div>
+            </div>
+
+            <h2 className="text-3xl font-black text-[#181B25] dark:text-white mb-2 tracking-tight">DayMeet Vault</h2>
+            <p className="text-sm font-medium text-[#464555] dark:text-slate-400 text-center mb-10">
+              Hardware biometric scan required to resume.
+            </p>
+            
+            <button 
+              onClick={handleUnlock}
+              className="w-full max-w-xs h-14 rounded-2xl bg-[#181B25] text-white text-sm font-bold flex items-center justify-center gap-2 hover:bg-black transition shadow-[0_8px_24px_rgba(24,27,37,0.3)] active:scale-95"
+            >
+              <span className="material-symbols-rounded text-[20px]">fingerprint</span>
+              <span>Scan to Authenticate</span>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
