@@ -105,12 +105,21 @@ export default function FinanceScreen() {
         </button>
 
         {/* Developer/Emergency Bypass */}
-        <button 
-          onClick={() => setShowPinModal(true)}
-          className="mt-6 text-[10px] font-bold tracking-widest text-[#464555] hover:text-[#181B25] uppercase underline decoration-[#E5E8F5] underline-offset-4 active:scale-95 transition"
-        >
-          Master PIN Fallback
-        </button>
+        <div className="mt-6 flex flex-col items-center gap-4">
+          <button 
+            onClick={() => setShowPinModal(true)}
+            className="text-[10px] font-bold tracking-widest text-[#464555] hover:text-[#181B25] uppercase underline decoration-[#E5E8F5] underline-offset-4 active:scale-95 transition"
+          >
+            Master PIN Fallback
+          </button>
+          
+          <button 
+            onClick={() => setUnlocked(true)}
+            className="text-[10px] font-bold tracking-widest text-[#E53935] hover:text-[#B71C1C] uppercase active:scale-95 transition"
+          >
+            Direct Login (Dev Bypass)
+          </button>
+        </div>
       </div>
       <PinFallbackModal 
         isOpen={showPinModal} 
