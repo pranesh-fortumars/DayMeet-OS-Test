@@ -2,6 +2,90 @@ import React from 'react';
 import { Geolocation } from '@capacitor/geolocation';
 import { useAppStore } from '../store/useAppStore';
 import { useInteraction } from '../hooks/useInteraction';
+import { motion, useAnimation } from 'framer-motion';
+import confetti from 'canvas-confetti';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
+
+function SwipeableTask({ task, leftBorder, prioBadge, style, onComplete, interact }) {
+  const controls = useAnimation();
+  const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Heavy }).catch(() => {});
+
+  const handleDragEnd = (event, info) => {
+    const offset = info.offset.x;
+    const velocity = info.velocity.x;
+    
+    // Swipe Right to Complete
+    if (offset > 100 || velocity > 500) {
+      // Animate off screen to the right
+      controls.start({ x: '100%', opacity: 0, transition: { duration: 0.2 } }).then(() => {
+        triggerHaptic();
+        // Fire Confetti!
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#3525CD', '#10B981', '#6FFBBE'],
+          zIndex: 9999
+        });
+        onComplete(task.id);
+        // Reset position silently in case it re-renders
+        controls.set({ x: 0, opacity: 1 });
+      });
+    } else {
+      // Spring back to origin if swipe wasn't far enough
+      controls.start({ x: 0, opacity: 1, transition: { type: 'spring', stiffness: 300, damping: 20 } });
+    }
+  };
+
+  return (
+    <div className="relative mb-2.5 rounded-xl overflow-hidden bg-[#10B981] shadow-inner">
+      {/* Background Action Layer (Revealed on Swipe) */}
+      <div className="absolute inset-0 flex items-center px-6">
+         <span className="material-symbols-rounded text-white text-[24px]">check_circle</span>
+         <span className="text-white font-bold text-sm ml-2">Complete</span>
+      </div>
+      
+      {/* Foreground Draggable Task Card */}
+      <motion.div 
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={{ right: 0.5, left: 0 }} // Only elastic on the right
+        onDragEnd={handleDragEnd}
+        animate={controls}
+        onClick={() => interact(`View Task: ${task.title}`)}
+        className={`relative z-10 bg-white dark:bg-[#1E293B] rounded-xl p-3.5 border border-[#E5E8F5] dark:border-slate-700 shadow-sm flex items-center justify-between gap-3 cursor-pointer ${leftBorder}`}
+      >
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <button 
+            onClick={(e) => { 
+              e.stopPropagation(); 
+              onComplete(task.id); 
+              triggerHaptic(); 
+              confetti({ particleCount: 40, spread: 50, colors: ['#10B981'] });
+            }} 
+            className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 transition ${task.status === 'completed' ? 'bg-[#10B981] border-[#10B981] text-white' : 'bg-[#E5E8F5] dark:bg-slate-800 border-[#C7C4D8] dark:border-slate-600 text-transparent hover:border-[#3525CD]'}`}
+          >
+            <span className="material-symbols-rounded text-[16px]">{task.status === 'completed' ? 'check' : ''}</span>
+          </button>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5">
+              <p className={`text-xs font-bold truncate ${task.status === 'completed' ? 'line-through text-[#777587]' : 'text-[#181B25] dark:text-white'}`}>{task.title}</p>
+              {prioBadge}
+            </div>
+            <p className="text-[10px] text-[#464555] dark:text-gray-400 truncate">
+              {task.subtitle || 'Task'} • Due {task.time || new Date(task.createdAt || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+            </p>
+          </div>
+        </div>
+        {task.tag && (
+          <span className="shrink-0 px-2 py-0.5 rounded text-[10px] font-bold" style={{backgroundColor: style.bg, color: style.text}}>
+            {task.tag}
+          </span>
+        )}
+      </motion.div>
+    </div>
+  );
+}
 
 export default function TasksScreen() {
   const { tasks, completeTask } = useAppStore();
@@ -38,9 +122,9 @@ export default function TasksScreen() {
       </div>
 
       <div className="flex items-center gap-2">
-        <button onClick={() => interact('Filter: All')} className="px-3 py-1 rounded-full text-xs font-bold bg-[#181B25] text-white">All (6)</button>
-        <button onClick={() => interact('Filter: Pending')} className="px-3 py-1 rounded-full text-xs font-medium bg-[#EBEDFB] text-[#464555] hover:bg-[#E5E8F5]">Pending (4)</button>
-        <button onClick={() => interact('Filter: Completed')} className="px-3 py-1 rounded-full text-xs font-medium bg-[#EBEDFB] text-[#464555] hover:bg-[#E5E8F5]">Completed (2)</button>
+        <button onClick={() => interact('Filter: All')} className="px-3 py-1 rounded-full text-xs font-bold bg-[#181B25] text-white">All ({tasks.length})</button>
+        <button onClick={() => interact('Filter: Pending')} className="px-3 py-1 rounded-full text-xs font-medium bg-[#EBEDFB] text-[#464555] hover:bg-[#E5E8F5]">Pending ({tasks.filter(t => t.status !== 'completed').length})</button>
+        <button onClick={() => interact('Filter: Completed')} className="px-3 py-1 rounded-full text-xs font-medium bg-[#EBEDFB] text-[#464555] hover:bg-[#E5E8F5]">Completed ({tasks.filter(t => t.status === 'completed').length})</button>
       </div>
 
       <div onClick={() => interact('Toggle Auto-sort')} className="bg-white dark:bg-[#1E293B] rounded-xl p-3 border border-[#E5E8F5] dark:border-slate-700 shadow-sm flex items-center justify-between cursor-pointer active:scale-[0.98] transition">
@@ -61,7 +145,7 @@ export default function TasksScreen() {
         </label>
       </div>
       
-      <div className="space-y-2.5 pt-2">
+      <div className="space-y-0 pt-2">
         {tasks.map((task) => {
           // Determine styles based on priority
           const prio = task.priority || 'Medium';
@@ -94,30 +178,15 @@ export default function TasksScreen() {
           const style = getTagStyles(task.tagType);
 
           return (
-            <div key={task.id} onClick={() => interact(`View Task: ${task.title}`)} className={`bg-white dark:bg-[#1E293B] rounded-xl p-3.5 border border-[#E5E8F5] dark:border-slate-700 shadow-sm flex items-center justify-between gap-3 cursor-pointer active:scale-[0.98] transition ${leftBorder}`}>
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); completeTask(task.id); interact(`Complete Task: ${task.title}`); }} 
-                  className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 transition ${task.status === 'completed' ? 'bg-[#10B981] border-[#10B981] text-white' : 'bg-[#E5E8F5] dark:bg-slate-800 border-[#C7C4D8] dark:border-slate-600 text-transparent hover:border-[#3525CD]'}`}
-                >
-                  <span className="material-symbols-rounded text-[16px]">{task.status === 'completed' ? 'check' : ''}</span>
-                </button>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <p className={`text-xs font-bold truncate ${task.status === 'completed' ? 'line-through text-[#777587]' : 'text-[#181B25] dark:text-white'}`}>{task.title}</p>
-                    {prioBadge}
-                  </div>
-                  <p className="text-[10px] text-[#464555] dark:text-gray-400 truncate">
-                    {task.subtitle || 'Task'} • Due {task.time || new Date(task.createdAt || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                  </p>
-                </div>
-              </div>
-              {task.tag && (
-                <span className="shrink-0 px-2 py-0.5 rounded text-[10px] font-bold" style={{backgroundColor: style.bg, color: style.text}}>
-                  {task.tag}
-                </span>
-              )}
-            </div>
+            <SwipeableTask 
+              key={task.id}
+              task={task}
+              leftBorder={leftBorder}
+              prioBadge={prioBadge}
+              style={style}
+              onComplete={completeTask}
+              interact={interact}
+            />
           );
         })}
         

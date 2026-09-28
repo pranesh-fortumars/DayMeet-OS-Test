@@ -8,18 +8,18 @@ export default function HomeScreen() {
   const navigate = useNavigate();
   const { setModalOpen, spending, dailyBudget, steps, stepsGoal, hydration, hydrationGoal, meditationStreak, exerciseStreak, tasks, activeProfile, currentLocation, setCurrentLocation, setActiveProfile, widgets } = useAppStore();
   const [isTravelMode, setIsTravelMode] = useState(true);
-  const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
-  
+  const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Light }).catch(() => { });
+
   const filteredTasks = tasks.filter(t => !t.profile || t.profile === activeProfile);
-  
+
   const triggerToast = (msg) => { triggerHaptic(); console.log('Toast:', msg); };
   const openBriefingModal = () => { triggerHaptic(); setModalOpen('briefing', true); };
   const switchTab = (tab) => { triggerHaptic(); navigate(tab === 'home' ? '/' : `/${tab}`); };
   const payBill = (id) => { triggerHaptic(); console.log('Pay Bill:', id); };
   const openQuickScheduleMeetingModal = () => { triggerHaptic(); setModalOpen('quickMeeting', true); };
-  
-  const openQuickAddWith = async (type) => { 
-    triggerHaptic(); 
+
+  const openQuickAddWith = async (type) => {
+    triggerHaptic();
     if (type === 'Expense' || type === 'Health Entry') {
       try {
         const image = await Camera.getPhoto({
@@ -63,7 +63,7 @@ export default function HomeScreen() {
       {isTravelMode && (
         <div className="bg-white dark:bg-gradient-to-r dark:from-[#0F172A] dark:to-[#1E293B] border border-[#E5E8F5] dark:border-transparent rounded-[20px] p-4 shadow-sm dark:shadow-xl text-[#181B25] dark:text-white animate-in slide-in-from-top-4 duration-500 overflow-hidden relative">
           <div className="absolute -right-10 -top-10 w-32 h-32 bg-[#F1F3FF] dark:bg-white/5 rounded-full blur-2xl"></div>
-          
+
           <div className="flex items-center justify-between mb-3 relative z-10">
             <span className="px-2 py-1 rounded-md text-[10px] font-black bg-[#E5E8F5] dark:bg-white/10 text-[#181B25] dark:text-white tracking-widest uppercase flex items-center gap-1">
               <span className="material-symbols-rounded text-[14px]">flight_takeoff</span>
@@ -71,13 +71,13 @@ export default function HomeScreen() {
             </span>
             <span className="text-[10px] text-[#464555] dark:text-gray-400 font-bold">Gate closes in 45m</span>
           </div>
-          
+
           <div className="flex items-center justify-between relative z-10">
             <div>
               <p className="text-3xl font-black tracking-tighter">JFK</p>
               <p className="text-[10px] text-[#464555] dark:text-gray-400">New York, US</p>
             </div>
-            
+
             <div className="flex-1 px-4">
               <div className="flex items-center justify-center gap-2">
                 <div className="h-px bg-[#E5E8F5] dark:bg-white/20 flex-1"></div>
@@ -86,13 +86,13 @@ export default function HomeScreen() {
               </div>
               <p className="text-center text-[10px] font-bold text-[#464555] dark:text-gray-400 mt-1">11h 20m</p>
             </div>
-            
+
             <div className="text-right">
               <p className="text-3xl font-black tracking-tighter">LHR</p>
               <p className="text-[10px] text-[#464555] dark:text-gray-400">London, UK</p>
             </div>
           </div>
-          
+
           <div className="flex items-center justify-between mt-4 p-3 bg-[#F1F3FF] dark:bg-white/5 rounded-xl border border-[#E5E8F5] dark:border-white/10 relative z-10">
             <div>
               <p className="text-[10px] text-[#464555] dark:text-gray-400">Flight</p>
@@ -110,7 +110,7 @@ export default function HomeScreen() {
               <span className="material-symbols-rounded text-[20px]">qr_code_2</span>
             </button>
           </div>
-          
+
           <div className="flex gap-2 mt-3 relative z-10">
             <button onClick={() => triggerToast('Currency Converter: USD to GBP')} className="flex-1 py-1.5 rounded-lg bg-[#F1F3FF] dark:bg-white/10 text-[#181B25] dark:text-white text-[10px] font-bold flex items-center justify-center gap-1 hover:bg-[#E5E8F5] dark:hover:bg-white/20 transition">
               <span className="material-symbols-rounded text-[14px]">currency_exchange</span>
@@ -135,7 +135,7 @@ export default function HomeScreen() {
             <p className="text-[10px] text-[#464555] dark:text-gray-400">Context active: {activeProfile}</p>
           </div>
         </div>
-        <button 
+        <button
           onClick={() => {
             triggerHaptic();
             if (currentLocation === 'Office HQ') {
@@ -145,7 +145,7 @@ export default function HomeScreen() {
               setCurrentLocation('Office HQ');
               setActiveProfile('Work');
             }
-          }} 
+          }}
           className="px-3 py-1.5 rounded-lg bg-[#F1F3FF] dark:bg-white/10 hover:bg-[#E5E8F5] dark:hover:bg-white/20 transition text-[#181B25] dark:text-white text-[10px] font-bold"
         >
           Simulate Geofence
@@ -400,15 +400,14 @@ export default function HomeScreen() {
           </div>
           <button onClick={() => switchTab('calendar')} className="text-xs font-bold text-[#3525CD] hover:underline">Full View</button>
         </div>
-        
+
         <div className="space-y-2">
           {filteredTasks.slice(0, 3).map((task) => (
             <div key={task.id || task.title} className="flex gap-2.5 p-3 rounded-2xl bg-white border border-[#E5E8F5] shadow-sm active:scale-95 transition cursor-pointer" onClick={() => navigate('/tasks')}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                task.tagType === 'expense' ? 'bg-[#E8F5E9] text-[#2E7D32]' : 
-                task.tagType === 'meeting' ? 'bg-[#EDE7F6] text-[#673AB7]' : 
-                'bg-[#FFEBEE] text-[#E53935]'
-              }`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${task.tagType === 'expense' ? 'bg-[#E8F5E9] text-[#2E7D32]' :
+                  task.tagType === 'meeting' ? 'bg-[#EDE7F6] text-[#673AB7]' :
+                    'bg-[#FFEBEE] text-[#E53935]'
+                }`}>
                 <span className="material-symbols-rounded text-[16px]">
                   {task.tagType === 'expense' ? 'account_balance_wallet' : task.tagType === 'meeting' ? 'videocam' : 'check_circle'}
                 </span>
@@ -430,7 +429,7 @@ export default function HomeScreen() {
           )}
         </div>
       </div>
-      
+
       {/* 8. Quick Capture Hub */}
       <div className="bg-white rounded-[18px] p-4 border border-[#E5E8F5] shadow-sm mt-4">
         <div className="flex items-center justify-between mb-3">
