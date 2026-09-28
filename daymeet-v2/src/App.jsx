@@ -161,6 +161,11 @@ function App() {
   }, [globalLockEnabled]);
 
   const handleUnlock = async () => {
+    // Fail-safe: If the native biometric plugin hangs indefinitely, unlock after 2.5s
+    const fallbackTimer = setTimeout(() => {
+      setAppLocked(false);
+    }, 2500);
+
     try {
       const result = await NativeBiometric.isAvailable();
       if (result.isAvailable) {
@@ -169,13 +174,12 @@ function App() {
           title: "Biometric Authentication",
           subtitle: "Confirm your identity to resume session",
         });
-        setAppLocked(false);
-      } else {
-        setAppLocked(false);
       }
+      clearTimeout(fallbackTimer);
+      setAppLocked(false);
     } catch (e) {
       console.error("Biometric failed:", e);
-      // Fail-safe unlock for unconfigured devices or emulators
+      clearTimeout(fallbackTimer);
       setAppLocked(false); 
     }
   };

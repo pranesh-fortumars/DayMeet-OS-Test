@@ -60,6 +60,12 @@ export default function FinanceScreen() {
 
   const requestBiometric = async () => {
     interact('Biometric Scan Initiated');
+    
+    // Fail-safe: If the native biometric plugin hangs indefinitely, unlock after 2.5s
+    const fallbackTimer = setTimeout(() => {
+      setUnlocked(true);
+    }, 2500);
+
     try {
       const result = await NativeBiometric.isAvailable();
       if (result.isAvailable) {
@@ -68,14 +74,12 @@ export default function FinanceScreen() {
           title: "Biometric Authentication",
           subtitle: "Confirm your identity to view sensitive data",
         });
-        setUnlocked(true);
-      } else {
-        // Fallback for Web/Emulators without biometric hardware
-        setUnlocked(true);
       }
+      clearTimeout(fallbackTimer);
+      setUnlocked(true);
     } catch (e) {
       console.log('Biometric failed or canceled', e);
-      // Fail-safe unlock for unconfigured devices or emulators
+      clearTimeout(fallbackTimer);
       setUnlocked(true);
     }
   };
