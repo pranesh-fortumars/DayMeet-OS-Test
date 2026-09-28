@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../../store/useAppStore';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function QuickAddModal() {
   const { modals, setModalOpen } = useAppStore();
   const isOpen = modals.quickAdd;
   const [activeCategory, setActiveCategory] = useState('Task');
   const [priority, setPriority] = useState('p2');
-
-  if (!isOpen) return null;
 
   const handleClose = () => {
     setModalOpen('quickAdd', false);
@@ -28,16 +27,28 @@ export default function QuickAddModal() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-8 duration-300">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 pb-2 border-b border-gray-100">
-          <h3 className="font-black text-lg text-[#181B25]">Quick Add</h3>
-          <button onClick={handleClose} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200">
-            <span className="material-symbols-rounded text-[18px]">close</span>
-          </button>
-        </div>
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={handleClose}
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          />
+          <motion.div 
+            layoutId="quickAdd-fab"
+            className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-[0_32px_64px_rgba(0,0,0,0.3)] relative z-10"
+          >
+            
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 pb-2 border-b border-gray-100">
+              <h3 className="font-black text-lg text-[#181B25]">Quick Add</h3>
+              <button onClick={handleClose} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200">
+                <span className="material-symbols-rounded text-[18px]">close</span>
+              </button>
+            </div>
 
         <div className="p-4 space-y-4">
           {/* Categories */}
@@ -81,8 +92,10 @@ export default function QuickAddModal() {
               <span className="material-symbols-rounded text-[16px]">send</span>
             </button>
           </div>
+          </div>
+        </motion.div>
         </div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 }

@@ -77,16 +77,23 @@ export default function LifeInboxModal({ isOpen, onClose }) {
           </div>
         ) : activeItem ? (
           <div className="space-y-4">
-            <div className="bg-[#FAF9FF] dark:bg-slate-800/50 p-4 rounded-2xl border border-[#E5E8F5] dark:border-slate-700 flex gap-4">
-              {activeItem.imageUrl && (
-                <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 shadow-sm border border-gray-200 dark:border-slate-600">
-                  <img src={activeItem.imageUrl} alt="attachment" className="w-full h-full object-cover" />
+            {activeItem.imageUrl ? (
+              <div className="relative w-full h-40 rounded-2xl overflow-hidden shadow-sm border border-[#E5E8F5] dark:border-slate-700">
+                <img src={activeItem.imageUrl} alt="attachment" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <div className="absolute bottom-3 left-3 right-3 p-3 bg-white/20 dark:bg-black/30 backdrop-blur-md rounded-xl border border-white/30 dark:border-white/10 shadow-lg">
+                  <p className="text-sm font-medium text-white leading-snug line-clamp-2">
+                    "{activeItem.rawText}"
+                  </p>
                 </div>
-              )}
-              <p className="text-sm font-medium text-[#181B25] dark:text-white leading-relaxed flex-1">
-                "{activeItem.rawText}"
-              </p>
-            </div>
+              </div>
+            ) : (
+              <div className="bg-[#FAF9FF] dark:bg-slate-800/50 p-4 rounded-2xl border border-[#E5E8F5] dark:border-slate-700 flex gap-4">
+                <p className="text-sm font-medium text-[#181B25] dark:text-white leading-relaxed flex-1">
+                  "{activeItem.rawText}"
+                </p>
+              </div>
+            )}
             
             {activeItem.status === 'pending' ? (
               <div className="flex items-center gap-2 text-xs text-[#3525CD] bg-[#F1F3FF] dark:bg-[#3525CD]/10 p-3 rounded-xl border border-[#D9D7FF] dark:border-[#3525CD]/20">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { motion } from 'framer-motion';
 
 import { useAppStore } from '../store/useAppStore';
 
@@ -29,12 +30,13 @@ export default function BottomDock() {
           <span className="text-[10px] font-bold mt-0.5">Tasks</span>
         </NavLink>
         <div className="flex-1 flex justify-center mt-[-20px] z-50">
-          <button 
+          <motion.button 
+            layoutId="quickAdd-fab"
             onClick={() => setModalOpen('quickAdd', true)}
             className="w-12 h-12 rounded-full bg-[#181B25] shadow-[0_8px_16px_rgba(24,27,37,0.3)] flex items-center justify-center text-white relative hover:scale-105 transition"
           >
             <span className="material-symbols-rounded text-[24px]">add</span>
-          </button>
+          </motion.button>
         </div>        <NavLink to="/insights" onClick={handleNav} className={navClass}>
           <span className="material-symbols-rounded text-[24px]">insights</span>
           <span className="text-[10px] font-bold mt-0.5">Vitals</span>
