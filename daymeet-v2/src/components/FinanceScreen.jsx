@@ -64,23 +64,23 @@ export default function FinanceScreen() {
   const requestBiometric = async () => {
     interact('Biometric Scan Initiated');
     
-    // Fail-safe: If the native biometric plugin hangs indefinitely, unlock after 2.5s
+    // Fail-safe: If the native biometric plugin hangs on initialization, unlock after 2.5s
     const fallbackTimer = setTimeout(() => {
       setShowPinModal(true);
     }, 2500);
 
     try {
       const result = await NativeBiometric.isAvailable();
+      clearTimeout(fallbackTimer);
+      
       if (result.isAvailable) {
         await NativeBiometric.verifyIdentity({
           reason: "Unlock the Finance Ledger",
           title: "Biometric Authentication",
           subtitle: "Confirm your identity to view sensitive data",
         });
-        clearTimeout(fallbackTimer);
         setUnlocked(true);
       } else {
-        clearTimeout(fallbackTimer);
         setShowPinModal(true);
       }
     } catch (e) {

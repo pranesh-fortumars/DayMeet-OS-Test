@@ -164,23 +164,23 @@ function App() {
   const [showPinModal, setShowPinModal] = useState(false);
 
   const handleUnlock = async () => {
-    // Fail-safe: If the native biometric plugin hangs indefinitely, prompt for PIN after 2.5s
+    // Fail-safe: If the native biometric plugin hangs on initialization, prompt for PIN after 2.5s
     const fallbackTimer = setTimeout(() => {
       setShowPinModal(true);
     }, 2500);
 
     try {
       const result = await NativeBiometric.isAvailable();
+      clearTimeout(fallbackTimer); // Clear immediately once we know the plugin is responsive
+      
       if (result.isAvailable) {
         await NativeBiometric.verifyIdentity({
           reason: "Unlock DayMeet OS",
           title: "Biometric Authentication",
           subtitle: "Confirm your identity to resume session",
         });
-        clearTimeout(fallbackTimer);
         setAppLocked(false);
       } else {
-        clearTimeout(fallbackTimer);
         setShowPinModal(true);
       }
     } catch (e) {
