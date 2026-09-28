@@ -5,6 +5,7 @@ import BottomDock from './components/BottomDock';
 import GlobalSmartCapture from './components/GlobalSmartCapture';
 import AuthScreen from './components/AuthScreen';
 import PullToRefresh from './components/PullToRefresh';
+import { useTimeOfDay } from './hooks/useTimeOfDay';
 
 // Handle ChunkLoadErrors gracefully
 const lazyWithRetry = (componentImport) =>
@@ -70,6 +71,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [appLocked, setAppLocked] = useState(false);
+  const timeOfDay = useTimeOfDay();
   const { initSync, activeProfile, setActiveProfile, setCurrentLocation, globalLockEnabled, detoxMode } = useAppStore();
 
   useEffect(() => {
@@ -202,7 +204,7 @@ function App() {
   }
 
   return (
-    <div className={`h-[100dvh] flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200 bg-[#FAF9FF] overflow-hidden ${detoxMode ? 'grayscale transition-all duration-1000' : 'transition-all duration-1000'}`}>
+    <div className={`h-[100dvh] flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200 time-gradient-transition bg-mesh-${timeOfDay} overflow-hidden ${detoxMode ? 'grayscale transition-all duration-1000' : 'transition-all duration-1000'}`}>
       <Header />
       <main className="max-w-3xl mx-auto flex-1 w-full relative flex flex-col min-h-0">
         <PullToRefresh onRefresh={handleGlobalRefresh}>
