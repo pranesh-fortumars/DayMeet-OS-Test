@@ -4,11 +4,10 @@ import { useAppStore } from '../store/useAppStore';
 import { useInteraction } from '../hooks/useInteraction';
 import { motion, useAnimation } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { triggerHaptic } from '../utils/haptics';
 
 function SwipeableTask({ task, leftBorder, prioBadge, style, onComplete, interact }) {
   const controls = useAnimation();
-  const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Heavy }).catch(() => {});
 
   const handleDragEnd = (event, info) => {
     const offset = info.offset.x;
@@ -18,7 +17,7 @@ function SwipeableTask({ task, leftBorder, prioBadge, style, onComplete, interac
     if (offset > 100 || velocity > 500) {
       // Animate off screen to the right
       controls.start({ x: '100%', opacity: 0, transition: { duration: 0.2 } }).then(() => {
-        triggerHaptic();
+        triggerHaptic('success');
         // Fire Confetti!
         confetti({
           particleCount: 80,
@@ -33,6 +32,7 @@ function SwipeableTask({ task, leftBorder, prioBadge, style, onComplete, interac
       });
     } else {
       // Spring back to origin if swipe wasn't far enough
+      triggerHaptic('light');
       controls.start({ x: 0, opacity: 1, transition: { type: 'spring', stiffness: 300, damping: 20 } });
     }
   };
@@ -60,7 +60,7 @@ function SwipeableTask({ task, leftBorder, prioBadge, style, onComplete, interac
             onClick={(e) => { 
               e.stopPropagation(); 
               onComplete(task.id); 
-              triggerHaptic(); 
+              triggerHaptic('success'); 
               confetti({ particleCount: 40, spread: 50, colors: ['#10B981'] });
             }} 
             className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 transition ${task.status === 'completed' ? 'bg-[#10B981] border-[#10B981] text-white' : 'bg-[#E5E8F5] dark:bg-slate-800 border-[#C7C4D8] dark:border-slate-600 text-transparent hover:border-[#3525CD]'}`}

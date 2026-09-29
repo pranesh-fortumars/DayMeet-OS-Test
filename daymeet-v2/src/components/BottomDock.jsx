@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { triggerHaptic } from '../utils/haptics';
 import { motion } from 'framer-motion';
 
 import { useAppStore } from '../store/useAppStore';
 
 export default function BottomDock() {
-  const handleNav = () => Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
+  const handleNav = () => triggerHaptic('light');
   const { setModalOpen } = useAppStore();
 
   const navClass = ({ isActive }) => 
@@ -32,7 +32,7 @@ export default function BottomDock() {
         <div className="flex-1 flex justify-center mt-[-20px] z-50">
           <motion.button 
             layoutId="quickAdd-fab"
-            onClick={() => setModalOpen('quickAdd', true)}
+            onClick={() => { triggerHaptic('medium'); setModalOpen('quickAdd', true); }}
             className="w-12 h-12 rounded-full bg-[#181B25] shadow-[0_8px_16px_rgba(24,27,37,0.3)] flex items-center justify-center text-white relative hover:scale-105 transition"
           >
             <span className="material-symbols-rounded text-[24px]">add</span>

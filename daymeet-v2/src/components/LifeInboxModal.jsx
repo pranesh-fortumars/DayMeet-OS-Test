@@ -1,5 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import { useAppStore } from '../store/useAppStore';
+import { motion, useAnimation } from 'framer-motion';
+import { triggerHaptic } from '../utils/haptics';
+
+function SwipeableInboxCard({ activeItem, onApprove, onDiscard }) {
+  const controls = useAnimation();
+
+  const handleDragEnd = (event, info) => {
+    const offset = info.offset.x;
+    const velocity = info.velocity.x;
+    
+    // Swipe Right to Approve
+    if (offset > 100 || velocity > 500) {
+      controls.start({ x: '100%', opacity: 0, transition: { duration: 0.2 } }).then(() => {
+        triggerHaptic('success');
+        onApprove(activeItem.id);
+        controls.set({ x: 0, opacity: 1 });
+      });
+    } 
+    // Swipe Left to Discard
+    else if (offset < -100 || velocity < -500) {
+      controls.start({ x: '-100%', opacity: 0, transition: { duration: 0.2 } }).then(() => {
+        triggerHaptic('heavy');
+        onDiscard(activeItem.id);
+        controls.set({ x: 0, opacity: 1 });
+      });
+    } 
+    // Spring back
+    else {
+      triggerHaptic('light');
+      controls.start({ x: 0, opacity: 1, transition: { type: 'spring', stiffness: 300, damping: 20 } });
+    }
+  };
+
+  return (
+    <div className="relative w-full rounded-xl overflow-hidden mt-3 shadow-sm bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+      {/* Background Actions Layer */}
+      <div className="absolute inset-0 flex justify-between items-center px-6">
+        <div className="flex items-center gap-2 text-red-500 font-bold text-sm">
+          <span className="material-symbols-rounded">delete</span> Discard
+        </div>
+        <div className="flex items-center gap-2 text-[#10B981] font-bold text-sm">
+          Approve <span className="material-symbols-rounded">check_circle</span>
+        </div>
+      </div>
+      
+      {/* Draggable Card */}
+      <motion.div 
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        onDragEnd={handleDragEnd}
+        animate={controls}
+        className="relative z-10 bg-white dark:bg-slate-800 p-3.5 border-2 border-[#10B981] shadow-sm flex items-center justify-between cursor-grab active:cursor-grabbing rounded-xl"
+      >
+        <div>
+          <p className="text-xs font-bold text-[#181B25] dark:text-white">{activeItem.action}</p>
+          <p className="text-[10px] text-[#464555] dark:text-gray-400">Categorized as {activeItem.category}</p>
+        </div>
+        <span className="px-2 py-1 rounded bg-[#E8F5E9] dark:bg-[#10B981]/20 text-[#2E7D32] dark:text-[#10B981] text-[10px] font-black tracking-wide">CONFIDENCE 94%</span>
+      </motion.div>
+    </div>
+  );
+}
 
 export default function LifeInboxModal({ isOpen, onClose }) {
   const { inbox, dismissInboxItem, processInboxItem, approveInboxItem } = useAppStore();
@@ -114,25 +176,10 @@ export default function LifeInboxModal({ isOpen, onClose }) {
                 <div className="flex items-center gap-2 text-xs">
                   <span className="material-symbols-rounded text-[16px] text-[#10B981]">auto_awesome</span>
                   <span className="font-bold text-[#181B25] dark:text-white">Suggested Action</span>
+                  <span className="ml-auto text-[9px] font-bold text-gray-400 uppercase tracking-widest bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded-full">Swipe to Resolve</span>
                 </div>
                 
-                <div className="bg-white dark:bg-slate-800 p-3.5 rounded-xl border-2 border-[#10B981] shadow-sm flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-bold text-[#181B25] dark:text-white">{activeItem.action}</p>
-                    <p className="text-[10px] text-[#464555] dark:text-gray-400">Categorized as {activeItem.category}</p>
-                  </div>
-                  <span className="px-2 py-1 rounded bg-[#E8F5E9] dark:bg-[#10B981]/20 text-[#2E7D32] dark:text-[#10B981] text-[10px] font-black tracking-wide">CONFIDENCE 94%</span>
-                </div>
-
-                <div className="flex items-center gap-2 pt-2">
-                  <button onClick={() => dismissInboxItem(activeItem.id)} className="flex-1 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 text-xs font-bold hover:bg-gray-100 transition">
-                    Discard
-                  </button>
-                  <button onClick={() => approveInboxItem(activeItem.id)} className="flex-1 py-2.5 rounded-xl bg-[#3525CD] text-white text-xs font-bold hover:bg-[#2B1DAE] transition flex items-center justify-center gap-1.5 shadow-sm">
-                    <span className="material-symbols-rounded text-[16px]">check_circle</span>
-                    Approve
-                  </button>
-                </div>
+                <SwipeableInboxCard activeItem={activeItem} onApprove={approveInboxItem} onDiscard={dismissInboxItem} />
               </div>
             )}
           </div>

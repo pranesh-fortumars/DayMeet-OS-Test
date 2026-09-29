@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../../store/useAppStore';
+import { triggerHaptic } from '../../utils/haptics';
 
 export default function PinFallbackModal({ isOpen, onSuccess, onCancel }) {
   const { appPin, setAppPin } = useAppStore();
@@ -9,6 +10,7 @@ export default function PinFallbackModal({ isOpen, onSuccess, onCancel }) {
   if (!isOpen) return null;
 
   const handleKeyPress = (num) => {
+    triggerHaptic('light');
     setError(false);
     if (pinInput.length < 4) {
       const newPin = pinInput + num;
@@ -18,12 +20,15 @@ export default function PinFallbackModal({ isOpen, onSuccess, onCancel }) {
         // Evaluate
         setTimeout(() => {
           if (!appPin) {
+            triggerHaptic('success');
             setAppPin(newPin);
             onSuccess();
           } else {
             if (newPin === appPin) {
+              triggerHaptic('success');
               onSuccess();
             } else {
+              triggerHaptic('error');
               setError(true);
               setPinInput('');
             }
@@ -34,6 +39,7 @@ export default function PinFallbackModal({ isOpen, onSuccess, onCancel }) {
   };
 
   const handleBackspace = () => {
+    triggerHaptic('light');
     setPinInput(prev => prev.slice(0, -1));
   };
 
