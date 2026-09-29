@@ -7,6 +7,7 @@ import { NativeBiometric } from '@capgo/capacitor-native-biometric';
 import { startSmsListener } from '../services/SmsService';
 
 import PinFallbackModal from './modals/PinFallbackModal';
+import ParallaxCard from './ParallaxCard';
 
 export default function FinanceScreen() {
   const [unlocked, setUnlocked] = useState(false);
@@ -152,21 +153,29 @@ export default function FinanceScreen() {
 
       {/* Finance Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm">
-          <p className="text-xs text-[#464555] font-medium">Liquid Net Worth</p>
-          <p className="text-2xl font-black text-[#181B25] mt-1">₹{liquidNetWorth.toLocaleString()}</p>
-          <p className="text-[11px] text-[#464555] mt-0.5">HDFC ••4109 & ICICI ••8912</p>
-        </div>
-        <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm">
-          <p className="text-xs text-[#005338] font-semibold flex items-center gap-1"><span className="material-symbols-rounded text-[14px]">verified_user</span> Safe-Spend Allowance</p>
-          <p className="text-2xl font-black text-[#005338] mt-1">₹{(dailyBudget - spending).toLocaleString()}</p>
-          <p className="text-[11px] text-[#10B981] mt-0.5">₹{spending.toLocaleString()} burned today</p>
-        </div>
-        <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm">
-          <p className="text-xs text-[#D97706] font-semibold">Upcoming Bills (48h)</p>
-          <p className="text-2xl font-black text-[#181B25] mt-1">₹{upcomingBills.toLocaleString()}</p>
-          <p className="text-[11px] text-[#D32F2F] mt-0.5 animate-pulse">Tata Power Electricity</p>
-        </div>
+        <ParallaxCard>
+          <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm h-full">
+            <p className="text-xs text-[#464555] font-medium">Liquid Net Worth</p>
+            <p className="text-2xl font-black text-[#181B25] mt-1">₹{liquidNetWorth.toLocaleString()}</p>
+            <p className="text-[11px] text-[#464555] mt-0.5">HDFC ••4109 & ICICI ••8912</p>
+          </div>
+        </ParallaxCard>
+        
+        <ParallaxCard>
+          <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm h-full">
+            <p className="text-xs text-[#005338] font-semibold flex items-center gap-1"><span className="material-symbols-rounded text-[14px]">verified_user</span> Safe-Spend Allowance</p>
+            <p className="text-2xl font-black text-[#005338] mt-1">₹{(dailyBudget - spending).toLocaleString()}</p>
+            <p className="text-[11px] text-[#10B981] mt-0.5">₹{spending.toLocaleString()} burned today</p>
+          </div>
+        </ParallaxCard>
+        
+        <ParallaxCard>
+          <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm h-full">
+            <p className="text-xs text-[#D97706] font-semibold">Upcoming Bills (48h)</p>
+            <p className="text-2xl font-black text-[#181B25] mt-1">₹{upcomingBills.toLocaleString()}</p>
+            <p className="text-[11px] text-[#D32F2F] mt-0.5 animate-pulse">Tata Power Electricity</p>
+          </div>
+        </ParallaxCard>
       </div>
 
       {/* Subscription Radar & Zombie Hunter */}
