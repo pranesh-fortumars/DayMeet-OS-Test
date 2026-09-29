@@ -4,18 +4,9 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Header() {
-  const { setModalOpen, activeProfile, setActiveProfile } = useAppStore();
+  const { setModalOpen, activeProfile, setActiveProfile, islandState, setIsland } = useAppStore();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [activeEvent, setActiveEvent] = useState(null); // 'flight' | 'recording' | null
   const toggleGlobalTheme = () => document.documentElement.classList.toggle('dark');
-
-  // Simulate dynamic events over time for demonstration
-  useEffect(() => {
-    // Show flight boarding for 10 seconds on boot
-    setActiveEvent('flight');
-    const timer1 = setTimeout(() => setActiveEvent(null), 10000);
-    return () => clearTimeout(timer1);
-  }, []);
 
   const profiles = [
     { id: 'Work', icon: 'work', color: 'bg-[#E2DFFF] text-[#3525CD]' },
@@ -42,13 +33,36 @@ export default function Header() {
         layout
         transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
         className={`pointer-events-auto bg-white/80 dark:bg-[#1E293B]/80 backdrop-blur-xl shadow-lg border border-[#E5E8F5] dark:border-slate-700/50 flex flex-col justify-center overflow-hidden mx-auto ${
-          activeEvent ? 'rounded-[32px] w-[95%] sm:w-[90%]' : 'rounded-full w-[95%] sm:max-w-3xl'
+          islandState.active ? 'rounded-[32px] w-[95%] sm:w-[90%]' : 'rounded-full w-[95%] sm:max-w-3xl'
         }`}
       >
         
         {/* === DYNAMIC EXPANDED STATES === */}
         <AnimatePresence mode="wait">
-          {activeEvent === 'flight' && (
+          {islandState.active && islandState.type === 'sync' && (
+            <motion.div
+              key="sync"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="px-5 py-4 bg-[#181B25] dark:bg-black text-white"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="material-symbols-rounded text-[#6FFBBE] animate-spin text-[24px]">sync</span>
+                  <div>
+                    <p className="text-sm font-bold text-white">{islandState.message || 'Syncing...'}</p>
+                    <p className="text-[11px] text-gray-400">Syncing with Firebase Cloud</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-base font-black text-[#38BDF8]">Live</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {islandState.active && islandState.type === 'flight' && (
             <motion.div
               key="flight"
               initial={{ opacity: 0, height: 0 }}
@@ -72,7 +86,7 @@ export default function Header() {
             </motion.div>
           )}
 
-          {activeEvent === 'recording' && (
+          {islandState.active && islandState.type === 'recording' && (
             <motion.div
               key="recording"
               initial={{ opacity: 0, height: 0 }}
@@ -83,7 +97,7 @@ export default function Header() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <span className="w-3.5 h-3.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
-                  <p className="text-xs font-bold">Capturing Audio...</p>
+                  <p className="text-xs font-bold">{islandState.message || 'Capturing Audio...'}</p>
                 </div>
                 <p className="text-sm font-bold font-mono">00:14</p>
               </div>
@@ -94,7 +108,7 @@ export default function Header() {
         {/* === STANDARD COMPACT HEADER ROW === */}
         <div className="px-3 h-[52px] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div onClick={() => { setActiveEvent(activeEvent ? null : 'flight'); Haptics.impact({ style: ImpactStyle.Light }).catch(()=>{}); }} className="flex items-center gap-2 cursor-pointer select-none relative z-50">
+            <div onClick={() => { setIsland({ active: !islandState.active, type: 'flight' }); Haptics.impact({ style: ImpactStyle.Light }).catch(()=>{}); }} className="flex items-center gap-2 cursor-pointer select-none relative z-50">
               <div className="w-9 h-9 rounded-full bg-[#3525CD] flex items-center justify-center text-white shadow-sm hover:scale-105 transition">
                 <span className="material-symbols-rounded text-[18px]">widgets</span>
               </div>

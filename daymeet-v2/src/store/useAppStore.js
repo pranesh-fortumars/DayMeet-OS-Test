@@ -21,6 +21,10 @@ export const useAppStore = create((set, get) => ({
   appPin: null,
   setAppPin: (pin) => set({ appPin: pin }),
   
+  // Dynamic Island State
+  islandState: { active: false, type: 'sync', message: '' },
+  setIsland: (state) => set((prevState) => ({ islandState: { ...prevState.islandState, ...state } })),
+  
   detoxMode: false,
   toggleDetoxMode: () => set((state) => ({ detoxMode: !state.detoxMode })),
   
