@@ -8,6 +8,7 @@ import AuthScreen from './components/AuthScreen';
 import PullToRefresh from './components/PullToRefresh';
 import { useTimeOfDay } from './hooks/useTimeOfDay';
 import PinFallbackModal from './components/modals/PinFallbackModal';
+import AmbientBackground from './components/AmbientBackground';
 
 // Handle ChunkLoadErrors gracefully
 const lazyWithRetry = (componentImport) =>
@@ -240,6 +241,7 @@ function App() {
 
   return (
     <div className={`h-[100dvh] flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200 time-gradient-transition bg-mesh-${timeOfDay} overflow-hidden transition-all duration-[3000ms] ease-in-out ${getThemeFilter()} ${detoxMode ? 'grayscale' : ''}`}>
+      <AmbientBackground />
       <Header />
       <main className="max-w-3xl mx-auto flex-1 w-full relative flex flex-col min-h-0">
         <PullToRefresh onRefresh={handleGlobalRefresh}>
