@@ -38,7 +38,7 @@ export default function AmbientBackground() {
       {particles.map((p) => (
         <motion.div
           key={p.id}
-          className="absolute rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[60px] opacity-40 dark:opacity-20"
+          className="absolute rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[60px] opacity-10 dark:opacity-5"
           style={{
             width: p.size,
             height: p.size,
