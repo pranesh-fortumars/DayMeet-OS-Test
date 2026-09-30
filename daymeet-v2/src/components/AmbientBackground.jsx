@@ -29,7 +29,7 @@ export default function AmbientBackground() {
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
       {/* Base Gradient that slowly morphs color */}
       <motion.div 
-        className="absolute inset-0 opacity-20 dark:opacity-10"
+        className="absolute inset-0 opacity-5 dark:opacity-[0.02]"
         animate={{ backgroundColor: themeColor }}
         transition={{ duration: 2, ease: "easeInOut" }}
       />
