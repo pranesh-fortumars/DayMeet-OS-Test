@@ -8,7 +8,6 @@ import AuthScreen from './components/AuthScreen';
 import PullToRefresh from './components/PullToRefresh';
 import { useTimeOfDay } from './hooks/useTimeOfDay';
 import PinFallbackModal from './components/modals/PinFallbackModal';
-import AmbientBackground from './components/AmbientBackground';
 
 // Handle ChunkLoadErrors gracefully
 const lazyWithRetry = (componentImport) =>
