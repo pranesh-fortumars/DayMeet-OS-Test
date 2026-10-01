@@ -4,13 +4,13 @@ import { useAppStore } from '../../store/useAppStore';
 
 export default function CalendarModal({ isOpen, onClose }) {
   const { interact } = useInteraction();
-  const { tasks, setModalOpen } = useAppStore();
+  const { tasks, selectedCalendarDate, setSelectedCalendarDate } = useAppStore();
   
-  const todayDate = new Date();
+  const realToday = new Date();
   const [viewMode, setViewMode] = useState('month'); // 'month' | 'year'
-  const [activeYear, setActiveYear] = useState(2026);
-  const [activeMonth, setActiveMonth] = useState(9); // October (0-indexed)
-  const [selectedDate, setSelectedDate] = useState(24);
+  const [activeYear, setActiveYear] = useState(() => (selectedCalendarDate || realToday).getFullYear());
+  const [activeMonth, setActiveMonth] = useState(() => (selectedCalendarDate || realToday).getMonth());
+  const [selectedDateNum, setSelectedDateNum] = useState(() => (selectedCalendarDate || realToday).getDate());
   const [isExpanding, setIsExpanding] = useState(false);
   const [newEventTitle, setNewEventTitle] = useState('');
   const [newEventTime, setNewEventTime] = useState('10:00 AM');
@@ -19,14 +19,18 @@ export default function CalendarModal({ isOpen, onClose }) {
   // Custom user-added events per year-month-day key (e.g. "2026-9-24")
   const [customEvents, setCustomEvents] = useState({});
 
-  // Apple Calendar style smooth transitions
+  // Sync state when modal opens or store date changes
   useEffect(() => {
     if (isOpen) {
+      const targetDate = selectedCalendarDate || new Date();
+      setActiveYear(targetDate.getFullYear());
+      setActiveMonth(targetDate.getMonth());
+      setSelectedDateNum(targetDate.getDate());
       setIsExpanding(true);
       const timer = setTimeout(() => setIsExpanding(false), 300);
       return () => clearTimeout(timer);
     }
-  }, [isOpen]);
+  }, [isOpen, selectedCalendarDate]);
 
   if (!isOpen) return null;
 
@@ -40,7 +44,7 @@ export default function CalendarModal({ isOpen, onClose }) {
   const dates = Array.from({ length: totalDaysInMonth }, (_, i) => i + 1);
   const blanks = Array.from({ length: firstDayOfWeek }, (_, i) => i);
 
-  // Month navigation handlers
+  // Navigation Handlers
   const handlePrevMonth = () => {
     if (activeMonth === 0) {
       setActiveMonth(11);
@@ -65,20 +69,36 @@ export default function CalendarModal({ isOpen, onClose }) {
     setActiveMonth(monthIdx);
     setViewMode('month');
     const newMonthTotalDays = new Date(activeYear, monthIdx + 1, 0).getDate();
-    if (selectedDate > newMonthTotalDays) {
-      setSelectedDate(newMonthTotalDays);
-    }
+    const clampedDate = Math.min(selectedDateNum, newMonthTotalDays);
+    setSelectedDateNum(clampedDate);
+    setSelectedCalendarDate(new Date(activeYear, monthIdx, clampedDate));
     interact(`Selected month ${months[monthIdx]}`);
   };
 
   const handleSelectDate = (date) => {
+    const newDateObj = new Date(activeYear, activeMonth, date);
+    setSelectedDateNum(date);
+    setSelectedCalendarDate(newDateObj);
     interact(`Selected ${months[activeMonth]} ${date}, ${activeYear}`);
-    setSelectedDate(date);
     setShowAddInline(false);
+  };
+
+  const handleJumpToToday = () => {
+    const now = new Date();
+    setActiveYear(now.getFullYear());
+    setActiveMonth(now.getMonth());
+    setSelectedDateNum(now.getDate());
+    setSelectedCalendarDate(now);
+    setViewMode('month');
+    interact('Jumped to Real Live Today');
   };
 
   // Base mock events database keyed by "monthIndex-date"
   const defaultEventsMap = {
+    [`${realToday.getMonth()}-${realToday.getDate()}`]: [
+      { id: 1001, title: 'Live System Sync & Status Review', time: '09:00 AM', duration: '30m', type: 'schedule', color: 'bg-[#3525CD]', text: 'text-white', location: 'DayMeet Core', attendees: ['System'], linkedNodes: 2 },
+      { id: 1002, title: 'Real Time Work Block', time: '11:00 AM', duration: '2h', type: 'laptop_mac', color: 'bg-[#00897B]', text: 'text-white', location: 'Live Workspace', attendees: ['Me'], linkedNodes: 5 },
+    ],
     '9-2': [
       { id: 101, title: 'Gandhi Jayanti / Int. Day of Non-Violence', time: 'All Day', duration: '24h', type: 'public', color: 'bg-[#00897B]', text: 'text-white', location: 'India & Global', attendees: [], linkedNodes: 0 },
     ],
@@ -94,23 +114,13 @@ export default function CalendarModal({ isOpen, onClose }) {
     '9-28': [
       { id: 4, title: 'Flight to London (LHR)', time: '08:00 AM', duration: '11h', type: 'flight_takeoff', color: 'bg-[#0F172A]', text: 'text-white', location: 'Terminal 4, JFK', attendees: [], linkedNodes: 5 },
     ],
-    '9-31': [
-      { id: 103, title: 'Halloween / National Unity Day', time: 'All Day', duration: '24h', type: 'celebration', color: 'bg-[#F4511E]', text: 'text-white', location: 'Global', attendees: [], linkedNodes: 0 },
-    ],
-    '10-14': [
-      { id: 201, title: 'Diwali Celebration Block', time: '06:00 PM', duration: '4h', type: 'celebration', color: 'bg-[#F57C00]', text: 'text-white', location: 'Home & Community', attendees: ['Family'], linkedNodes: 2 },
-    ],
-    '11-25': [
-      { id: 301, title: 'Christmas Day', time: 'All Day', duration: '24h', type: 'celebration', color: 'bg-[#E53935]', text: 'text-white', location: 'Global', attendees: [], linkedNodes: 0 },
-    ]
   };
 
-  const dateKey = `${activeMonth}-${selectedDate}`;
+  const dateKey = `${activeMonth}-${selectedDateNum}`;
   const customList = customEvents[`${activeYear}-${dateKey}`] || [];
   const baseList = defaultEventsMap[dateKey] || [];
   const currentEvents = [...baseList, ...customList];
 
-  // Helper to check if a specific date has any events (for calendar dot indicator)
   const hasEventsForDate = (date) => {
     const key = `${activeMonth}-${date}`;
     const customKey = `${activeYear}-${key}`;
@@ -129,12 +139,12 @@ export default function CalendarModal({ isOpen, onClose }) {
       type: 'event',
       color: 'bg-[#3525CD]',
       text: 'text-white',
-      location: 'DayMeet OS',
+      location: 'Live Workspace',
       attendees: ['Me'],
       linkedNodes: 1
     };
 
-    const fullKey = `${activeYear}-${activeMonth}-${selectedDate}`;
+    const fullKey = `${activeYear}-${activeMonth}-${selectedDateNum}`;
     setCustomEvents(prev => ({
       ...prev,
       [fullKey]: [...(prev[fullKey] || []), newEvt]
@@ -142,8 +152,14 @@ export default function CalendarModal({ isOpen, onClose }) {
 
     setNewEventTitle('');
     setShowAddInline(false);
-    interact(`Added event "${newEvt.title}" on ${months[activeMonth]} ${selectedDate}`);
+    interact(`Added event "${newEvt.title}" on ${months[activeMonth]} ${selectedDateNum}`);
   };
+
+  const isSelectedDateRealToday = (
+    selectedDateNum === realToday.getDate() &&
+    activeMonth === realToday.getMonth() &&
+    activeYear === realToday.getFullYear()
+  );
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-md p-0 sm:p-4 animate-in fade-in duration-300" onClick={onClose}>
@@ -158,14 +174,23 @@ export default function CalendarModal({ isOpen, onClose }) {
         <div className="w-12 h-1.5 bg-gray-300 dark:bg-slate-700 rounded-full mx-auto my-2.5 shrink-0 sm:hidden"></div>
 
         {/* Header - Fixed Height with shrink-0 so it NEVER gets cropped */}
-        <div className="px-6 py-3 flex items-center justify-between bg-white dark:bg-[#1E293B] shadow-xs z-20 relative shrink-0 border-b border-gray-100 dark:border-slate-800">
-          <button 
-            onClick={viewMode === 'month' ? handlePrevMonth : () => setActiveYear(prev => prev - 1)}
-            className="w-10 h-10 flex items-center justify-center rounded-full text-[#3525CD] dark:text-[#818CF8] hover:bg-[#F1F3FF] dark:hover:bg-slate-800 transition active:scale-90"
-            title="Previous"
-          >
-            <span className="material-symbols-rounded text-[24px]">chevron_left</span>
-          </button>
+        <div className="px-5 py-3 flex items-center justify-between bg-white dark:bg-[#1E293B] shadow-xs z-20 relative shrink-0 border-b border-gray-100 dark:border-slate-800">
+          <div className="flex items-center gap-1">
+            <button 
+              onClick={viewMode === 'month' ? handlePrevMonth : () => setActiveYear(prev => prev - 1)}
+              className="w-9 h-9 flex items-center justify-center rounded-full text-[#3525CD] dark:text-[#818CF8] hover:bg-[#F1F3FF] dark:hover:bg-slate-800 transition active:scale-90"
+              title="Previous"
+            >
+              <span className="material-symbols-rounded text-[22px]">chevron_left</span>
+            </button>
+            <button
+              onClick={handleJumpToToday}
+              className="px-2.5 py-1 rounded-xl bg-[#EBEDFB] dark:bg-slate-800 text-[#3525CD] dark:text-[#818CF8] text-xs font-bold hover:bg-[#3525CD] hover:text-white transition active:scale-95"
+              title="Jump to Today"
+            >
+              Today
+            </button>
+          </div>
           
           <button 
             onClick={() => {
@@ -174,7 +199,7 @@ export default function CalendarModal({ isOpen, onClose }) {
             }}
             className="flex items-center gap-1.5 hover:opacity-75 transition active:scale-95 px-3 py-1 rounded-xl bg-[#FAF9FF] dark:bg-slate-800/80 border border-[#E5E8F5] dark:border-slate-700"
           >
-            <h2 className="text-lg font-black text-[#181B25] dark:text-white tracking-tight">
+            <h2 className="text-base font-black text-[#181B25] dark:text-white tracking-tight">
               {viewMode === 'month' ? `${months[activeMonth]} ${activeYear}` : `${activeYear}`}
             </h2>
             <span className={`material-symbols-rounded text-[#3525CD] dark:text-[#818CF8] transition-transform duration-300 ${viewMode === 'year' ? 'rotate-180' : ''}`}>
@@ -185,17 +210,17 @@ export default function CalendarModal({ isOpen, onClose }) {
           <div className="flex items-center gap-1">
             <button 
               onClick={viewMode === 'month' ? handleNextMonth : () => setActiveYear(prev => prev + 1)}
-              className="w-10 h-10 flex items-center justify-center rounded-full text-[#3525CD] dark:text-[#818CF8] hover:bg-[#F1F3FF] dark:hover:bg-slate-800 transition active:scale-90"
+              className="w-9 h-9 flex items-center justify-center rounded-full text-[#3525CD] dark:text-[#818CF8] hover:bg-[#F1F3FF] dark:hover:bg-slate-800 transition active:scale-90"
               title="Next"
             >
-              <span className="material-symbols-rounded text-[24px]">chevron_right</span>
+              <span className="material-symbols-rounded text-[22px]">chevron_right</span>
             </button>
             <button 
               onClick={onClose} 
-              className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 dark:bg-slate-800 text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 transition active:scale-90"
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-slate-800 text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 transition active:scale-90"
               title="Close modal"
             >
-              <span className="material-symbols-rounded text-[20px]">close</span>
+              <span className="material-symbols-rounded text-[18px]">close</span>
             </button>
           </div>
         </div>
@@ -222,8 +247,8 @@ export default function CalendarModal({ isOpen, onClose }) {
                     <div key={`blank-${i}`} className="w-10 h-10"></div>
                   ))}
                   {dates.map((date) => {
-                    const isToday = date === todayDate.getDate() && activeMonth === todayDate.getMonth() && activeYear === todayDate.getFullYear();
-                    const isSelected = date === selectedDate;
+                    const isToday = date === realToday.getDate() && activeMonth === realToday.getMonth() && activeYear === realToday.getFullYear();
+                    const isSelected = date === selectedDateNum;
                     const hasEvts = hasEventsForDate(date);
                     
                     return (
@@ -286,10 +311,10 @@ export default function CalendarModal({ isOpen, onClose }) {
             <div className="flex items-center justify-between mb-3.5">
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-black text-[#181B25] dark:text-white flex items-center gap-2">
-                  {selectedDate === todayDate.getDate() && activeMonth === todayDate.getMonth() ? 'Today' : `${months[activeMonth]} ${selectedDate}`}
+                  {isSelectedDateRealToday ? 'Today (Live)' : `${months[activeMonth]} ${selectedDateNum}`}
                   <span className="text-xs font-semibold text-gray-400">· {currentEvents.length} {currentEvents.length === 1 ? 'event' : 'events'}</span>
                 </h3>
-                {selectedDate === 24 && activeMonth === 9 && (
+                {isSelectedDateRealToday && (
                   <div className="flex items-center gap-1 text-[10px] font-bold text-[#D97706] bg-[#FFF3E0] px-2 py-0.5 rounded-md">
                     <span className="material-symbols-rounded text-[13px]">wb_sunny</span>
                     72°
@@ -309,7 +334,7 @@ export default function CalendarModal({ isOpen, onClose }) {
             {/* Inline Event Creation Form */}
             {showAddInline && (
               <form onSubmit={handleAddCustomEvent} className="mb-4 p-3 bg-white dark:bg-slate-800 rounded-2xl border border-[#E5E8F5] dark:border-slate-700 shadow-sm space-y-2.5 animate-in slide-in-from-top-2 duration-200">
-                <p className="text-xs font-bold text-[#181B25] dark:text-white">Add Event for {months[activeMonth]} {selectedDate}</p>
+                <p className="text-xs font-bold text-[#181B25] dark:text-white">Add Event for {months[activeMonth]} {selectedDateNum}</p>
                 <input 
                   type="text"
                   placeholder="Event title..."
@@ -395,4 +420,5 @@ export default function CalendarModal({ isOpen, onClose }) {
     </div>
   );
 }
+
 

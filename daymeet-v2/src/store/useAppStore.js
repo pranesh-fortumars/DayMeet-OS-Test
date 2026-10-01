@@ -28,9 +28,11 @@ export const useAppStore = create((set, get) => ({
   detoxMode: false,
   toggleDetoxMode: () => set((state) => ({ detoxMode: !state.detoxMode })),
   
-  // Third Party Integrations
+  // Third Party Integrations & Real Live Calendar Sync
   googleCalConnected: false,
   setGoogleCalConnected: (status) => set({ googleCalConnected: status }),
+  selectedCalendarDate: new Date(),
+  setSelectedCalendarDate: (date) => set({ selectedCalendarDate: date }),
 
   // Finance Data
   spending: 3450, // Today's spending
