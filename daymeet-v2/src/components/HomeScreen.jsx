@@ -62,7 +62,7 @@ export default function HomeScreen() {
 
       {/* 1.5 Boarding Pass & Travel Nomad Concierge (Travel Mode) */}
       {isTravelMode && (
-        <div className="bg-white dark:bg-gradient-to-r dark:from-[#0F172A] dark:to-[#1E293B] border border-[#E5E8F5] dark:border-transparent rounded-[20px] p-4 shadow-sm dark:shadow-xl text-[#181B25] dark:text-white animate-in slide-in-from-top-4 duration-500 overflow-hidden relative">
+        <div className="glass-panel border border-[#E5E8F5] dark:border-transparent rounded-[20px] p-4 text-[#181B25] dark:text-white animate-in slide-in-from-top-4 duration-500 overflow-hidden relative hover-lift">
           <div className="absolute -right-10 -top-10 w-32 h-32 bg-[#F1F3FF] dark:bg-white/5 rounded-full blur-2xl"></div>
 
           <div className="flex items-center justify-between mb-3 relative z-10">
@@ -126,7 +126,7 @@ export default function HomeScreen() {
       )}
 
       {/* Geofence & Context Switcher Trigger Card */}
-      <div className="bg-white dark:bg-[#181B25] border border-[#E5E8F5] dark:border-transparent rounded-xl p-3 shadow-sm dark:shadow-md flex items-center justify-between text-[#181B25] dark:text-white animate-in slide-in-from-top-2 duration-500">
+      <div className="glass-card rounded-xl p-3 flex items-center justify-between text-[#181B25] dark:text-white animate-in slide-in-from-top-2 duration-500">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-[#F1F3FF] dark:bg-white/10 flex items-center justify-center">
             <span className="material-symbols-rounded text-[#10B981] text-[18px]">location_on</span>
@@ -156,7 +156,7 @@ export default function HomeScreen() {
       {/* 2. Daily Briefing Card */}
       {widgets.briefing && (
         <ParallaxCard>
-          <div className="bg-white rounded-[18px] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#E5E8F5] h-full">
+          <div className="glass-card rounded-[18px] p-4 premium-shadow h-full">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <span className="material-symbols-rounded text-[#3525CD] text-[18px]">auto_awesome</span>
@@ -217,7 +217,7 @@ export default function HomeScreen() {
       {/* 4. Hero Next Meeting Card */}
       {widgets.calendar && (
         <ParallaxCard>
-          <div className="bg-white rounded-[18px] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#E5E8F5] h-full">
+          <div className="glass-card rounded-[18px] p-4 premium-shadow h-full hover-lift">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-[10px] bg-[#E2DFFF] flex items-center justify-center text-[#3525CD]">
