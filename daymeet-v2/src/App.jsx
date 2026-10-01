@@ -241,7 +241,6 @@ function App() {
 
   return (
     <div className={`h-[100dvh] flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200 overflow-hidden transition-all duration-[3000ms] ease-in-out bg-[#FAF9FF] dark:bg-[#0F172A] ${getThemeFilter()} ${detoxMode ? 'grayscale' : ''}`}>
-      <AmbientBackground />
       <Header />
       <main className="max-w-3xl mx-auto flex-1 w-full relative flex flex-col min-h-0">
         <PullToRefresh onRefresh={handleGlobalRefresh}>
