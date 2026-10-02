@@ -3,6 +3,7 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { useAppStore } from '../store/useAppStore';
 import LifeInboxModal from './LifeInboxModal';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function GlobalSmartCapture() {
   const { captureToInbox, inbox } = useAppStore();
@@ -140,15 +141,87 @@ export default function GlobalSmartCapture() {
           onPointerDown={startPress}
           onPointerUp={endPress}
           onPointerLeave={endPress}
-          className={`pointer-events-auto flex items-center justify-center w-14 h-14 rounded-full text-white shadow-[0_8px_24px_rgba(53,37,205,0.4)] transition-all duration-300 select-none touch-none ${
-            isRecording ? 'bg-[#E53935] scale-125 shadow-[0_0_30px_rgba(229,57,53,0.6)] animate-pulse' : 'bg-[#3525CD] hover:bg-[#2B1DAE] active:scale-95'
+          className={`pointer-events-auto flex items-center justify-center w-14 h-14 rounded-full text-white shadow-[0_8px_24px_rgba(53,37,205,0.4)] transition-all duration-300 select-none touch-none z-50 relative ${
+            isRecording ? 'bg-transparent shadow-none' : 'bg-[#3525CD] hover:bg-[#2B1DAE] active:scale-95'
           }`}
         >
-          <span className="material-symbols-rounded text-[28px]">
-            {isRecording ? 'mic' : 'center_focus_strong'}
-          </span>
+          {!isRecording && (
+            <span className="material-symbols-rounded text-[28px]">
+              center_focus_strong
+            </span>
+          )}
         </button>
       </div>
+
+      {/* AI Conversational Orb Overlay */}
+      <AnimatePresence>
+        {isRecording && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.2 } }}
+            className="fixed inset-0 z-[45] flex flex-col items-center justify-center bg-black/80 backdrop-blur-md"
+          >
+            <div className="flex-1 flex flex-col items-center justify-center w-full">
+              <motion.p 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-white/70 text-sm font-medium mb-12"
+              >
+                Listening...
+              </motion.p>
+              
+              <div className="relative w-48 h-48 flex items-center justify-center">
+                {/* Outer Breathing Glow */}
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    opacity: [0.3, 0.7, 0.3],
+                    rotate: [0, 90, 180, 270, 360]
+                  }}
+                  transition={{ 
+                    duration: 4,
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                  }}
+                  className="absolute inset-0 rounded-full blur-3xl opacity-50 bg-gradient-to-tr from-[#3525CD] via-[#10B981] to-[#38BDF8]"
+                />
+                
+                {/* Inner Pulsing Core */}
+                <motion.div
+                  animate={{ 
+                    scale: [0.9, 1.1, 0.9],
+                  }}
+                  transition={{ 
+                    duration: 1.5,
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                  }}
+                  className="absolute inset-4 rounded-full blur-xl opacity-80 bg-gradient-to-bl from-[#6366F1] to-[#C084FC]"
+                />
+
+                {/* Solid Center Orb */}
+                <motion.div 
+                  className="relative z-10 w-24 h-24 rounded-full bg-gradient-to-tr from-[#3525CD] to-[#6FFBBE] shadow-[0_0_40px_rgba(111,251,190,0.5)]"
+                />
+              </div>
+
+              <motion.p 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-white text-lg font-bold mt-12 text-center px-8"
+              >
+                "Remind me to call John tomorrow..."
+              </motion.p>
+            </div>
+            
+            <div className="pb-12 text-white/50 text-xs font-bold uppercase tracking-widest">
+              Release to Process
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {isInputOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
