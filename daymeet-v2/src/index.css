@@ -1,6 +1,23 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 @layer base {
+  :root {
+    --theme-accent: #3525CD;
+    --theme-accent-soft: rgba(53, 37, 205, 0.18);
+  }
+  .theme-personal {
+    --theme-accent: #2E7D32;
+    --theme-accent-soft: rgba(46, 125, 50, 0.18);
+  }
+  .theme-creative {
+    --theme-accent: #F57C00;
+    --theme-accent-soft: rgba(245, 124, 0, 0.18);
+  }
+  .theme-family {
+    --theme-accent: #C2185B;
+    --theme-accent-soft: rgba(194, 24, 91, 0.18);
+  }
+
   body {
     font-family: 'Plus Jakarta Sans', sans-serif;
     background-color: #FAF9FF;

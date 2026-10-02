@@ -92,6 +92,14 @@ function App() {
   const { initSync, activeProfile, setActiveProfile, setCurrentLocation, globalLockEnabled, detoxMode } = useAppStore();
 
   useEffect(() => {
+    // Dynamic Theming - Context Aware
+    document.body.classList.remove('theme-personal', 'theme-creative', 'theme-family');
+    if (activeProfile === 'Personal') document.body.classList.add('theme-personal');
+    if (activeProfile === 'Creative') document.body.classList.add('theme-creative');
+    if (activeProfile === 'Family') document.body.classList.add('theme-family');
+  }, [activeProfile]);
+
+  useEffect(() => {
     const initApp = async () => {
       try {
         await initDB();

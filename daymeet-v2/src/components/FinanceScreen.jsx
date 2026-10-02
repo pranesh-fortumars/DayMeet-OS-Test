@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BudgetGauge from './charts/BudgetGauge';
 import SpendingChart from './charts/SpendingChart';
 import { useAppStore } from '../store/useAppStore';
@@ -8,10 +8,19 @@ import { startSmsListener } from '../services/SmsService';
 
 import PinFallbackModal from './modals/PinFallbackModal';
 import ParallaxCard from './ParallaxCard';
+import Skeleton, { SkeletonCircle } from './ui/Skeleton';
 
 export default function FinanceScreen() {
   const [unlocked, setUnlocked] = useState(false);
   const [showPinModal, setShowPinModal] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+  
+  useEffect(() => {
+    // Simulate network delay for fetching fresh financial data
+    const timer = setTimeout(() => setIsLoadingData(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
   const [recentTxns, setRecentTxns] = useState([
     { name: 'Starbucks', amount: '-₹450', date: 'Today, 09:15 AM', icon: 'local_cafe' },
     { name: 'Salary', amount: '+₹1,25,000', date: 'Yesterday', icon: 'account_balance' },
@@ -156,7 +165,7 @@ export default function FinanceScreen() {
         <ParallaxCard>
           <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm h-full">
             <p className="text-xs text-[#464555] font-medium">Liquid Net Worth</p>
-            <p className="text-2xl font-black text-[#181B25] mt-1">₹{liquidNetWorth.toLocaleString()}</p>
+            {isLoadingData ? <Skeleton className="h-8 w-24 mt-1 mb-0.5" /> : <p className="text-2xl font-black text-[#181B25] mt-1">₹{liquidNetWorth.toLocaleString()}</p>}
             <p className="text-[11px] text-[#464555] mt-0.5">HDFC ••4109 & ICICI ••8912</p>
           </div>
         </ParallaxCard>
@@ -164,7 +173,7 @@ export default function FinanceScreen() {
         <ParallaxCard>
           <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm h-full">
             <p className="text-xs text-[#005338] font-semibold flex items-center gap-1"><span className="material-symbols-rounded text-[14px]">verified_user</span> Safe-Spend Allowance</p>
-            <p className="text-2xl font-black text-[#005338] mt-1">₹{(dailyBudget - spending).toLocaleString()}</p>
+            {isLoadingData ? <Skeleton className="h-8 w-24 mt-1 mb-0.5" /> : <p className="text-2xl font-black text-[#005338] mt-1">₹{(dailyBudget - spending).toLocaleString()}</p>}
             <p className="text-[11px] text-[#10B981] mt-0.5">₹{spending.toLocaleString()} burned today</p>
           </div>
         </ParallaxCard>
@@ -172,7 +181,7 @@ export default function FinanceScreen() {
         <ParallaxCard>
           <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm h-full">
             <p className="text-xs text-[#D97706] font-semibold">Upcoming Bills (48h)</p>
-            <p className="text-2xl font-black text-[#181B25] mt-1">₹{upcomingBills.toLocaleString()}</p>
+            {isLoadingData ? <Skeleton className="h-8 w-24 mt-1 mb-0.5" /> : <p className="text-2xl font-black text-[#181B25] mt-1">₹{upcomingBills.toLocaleString()}</p>}
             <p className="text-[11px] text-[#D32F2F] mt-0.5 animate-pulse">Tata Power Electricity</p>
           </div>
         </ParallaxCard>
@@ -191,7 +200,19 @@ export default function FinanceScreen() {
         </div>
 
         <div className="space-y-3">
-          {mockSubscriptions.map(sub => (
+          {isLoadingData ? (
+            <>
+              <div className="p-3 rounded-xl border border-[#E5E8F5] flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <SkeletonCircle className="w-8 h-8" />
+                    <div><Skeleton className="w-24 h-4 mb-1" /><Skeleton className="w-16 h-3" /></div>
+                  </div>
+                  <Skeleton className="w-12 h-4" />
+                </div>
+              </div>
+            </>
+          ) : mockSubscriptions.map(sub => (
             <div key={sub.id} className={`p-3 rounded-xl border flex flex-col gap-3 ${sub.status === 'Zombie' ? 'bg-[#FFF5F5] border-[#FFE0E0]' : 'bg-[#FAF9FF] border-[#E5E8F5]'}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -246,7 +267,20 @@ export default function FinanceScreen() {
       <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm space-y-3">
         <h3 className="text-sm font-bold text-[#181B25]">Recent Ledger Activity</h3>
         <div className="space-y-3">
-          {recentTxns.map((txn, i) => (
+          {isLoadingData ? (
+            Array(3).fill(0).map((_, i) => (
+              <div key={i} className="flex items-center justify-between bg-[#FAF9FF] p-3 rounded-xl border border-[#E5E8F5]">
+                <div className="flex items-center gap-3">
+                  <SkeletonCircle className="w-10 h-10" />
+                  <div>
+                    <Skeleton className="w-24 h-4 mb-1" />
+                    <Skeleton className="w-16 h-3" />
+                  </div>
+                </div>
+                <Skeleton className="w-12 h-4" />
+              </div>
+            ))
+          ) : recentTxns.map((txn, i) => (
             <div key={i} onClick={() => interact(`Transaction ${txn.name}`)} className="flex items-center justify-between bg-[#FAF9FF] p-3 rounded-xl border border-[#E5E8F5] active:scale-95 transition cursor-pointer">
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${txn.amount.startsWith('+') ? 'bg-[#E8F5E9] text-[#2E7D32]' : 'bg-[#FFF3E0] text-[#F57C00]'}`}>
