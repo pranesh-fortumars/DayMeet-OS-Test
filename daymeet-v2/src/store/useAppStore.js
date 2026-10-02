@@ -148,6 +148,14 @@ export const useAppStore = create((set, get) => ({
     await setDoc(taskDoc, { status: 'completed' }, { merge: true });
   },
 
+  deleteTask: async (id) => {
+    const user = auth.currentUser;
+    if (!user) return;
+    const { deleteDoc } = await import('firebase/firestore');
+    const taskDoc = doc(db, `users/${user.uid}/tasks`, id);
+    await deleteDoc(taskDoc);
+  },
+
   // Life Inbox Actions
   inbox: [],
   captureToInbox: (rawText, imageUrl = null) => {
