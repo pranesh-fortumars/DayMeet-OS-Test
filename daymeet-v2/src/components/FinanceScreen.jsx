@@ -5,6 +5,7 @@ import { useAppStore } from '../store/useAppStore';
 import { useInteraction } from '../hooks/useInteraction';
 import { NativeBiometric } from '@capgo/capacitor-native-biometric';
 import { startSmsListener } from '../services/SmsService';
+import { motion } from 'framer-motion';
 
 import PinFallbackModal from './modals/PinFallbackModal';
 import ParallaxCard from './ParallaxCard';
@@ -102,7 +103,7 @@ export default function FinanceScreen() {
 
   if (!unlocked) {
     return (
-      <>
+      <motion.div layoutId="finance-hero" className="w-full">
       <div className="flex flex-col items-center justify-center pt-20">
         <div className="w-16 h-16 rounded-full bg-[#FFEBEE] text-[#E53935] flex items-center justify-center mb-4">
           <span className="material-symbols-rounded text-[32px]">lock</span>
@@ -136,12 +137,12 @@ export default function FinanceScreen() {
         onSuccess={() => { setShowPinModal(false); setUnlocked(true); }} 
         onCancel={() => setShowPinModal(false)} 
       />
-    </>
+    </motion.div>
     );
   }
 
   return (
-    <div className="space-y-4 animate-in fade-in zoom-in duration-300">
+    <motion.div layoutId="finance-hero" className="space-y-4 animate-in fade-in zoom-in duration-300 w-full bg-[#FAF9FF] dark:bg-[#0F172A] rounded-2xl">
       <div className="flex items-center justify-between pt-1">
         <h2 className="text-xl font-black tracking-tight text-[#181B25]">Finance</h2>
         <div className="flex gap-2">
@@ -296,6 +297,6 @@ export default function FinanceScreen() {
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

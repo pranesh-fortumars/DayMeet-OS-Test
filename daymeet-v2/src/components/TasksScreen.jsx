@@ -104,7 +104,7 @@ export default function TasksScreen() {
   };
 
   return (
-    <div className="space-y-4">
+    <motion.div layoutId="tasks-hero" className="space-y-4 bg-[#FAF9FF] dark:bg-[#0F172A] rounded-2xl w-full">
       <div className="flex items-center justify-between pt-1">
         <div>
           <h2 className="text-xl font-black text-[#181B25]">Tasks & Checklists</h2>
@@ -243,6 +243,6 @@ export default function TasksScreen() {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

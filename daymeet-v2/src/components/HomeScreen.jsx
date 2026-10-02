@@ -4,6 +4,7 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { useAppStore } from '../store/useAppStore';
 import ParallaxCard from './ParallaxCard';
+import { motion } from 'framer-motion';
 
 export default function HomeScreen() {
   const navigate = useNavigate();
@@ -254,7 +255,7 @@ export default function HomeScreen() {
 
       {/* 5. Electricity Bill Due Banner */}
       {widgets.bills && (
-        <div id="electricity-bill-card" className="bg-[#F1F5FD] rounded-2xl p-3 px-3.5 flex items-center justify-between border border-blue-100 mt-4">
+        <motion.div layoutId="finance-hero" id="electricity-bill-card" className="bg-[#F1F5FD] rounded-2xl p-3 px-3.5 flex items-center justify-between border border-blue-100 mt-4">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-full bg-[#E0F2FE] text-[#0288D1] flex items-center justify-center">
               <span className="material-symbols-rounded text-[18px]">bolt</span>
@@ -270,7 +271,7 @@ export default function HomeScreen() {
               Pay Now
             </button>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* 6. Daily Vitals (4 Streams) 2x2 Bento Grid */}
@@ -283,7 +284,7 @@ export default function HomeScreen() {
 
           <div className="grid grid-cols-2 gap-2.5">
             {/* Bento 1: Focus & Work */}
-            <div onClick={() => switchTab('tasks')} className="bg-white rounded-2xl p-3 border border-[#E5E8F5] shadow-sm hover:border-[#3525CD]/40 cursor-pointer transition">
+            <motion.div layoutId="tasks-hero" onClick={() => switchTab('tasks')} className="bg-white rounded-2xl p-3 border border-[#E5E8F5] shadow-sm hover:border-[#3525CD]/40 cursor-pointer transition">
               <div className="flex items-center justify-between">
                 <div className="w-7 h-7 rounded-lg bg-[#E5E8F5] text-[#3525CD] flex items-center justify-center">
                   <span className="material-symbols-rounded text-[16px]">filter_center_focus</span>
@@ -296,7 +297,7 @@ export default function HomeScreen() {
                 <div className="bg-[#3525CD] h-full rounded-full" style={{ width: '33%' }}></div>
               </div>
               <p className="text-[10px] text-[#464555] mt-1.5 truncate">3 meetings scheduled</p>
-            </div>
+            </motion.div>
 
             {/* Bento 2: Finance (Daily) */}
             <div onClick={() => switchTab('finance')} className="bg-white rounded-2xl p-3 border border-[#E5E8F5] shadow-sm hover:border-[#005338]/40 cursor-pointer transition">

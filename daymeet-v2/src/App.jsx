@@ -74,7 +74,7 @@ const PageTransition = ({ children }) => {
     <motion.div
       initial={{ opacity: 0, y: 15, scale: 0.98, filter: 'blur(4px)' }}
       animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-      exit={{ opacity: 0, y: -15, scale: 0.98, filter: 'blur(4px)' }}
+      exit={{ opacity: 0, y: -15, scale: 0.98, filter: 'blur(4px)', position: 'absolute', top: 0, left: 0, right: 0 }}
       transition={{ type: 'spring', stiffness: 350, damping: 28, mass: 0.8 }}
       className="w-full h-full"
     >
@@ -259,7 +259,7 @@ function App() {
                 <div className="w-48 h-3 rounded-md bg-[#F1F3FF]"></div>
               </div>
             }>
-              <AnimatePresence mode="wait">
+              <AnimatePresence>
                 <Routes location={location} key={location.pathname}>
                   <Route path="/" element={<PageTransition><HomeScreen /></PageTransition>} />
                   <Route path="/calendar" element={<PageTransition><CalendarScreen /></PageTransition>} />
