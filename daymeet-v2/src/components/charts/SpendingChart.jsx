@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer, YAxis, CartesianGrid } from 'recharts';
 import { useAppStore } from '../../store/useAppStore';
+import { triggerHaptic } from '../../utils/haptics';
 
+// --- RESTORED OLD COMPONENT TO PRESERVE CODE ---
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
@@ -19,58 +21,104 @@ const CustomTooltip = ({ active, payload, label }) => {
   }
   return null;
 };
+// ----------------------------------------------
 
 export default function SpendingChart() {
   const { weeklySummaryData } = useAppStore();
+  
+  // Calculate total or latest for default display
+  const defaultAmount = weeklySummaryData[weeklySummaryData.length - 1]?.spending || 0;
+  const defaultLabel = 'Total This Week (Optimal)';
+  
+  const [activeValue, setActiveValue] = useState(defaultAmount);
+  const [activeLabel, setActiveLabel] = useState(defaultLabel);
+
+  const handleMouseMove = (state) => {
+    if (state && state.activePayload && state.activePayload.length) {
+      const payload = state.activePayload[0].payload;
+      if (activeValue !== payload.spending) {
+        setActiveValue(payload.spending);
+        setActiveLabel(`${payload.fullDay} Spending`);
+        triggerHaptic('light'); // Scrubbing haptic feedback
+      }
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setActiveValue(defaultAmount);
+    setActiveLabel(defaultLabel);
+  };
 
   return (
-    <div className="w-full h-48 mt-4 relative">
-      {/* Decorative Glow behind the chart */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-[#3525CD] blur-[60px] opacity-10 dark:opacity-20 rounded-full pointer-events-none"></div>
-      
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={weeklySummaryData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
-          <defs>
-            <linearGradient id="colorSpend" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#3525CD" stopOpacity={0.4}/>
-              <stop offset="95%" stopColor="#3525CD" stopOpacity={0}/>
-            </linearGradient>
-            <linearGradient id="colorSpendDark" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#818CF8" stopOpacity={0.4}/>
-              <stop offset="95%" stopColor="#818CF8" stopOpacity={0}/>
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E8F5" strokeOpacity={0.5} />
-          <XAxis 
-            dataKey="day" 
-            axisLine={false} 
-            tickLine={false} 
-            tick={{ fontSize: 10, fill: '#777587', fontWeight: 700 }}
-            dy={10}
-          />
-          <YAxis hide domain={['dataMin - 1000', 'dataMax + 1000']} />
-          <Tooltip 
-            content={<CustomTooltip />} 
-            cursor={{ stroke: '#3525CD', strokeWidth: 2, strokeDasharray: '4 4', opacity: 0.4 }}
-          />
-          <Area 
-            type="monotone" 
-            dataKey="spending" 
-            stroke="var(--chart-stroke, #3525CD)" 
-            strokeWidth={3}
-            fill="url(#colorSpend)" 
-            activeDot={{ r: 6, fill: '#3525CD', stroke: '#fff', strokeWidth: 3, shadow: '0 4px 12px rgba(53,37,205,0.5)' }}
-            animationDuration={1500}
-            animationEasing="ease-out"
-          />
-        </AreaChart>
-      </ResponsiveContainer>
-      
-      <style dangerouslySetInnerHTML={{__html: `
-        :root { --chart-stroke: #3525CD; }
-        .dark { --chart-stroke: #818CF8; }
-        .dark [fill="url(#colorSpend)"] { fill: url(#colorSpendDark); }
-      `}} />
+    <div className="w-full flex flex-col pt-2">
+      {/* Dynamic Header (Apple Stocks Style) */}
+      <div className="mb-4">
+        <p className="text-[10px] font-bold text-[#464555] dark:text-gray-400 uppercase tracking-wider transition-all">
+          {activeLabel}
+        </p>
+        <p className="text-3xl font-black text-[#3525CD] dark:text-[#818CF8] transition-all">
+          ₹{activeValue.toLocaleString()}
+        </p>
+      </div>
+
+      <div className="w-full h-48 relative">
+        {/* Decorative Glow behind the chart */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-[#3525CD] blur-[60px] opacity-10 dark:opacity-20 rounded-full pointer-events-none"></div>
+        
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart 
+            data={weeklySummaryData} 
+            margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            onTouchMove={handleMouseMove}
+            onTouchEnd={handleMouseLeave}
+          >
+            <defs>
+              <linearGradient id="colorSpend" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#3525CD" stopOpacity={0.6}/>
+                <stop offset="95%" stopColor="#3525CD" stopOpacity={0}/>
+              </linearGradient>
+              <linearGradient id="colorSpendDark" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#818CF8" stopOpacity={0.6}/>
+                <stop offset="95%" stopColor="#818CF8" stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E8F5" strokeOpacity={0.5} />
+            <XAxis 
+              dataKey="day" 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fontSize: 10, fill: '#777587', fontWeight: 700 }}
+              dy={10}
+            />
+            <YAxis hide domain={['dataMin - 1000', 'dataMax + 1000']} />
+            
+            {/* Custom hidden tooltip just to trigger the cursor line without rendering the box */}
+            <Tooltip 
+              content={<></>} 
+              cursor={{ stroke: '#3525CD', strokeWidth: 2, strokeDasharray: '4 4', opacity: 0.4 }}
+            />
+            
+            <Area 
+              type="monotone" 
+              dataKey="spending" 
+              stroke="var(--chart-stroke, #3525CD)" 
+              strokeWidth={4}
+              fill="url(#colorSpend)" 
+              activeDot={{ r: 6, fill: '#3525CD', stroke: '#fff', strokeWidth: 3, shadow: '0 4px 12px rgba(53,37,205,0.5)' }}
+              animationDuration={1500}
+              animationEasing="ease-out"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+        
+        <style dangerouslySetInnerHTML={{__html: `
+          :root { --chart-stroke: #3525CD; }
+          .dark { --chart-stroke: #818CF8; }
+          .dark [fill="url(#colorSpend)"] { fill: url(#colorSpendDark); }
+        `}} />
+      </div>
     </div>
   );
 }
