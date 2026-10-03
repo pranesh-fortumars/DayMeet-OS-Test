@@ -37,7 +37,7 @@ export default function ParallaxCard({ children, className }) {
       onPointerLeave={handleMouseLeave}
       className={className || ''}
     >
-      <div style={{ transform: "translateZ(30px)" }} className="w-full h-full">
+      <div style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }} className="w-full h-full">
         {children}
       </div>
     </motion.div>

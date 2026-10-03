@@ -157,8 +157,8 @@ export default function HomeScreen() {
       {/* 2. Daily Briefing Card */}
       {widgets.briefing && (
         <ParallaxCard>
-          <div className="glass-card rounded-[18px] p-4 premium-shadow h-full">
-            <div className="flex items-center justify-between">
+          <div className="glass-card rounded-[18px] p-4 premium-shadow h-full" style={{ transformStyle: "preserve-3d" }}>
+            <div className="flex items-center justify-between" style={{ transform: "translateZ(30px)" }}>
               <div className="flex items-center gap-1.5">
                 <span className="material-symbols-rounded text-[#3525CD] text-[18px]">auto_awesome</span>
                 <h2 className="text-sm font-bold text-[#181B25]">Daily Briefing</h2>
@@ -168,7 +168,7 @@ export default function HomeScreen() {
               </span>
             </div>
 
-            <div className="grid grid-cols-4 gap-2 mt-3 text-center">
+            <div className="grid grid-cols-4 gap-2 mt-3 text-center" style={{ transform: "translateZ(50px)" }}>
               <div className="p-1">
                 <p className="text-lg font-bold text-[#181B25] leading-tight">3</p>
                 <p className="text-[11px] text-[#464555]">Meetings</p>
@@ -218,8 +218,8 @@ export default function HomeScreen() {
       {/* 4. Hero Next Meeting Card */}
       {widgets.calendar && (
         <ParallaxCard>
-          <div className="glass-card rounded-[18px] p-4 premium-shadow h-full hover-lift">
-            <div className="flex items-center justify-between">
+          <div className="glass-card rounded-[18px] p-4 premium-shadow h-full hover-lift" style={{ transformStyle: "preserve-3d" }}>
+            <div className="flex items-center justify-between" style={{ transform: "translateZ(30px)" }}>
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-[10px] bg-[#E2DFFF] flex items-center justify-center text-[#3525CD]">
                   <span className="material-symbols-rounded text-[20px]">videocam</span>
@@ -234,7 +234,7 @@ export default function HomeScreen() {
               <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#E5E8F5] text-[#3525CD]">Google Meet</span>
             </div>
 
-            <h4 className="text-base font-bold text-[#181B25] mt-2.5">Product Strategy Review</h4>
+            <h4 className="text-base font-bold text-[#181B25] mt-2.5" style={{ transform: "translateZ(60px)" }}>Product Strategy Review</h4>
 
             <div className="flex items-center justify-between mt-3 pt-2">
               <div className="flex items-center -space-x-2 overflow-hidden">
@@ -244,7 +244,7 @@ export default function HomeScreen() {
                 <div className="w-7 h-7 rounded-full bg-[#E5E8F5] text-[#464555] text-[10px] font-bold flex items-center justify-center ring-2 ring-white">+4</div>
               </div>
 
-              <button onClick={() => triggerToast('Connecting to Google Meet room...')} className="h-[38px] px-4 rounded-xl bg-[#3525CD] text-white text-xs font-bold flex items-center gap-1.5 hover:bg-[#2B1DAE] transition shadow-sm">
+              <button onClick={() => triggerToast('Connecting to Google Meet room...')} style={{ transform: "translateZ(40px)" }} className="h-[38px] px-4 rounded-xl bg-[#3525CD] text-white text-xs font-bold flex items-center gap-1.5 hover:bg-[#2B1DAE] transition shadow-sm">
                 <span className="material-symbols-rounded text-[16px]">videocam</span>
                 <span>Join Meeting</span>
               </button>
