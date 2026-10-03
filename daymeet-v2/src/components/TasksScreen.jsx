@@ -89,7 +89,7 @@ function SwipeableTask({ task, leftBorder, prioBadge, style, onComplete, interac
 }
 
 export default function TasksScreen() {
-  const { tasks, completeTask, deleteTask } = useAppStore();
+  const { tasks, completeTask, deleteTask, triggerConfetti } = useAppStore();
   const { interact } = useInteraction();
   const openQuickAddWith = (type) => interact(`Quick Add: ${type}`);
   
@@ -183,7 +183,7 @@ export default function TasksScreen() {
               key={task.id}
               onSwipeRight={() => {
                 completeTask(task.id);
-                confetti({ particleCount: 80, spread: 70, colors: ['#3525CD', '#10B981', '#6FFBBE'] });
+                triggerConfetti();
               }}
               onSwipeLeft={() => {
                 deleteTask(task.id);
@@ -211,7 +211,7 @@ export default function TasksScreen() {
                       e.stopPropagation(); 
                       completeTask(task.id); 
                       triggerHaptic('success'); 
-                      confetti({ particleCount: 40, spread: 50, colors: ['#10B981'] });
+                      triggerConfetti();
                     }} 
                     className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 transition ${task.status === 'completed' ? 'bg-[#10B981] border-[#10B981] text-white' : 'bg-[#E5E8F5] dark:bg-slate-800 border-[#C7C4D8] dark:border-slate-600 text-transparent hover:border-[#3525CD]'}`}
                   >

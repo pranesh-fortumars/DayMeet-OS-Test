@@ -9,7 +9,7 @@ import { syncHealthData } from '../services/HealthService';
 export default function InsightsScreen() {
   const { interact } = useInteraction();
   const [syncing, setSyncing] = useState(false);
-  const { sleepTime, sleepQuality, steps, stepsGoal, hydration, hydrationGoal, activeBurn, activeBurnGoal, meditationStreak, exerciseStreak } = useAppStore();
+  const { triggerConfetti, sleepTime, sleepQuality, steps, stepsGoal, hydration, hydrationGoal, activeBurn, activeBurnGoal, meditationStreak, exerciseStreak } = useAppStore();
 
   const handleSync = async () => {
     interact('Started Native Health Sync');
@@ -93,7 +93,7 @@ export default function InsightsScreen() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div onClick={() => interact('Sleep Metrics')}>
+        <div onClick={() => { interact('Sleep Metrics'); if (sleepQuality >= 85) triggerConfetti(); }}>
           <HealthRing 
             title="Sleep Quality" 
             value={`${sleepQuality}%`} 
@@ -104,7 +104,7 @@ export default function InsightsScreen() {
             icon="bedtime" 
           />
         </div>
-        <div onClick={() => interact('Activity Metrics')}>
+        <div onClick={() => { interact('Activity Metrics'); if (steps >= stepsGoal) triggerConfetti(); }}>
           <HealthRing 
             title="Steps" 
             value={steps.toLocaleString()} 
@@ -115,7 +115,7 @@ export default function InsightsScreen() {
             icon="directions_walk" 
           />
         </div>
-        <div onClick={() => interact('Hydration')}>
+        <div onClick={() => { interact('Hydration'); if (hydration >= hydrationGoal) triggerConfetti(); }}>
           <HealthRing 
             title="Hydration" 
             value={`${hydration}L`} 
@@ -126,7 +126,7 @@ export default function InsightsScreen() {
             icon="water_drop" 
           />
         </div>
-        <div onClick={() => interact('Calories Burned')}>
+        <div onClick={() => { interact('Calories Burned'); if (activeBurn >= activeBurnGoal) triggerConfetti(); }}>
           <HealthRing 
             title="Active Burn" 
             value={activeBurn} 

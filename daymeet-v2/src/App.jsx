@@ -8,6 +8,7 @@ import AuthScreen from './components/AuthScreen';
 import PullToRefresh from './components/PullToRefresh';
 import { useTimeOfDay } from './hooks/useTimeOfDay';
 import PinFallbackModal from './components/modals/PinFallbackModal';
+import Confetti from './components/ui/Confetti';
 
 // Handle ChunkLoadErrors gracefully
 const lazyWithRetry = (componentImport) =>
@@ -284,6 +285,7 @@ function App() {
       </main>
       <BottomDock />
       <GlobalSmartCapture />
+      <Confetti />
 
       {/* Global Modals */}
       <BriefingModal />

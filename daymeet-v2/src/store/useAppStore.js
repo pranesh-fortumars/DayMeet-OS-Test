@@ -13,6 +13,10 @@ export const useAppStore = create((set, get) => ({
   modals: { budgetTarget: false, focusSanctuary: false, windDown: false },
   setModalOpen: (modalId, isOpen) => set((state) => ({ modals: { ...state.modals, [modalId]: isOpen } })),
   
+  // Confetti Micro-Interaction State
+  confettiState: { show: false, id: 0 },
+  triggerConfetti: () => set({ confettiState: { show: true, id: Date.now() } }),
+
   // Custom Widget Engine & Security
   widgets: { briefing: true, calendar: true, bills: true, vitals: true },
   toggleWidget: (widget) => set((state) => ({ widgets: { ...state.widgets, [widget]: !state.widgets[widget] } })),
