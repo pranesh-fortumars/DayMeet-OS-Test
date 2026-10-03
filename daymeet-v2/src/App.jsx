@@ -9,6 +9,7 @@ import PullToRefresh from './components/PullToRefresh';
 import { useTimeOfDay } from './hooks/useTimeOfDay';
 import PinFallbackModal from './components/modals/PinFallbackModal';
 import Confetti from './components/ui/Confetti';
+import AmbientMesh from './components/ui/AmbientMesh';
 
 // Handle ChunkLoadErrors gracefully
 const lazyWithRetry = (componentImport) =>
@@ -249,6 +250,7 @@ function App() {
 
   return (
     <div className={`h-[100dvh] flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200 overflow-hidden transition-all duration-[3000ms] ease-in-out bg-[#FAF9FF] dark:bg-[#0F172A] ${getThemeFilter()} ${detoxMode ? 'grayscale' : ''}`}>
+      <AmbientMesh />
       <Header />
       <main className="max-w-3xl mx-auto flex-1 w-full relative flex flex-col min-h-0">
         <PullToRefresh onRefresh={handleGlobalRefresh}>
