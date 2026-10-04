@@ -24,6 +24,10 @@ export const useAppStore = create((set, get) => ({
   toggleGlobalLock: () => set((state) => ({ globalLockEnabled: !state.globalLockEnabled })),
   appPin: null,
   setAppPin: (pin) => set({ appPin: pin }),
+  decoyPin: '0000', // Default decoy PIN for testing Ghost Mode
+  setDecoyPin: (pin) => set({ decoyPin: pin }),
+  ghostModeActive: false,
+  setGhostModeActive: (isActive) => set({ ghostModeActive: isActive }),
   
   // Dynamic Island State
   islandState: { active: false, type: 'sync', message: '' },

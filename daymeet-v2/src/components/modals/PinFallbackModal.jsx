@@ -3,7 +3,7 @@ import { useAppStore } from '../../store/useAppStore';
 import { triggerHaptic } from '../../utils/haptics';
 
 export default function PinFallbackModal({ isOpen, onSuccess, onCancel }) {
-  const { appPin, setAppPin } = useAppStore();
+  const { appPin, setAppPin, decoyPin, setGhostModeActive } = useAppStore();
   const [pinInput, setPinInput] = useState('');
   const [error, setError] = useState(false);
 
@@ -26,6 +26,11 @@ export default function PinFallbackModal({ isOpen, onSuccess, onCancel }) {
           } else {
             if (newPin === appPin) {
               triggerHaptic('success');
+              setGhostModeActive(false); // Master pin deactivates ghost mode
+              onSuccess();
+            } else if (newPin === decoyPin) {
+              triggerHaptic('success');
+              setGhostModeActive(true); // Decoy pin activates ghost mode
               onSuccess();
             } else {
               triggerHaptic('error');

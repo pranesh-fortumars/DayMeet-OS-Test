@@ -81,6 +81,25 @@ export default function SecurityVaultScreen() {
         </div>
 
         <div className="flex items-center justify-between pt-4">
+          <h2 className="text-sm font-bold text-[#181B25]">Plausible Deniability</h2>
+        </div>
+
+        <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-rounded text-[#10B981]">visibility_off</span>
+              <div>
+                <p className="text-xs font-bold text-[#181B25]">Ghost Mode Decoy PIN</p>
+                <p className="text-[10px] text-[#464555]">Unlocking with <strong className="text-[#181B25]">0000</strong> hides sensitive data.</p>
+              </div>
+            </div>
+            <button onClick={() => interact('Configure Decoy PIN')} className="px-3 py-1.5 bg-[#F1F3FF] text-[#3525CD] text-[10px] font-bold rounded-lg hover:bg-[#E5E8F5] transition">
+              Configure
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between pt-4">
           <h2 className="text-sm font-bold text-[#181B25]">Local Backup Engine</h2>
         </div>
 

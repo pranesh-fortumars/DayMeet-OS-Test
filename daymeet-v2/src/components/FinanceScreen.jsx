@@ -32,7 +32,7 @@ export default function FinanceScreen() {
     { id: 2, name: 'Adobe Creative Cloud', amount: '₹4,230/mo', status: 'Zombie', icon: 'design_services', color: 'bg-[#E0F2FE] text-[#0288D1]', lastUsed: '45 days ago' }
   ]);
   const { interact } = useInteraction();
-  const { liquidNetWorth, spending, dailyBudget, upcomingBills, addExpense } = useAppStore();
+  const { liquidNetWorth, spending, dailyBudget, upcomingBills, addExpense, ghostModeActive } = useAppStore();
 
   const simulateBankSMS = () => {
     interact('Simulate SMS Received (Manual)');
@@ -166,29 +166,30 @@ export default function FinanceScreen() {
         <ParallaxCard>
           <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm h-full">
             <p className="text-xs text-[#464555] font-medium">Liquid Net Worth</p>
-            {isLoadingData ? <Skeleton className="h-8 w-24 mt-1 mb-0.5" /> : <p className="text-2xl font-black text-[#181B25] mt-1">₹{liquidNetWorth.toLocaleString()}</p>}
-            <p className="text-[11px] text-[#464555] mt-0.5">HDFC ••4109 & ICICI ••8912</p>
+            {isLoadingData ? <Skeleton className="h-8 w-24 mt-1 mb-0.5" /> : <p className="text-2xl font-black text-[#181B25] mt-1">{ghostModeActive ? '₹4,500' : `₹${liquidNetWorth.toLocaleString()}`}</p>}
+            <p className="text-[11px] text-[#464555] mt-0.5">{ghostModeActive ? 'SBI ••1245' : 'HDFC ••4109 & ICICI ••8912'}</p>
           </div>
         </ParallaxCard>
         
         <ParallaxCard>
           <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm h-full">
             <p className="text-xs text-[#005338] font-semibold flex items-center gap-1"><span className="material-symbols-rounded text-[14px]">verified_user</span> Safe-Spend Allowance</p>
-            {isLoadingData ? <Skeleton className="h-8 w-24 mt-1 mb-0.5" /> : <p className="text-2xl font-black text-[#005338] mt-1">₹{(dailyBudget - spending).toLocaleString()}</p>}
-            <p className="text-[11px] text-[#10B981] mt-0.5">₹{spending.toLocaleString()} burned today</p>
+            {isLoadingData ? <Skeleton className="h-8 w-24 mt-1 mb-0.5" /> : <p className="text-2xl font-black text-[#005338] mt-1">{ghostModeActive ? '₹1,200' : `₹${(dailyBudget - spending).toLocaleString()}`}</p>}
+            <p className="text-[11px] text-[#10B981] mt-0.5">{ghostModeActive ? '₹800' : `₹${spending.toLocaleString()}`} burned today</p>
           </div>
         </ParallaxCard>
         
         <ParallaxCard>
           <div className="p-4 bg-white rounded-2xl border border-[#E5E8F5] shadow-sm h-full">
             <p className="text-xs text-[#D97706] font-semibold">Upcoming Bills (48h)</p>
-            {isLoadingData ? <Skeleton className="h-8 w-24 mt-1 mb-0.5" /> : <p className="text-2xl font-black text-[#181B25] mt-1">₹{upcomingBills.toLocaleString()}</p>}
-            <p className="text-[11px] text-[#D32F2F] mt-0.5 animate-pulse">Tata Power Electricity</p>
+            {isLoadingData ? <Skeleton className="h-8 w-24 mt-1 mb-0.5" /> : <p className="text-2xl font-black text-[#181B25] mt-1">{ghostModeActive ? '₹0' : `₹${upcomingBills.toLocaleString()}`}</p>}
+            <p className={`text-[11px] mt-0.5 ${ghostModeActive ? 'text-[#10B981]' : 'text-[#D32F2F] animate-pulse'}`}>{ghostModeActive ? 'All clear' : 'Tata Power Electricity'}</p>
           </div>
         </ParallaxCard>
       </div>
 
-      {/* Subscription Radar & Zombie Hunter */}
+      {/* Subscription Radar & Zombie Hunter (Hidden in Ghost Mode) */}
+      {!ghostModeActive && (
       <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold text-[#181B25] flex items-center gap-1.5">
@@ -246,6 +247,7 @@ export default function FinanceScreen() {
           ))}
         </div>
       </div>
+      )}
 
       <div className="bg-white dark:bg-[#1E293B] rounded-2xl p-4 border border-[#E5E8F5] dark:border-slate-700 shadow-sm pt-5">
         <div className="flex items-center justify-between">
