@@ -6,7 +6,7 @@ import LifeInboxModal from './LifeInboxModal';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function GlobalSmartCapture() {
-  const { captureToInbox, inbox } = useAppStore();
+  const { captureToInbox, inbox, toggleDetoxMode, setActiveProfile, toggleGlobalLock, triggerConfetti } = useAppStore();
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [isInboxOpen, setIsInboxOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -18,6 +18,41 @@ export default function GlobalSmartCapture() {
   const fileInputRef = useRef(null);
   const pendingCount = inbox.length;
 
+  const triggerToast = (msg) => {
+    // Simple custom toast fallback if we don't have a global toast system imported here
+    console.log('Copilot Toast:', msg);
+  };
+
+  const processCopilotCommand = (text) => {
+    if (!text) return false;
+    const lower = text.toLowerCase();
+    let actionExecuted = false;
+
+    if (lower.includes('detox mode')) {
+      toggleDetoxMode();
+      actionExecuted = true;
+    }
+    if (lower.includes('work mode') || lower.includes('work profile')) {
+      setActiveProfile('Work');
+      actionExecuted = true;
+    }
+    if (lower.includes('personal mode') || lower.includes('personal profile')) {
+      setActiveProfile('Personal');
+      actionExecuted = true;
+    }
+    if (lower.includes('lock vault') || lower.includes('ghost mode')) {
+      toggleGlobalLock();
+      actionExecuted = true;
+    }
+
+    if (actionExecuted) {
+      triggerConfetti();
+      triggerToast('Copilot executed your command.');
+      Haptics.notification({ type: 'SUCCESS' }).catch(() => {});
+      return true;
+    }
+    return false;
+  };
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -108,12 +143,17 @@ export default function GlobalSmartCapture() {
     e.preventDefault();
     if (!inputValue.trim() && !selectedImage) return;
     
-    captureToInbox(inputValue.trim() || 'Attached Image', selectedImage);
+    const text = inputValue.trim();
+    const wasCommand = processCopilotCommand(text);
+
+    if (!wasCommand) {
+      captureToInbox(text || 'Attached Image', selectedImage);
+      setIsInboxOpen(true);
+    }
     
     setInputValue('');
     setSelectedImage(null);
     setIsInputOpen(false);
-    setIsInboxOpen(true);
   };
 
   const closeInput = () => {
