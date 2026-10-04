@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 
 export default function HomeScreen() {
   const navigate = useNavigate();
-  const { setModalOpen, spending, dailyBudget, steps, stepsGoal, hydration, hydrationGoal, meditationStreak, exerciseStreak, tasks, activeProfile, currentLocation, setCurrentLocation, setActiveProfile, widgets } = useAppStore();
+  const { setModalOpen, setIsland, spending, dailyBudget, steps, stepsGoal, hydration, hydrationGoal, meditationStreak, exerciseStreak, tasks, activeProfile, currentLocation, setCurrentLocation, setActiveProfile, widgets } = useAppStore();
   const [isTravelMode, setIsTravelMode] = useState(true);
   const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Light }).catch(() => { });
 
@@ -305,7 +305,7 @@ export default function HomeScreen() {
                 <div className="w-7 h-7 rounded-full bg-[#E5E8F5] text-[#464555] text-[10px] font-bold flex items-center justify-center ring-2 ring-white">+4</div>
               </div>
 
-              <button onClick={() => triggerToast('Connecting to Google Meet room...')} style={{ transform: "translateZ(40px)" }} className="h-[38px] px-4 rounded-xl bg-[#3525CD] text-white text-xs font-bold flex items-center gap-1.5 hover:bg-[#2B1DAE] transition shadow-sm">
+              <button onClick={() => { triggerToast('Connecting to Google Meet...'); setIsland({ active: true, type: 'meeting', message: 'Product Strategy Sync' }); }} style={{ transform: "translateZ(40px)" }} className="h-[38px] px-4 rounded-xl bg-[#3525CD] text-white text-xs font-bold flex items-center gap-1.5 hover:bg-[#2B1DAE] transition shadow-sm">
                 <span className="material-symbols-rounded text-[16px]">videocam</span>
                 <span>Join Meeting</span>
               </button>
