@@ -154,8 +154,8 @@ export default function HomeScreen() {
         </button>
       </div>
 
-      {/* 2. Daily Briefing Card */}
-      {widgets.briefing && (
+      {/* 2. Predictive Smart Widgets (Work / Active Mode) */}
+      {(activeProfile === 'Work' || activeProfile === 'Creative') && widgets.briefing && (
         <ParallaxCard>
           <div className="glass-card rounded-[18px] p-4 premium-shadow h-full" style={{ transformStyle: "preserve-3d" }}>
             <div className="flex items-center justify-between" style={{ transform: "translateZ(30px)" }}>
@@ -203,7 +203,68 @@ export default function HomeScreen() {
         </ParallaxCard>
       )}
 
-      {/* 3. My Day Widgets Header */}
+      {/* 3. Predictive Smart Widgets (Personal / Rest Mode) */}
+      {(activeProfile === 'Personal' || activeProfile === 'Family') && (
+        <div className="space-y-4 animate-in slide-in-from-right-8 duration-500">
+          {/* Wind Down Card */}
+          <ParallaxCard>
+            <div className="glass-card rounded-[18px] p-4 premium-shadow h-full" style={{ transformStyle: "preserve-3d" }}>
+              <div className="flex items-center justify-between" style={{ transform: "translateZ(30px)" }}>
+                <div className="flex items-center gap-1.5">
+                  <span className="material-symbols-rounded text-[#10B981] text-[18px]">bedtime</span>
+                  <h2 className="text-sm font-bold text-[#181B25]">Wind Down Routine</h2>
+                </div>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#10B981]/10 text-[#10B981]">
+                  Evening
+                </span>
+              </div>
+              <div className="mt-3 flex items-center justify-between" style={{ transform: "translateZ(50px)" }}>
+                <div>
+                  <h4 className="text-lg font-black text-[#181B25]">Ready for rest?</h4>
+                  <p className="text-[11px] text-[#464555] mt-0.5">Your sleep goal is 8 hours tonight.</p>
+                </div>
+                <button onClick={() => triggerToast('Initiating Sleep Protocol...')} className="h-10 px-4 rounded-xl bg-[#10B981] text-white text-xs font-bold hover:bg-[#059669] transition shadow-sm">
+                  Start Routine
+                </button>
+              </div>
+            </div>
+          </ParallaxCard>
+          
+          <div className="grid grid-cols-2 gap-4">
+            {/* Tomorrow's Agenda */}
+            <ParallaxCard>
+              <div className="glass-card rounded-[18px] p-4 premium-shadow h-full" style={{ transformStyle: "preserve-3d" }}>
+                <div className="flex items-center gap-1.5 mb-2" style={{ transform: "translateZ(30px)" }}>
+                  <span className="material-symbols-rounded text-[#F59E0B] text-[16px]">calendar_today</span>
+                  <h3 className="text-xs font-bold text-[#181B25]">Tomorrow</h3>
+                </div>
+                <div style={{ transform: "translateZ(40px)" }}>
+                  <p className="text-xl font-black text-[#181B25]">4 Events</p>
+                  <p className="text-[10px] text-[#464555] mt-1">First meeting at 9:00 AM</p>
+                </div>
+              </div>
+            </ParallaxCard>
+            
+            {/* Daily Spending */}
+            <ParallaxCard>
+              <div className="glass-card rounded-[18px] p-4 premium-shadow h-full" style={{ transformStyle: "preserve-3d" }}>
+                <div className="flex items-center gap-1.5 mb-2" style={{ transform: "translateZ(30px)" }}>
+                  <span className="material-symbols-rounded text-[#E53935] text-[16px]">payments</span>
+                  <h3 className="text-xs font-bold text-[#181B25]">Spent Today</h3>
+                </div>
+                <div style={{ transform: "translateZ(40px)" }}>
+                  <p className="text-xl font-black text-[#181B25]">₹{spending.toLocaleString()}</p>
+                  <div className="w-full bg-[#E5E8F5] h-1 rounded-full mt-2 overflow-hidden">
+                    <div className="bg-[#E53935] h-full rounded-full" style={{ width: `${Math.min((spending / dailyBudget) * 100, 100)}%` }}></div>
+                  </div>
+                </div>
+              </div>
+            </ParallaxCard>
+          </div>
+        </div>
+      )}
+
+      {/* 4. My Day Widgets Header */}
       <div className="flex items-center justify-between pt-1">
         <div className="flex items-center gap-2">
           <h3 className="text-base font-bold text-[#181B25]">My Day Widgets</h3>
@@ -215,8 +276,8 @@ export default function HomeScreen() {
         </button>
       </div>
 
-      {/* 4. Hero Next Meeting Card */}
-      {widgets.calendar && (
+      {/* 5. Hero Next Meeting Card (Only Work/Creative) */}
+      {(activeProfile === 'Work' || activeProfile === 'Creative') && widgets.calendar && (
         <ParallaxCard>
           <div className="glass-card rounded-[18px] p-4 premium-shadow h-full hover-lift" style={{ transformStyle: "preserve-3d" }}>
             <div className="flex items-center justify-between" style={{ transform: "translateZ(30px)" }}>
