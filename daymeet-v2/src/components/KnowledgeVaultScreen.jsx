@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInteraction } from '../hooks/useInteraction';
+import { motion } from 'framer-motion';
 
 export default function KnowledgeVaultScreen() {
   const navigate = useNavigate();
@@ -172,43 +173,80 @@ export default function KnowledgeVaultScreen() {
               ))}
             </div>
           ) : (
-            <div className="w-full h-[280px] bg-[#181B25] rounded-2xl relative overflow-hidden flex items-center justify-center cursor-crosshair">
-              {/* Simulated D3 Force Graph Canvas */}
-              <svg className="absolute inset-0 w-full h-full animate-in zoom-in-90 duration-700 opacity-60">
-                <line x1="20%" y1="30%" x2="50%" y2="50%" stroke="#4F46E5" strokeWidth="2" />
-                <line x1="80%" y1="20%" x2="50%" y2="50%" stroke="#4F46E5" strokeWidth="2" />
-                <line x1="50%" y1="50%" x2="30%" y2="80%" stroke="#4F46E5" strokeWidth="2" strokeDasharray="4" />
-                <line x1="50%" y1="50%" x2="70%" y2="75%" stroke="#4F46E5" strokeWidth="2" />
-              </svg>
+            <div className="w-full h-[400px] bg-[#FAF9FF] dark:bg-[#181B25] rounded-2xl relative overflow-hidden flex items-center justify-center border border-[#E5E8F5] dark:border-white/10 shadow-inner group">
+              {/* Dot Grid Background */}
+              <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #8B899C 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
               
-              <div className="absolute top-[30%] left-[20%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-in zoom-in duration-500 delay-100">
-                <div onClick={() => interact('Node: AI Agents')} className="w-4 h-4 bg-[#6366F1] rounded-full shadow-[0_0_15px_rgba(99,102,241,0.8)] cursor-pointer hover:scale-150 transition-transform"></div>
-                <span className="text-[9px] text-white font-bold mt-1 absolute top-4 whitespace-nowrap">AI Agents</span>
-              </div>
-              
-              <div className="absolute top-[20%] left-[80%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-in zoom-in duration-500 delay-200">
-                <div onClick={() => interact('Node: Life OS')} className="w-3 h-3 bg-[#10B981] rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)] cursor-pointer hover:scale-150 transition-transform"></div>
-                <span className="text-[9px] text-white font-bold mt-1 absolute top-3 whitespace-nowrap">Life OS Design</span>
-              </div>
-              
-              <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-in zoom-in duration-500">
-                <div onClick={() => interact('Node: Productivity Hub')} className="w-6 h-6 bg-white rounded-full shadow-[0_0_20px_rgba(255,255,255,0.9)] cursor-pointer hover:scale-125 transition-transform z-10 animate-pulse"></div>
-                <span className="text-[11px] text-white font-black mt-2 absolute top-6 whitespace-nowrap bg-black/50 px-2 py-0.5 rounded">Productivity Hub</span>
-              </div>
-              
-              <div className="absolute top-[80%] left-[30%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-in zoom-in duration-500 delay-300">
-                <div onClick={() => interact('Node: React Patterns')} className="w-3 h-3 bg-[#F59E0B] rounded-full shadow-[0_0_10px_rgba(245,158,11,0.8)] cursor-pointer hover:scale-150 transition-transform"></div>
-                <span className="text-[9px] text-white font-bold mt-1 absolute top-3 whitespace-nowrap">React Patterns</span>
-              </div>
+              {/* Infinite Draggable Canvas Container */}
+              <motion.div 
+                drag
+                dragConstraints={{ left: -1000, right: 1000, top: -1000, bottom: 1000 }}
+                dragElastic={0.1}
+                whileTap={{ cursor: "grabbing" }}
+                className="absolute w-[3000px] h-[3000px] flex items-center justify-center cursor-grab touch-none"
+              >
+                {/* Simulated Connective Strings */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-30 dark:opacity-60">
+                  <path d="M 1400 1400 Q 1500 1350 1550 1500" fill="none" stroke="#6366F1" strokeWidth="2" strokeDasharray="5,5" />
+                  <path d="M 1550 1500 Q 1450 1600 1300 1550" fill="none" stroke="#10B981" strokeWidth="2" />
+                  <path d="M 1400 1400 L 1300 1550" fill="none" stroke="#F59E0B" strokeWidth="2" />
+                </svg>
 
-              <div className="absolute top-[75%] left-[70%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-in zoom-in duration-500 delay-150">
-                <div onClick={() => interact('Node: Zettelkasten')} className="w-4 h-4 bg-[#EC4899] rounded-full shadow-[0_0_15px_rgba(236,72,153,0.8)] cursor-pointer hover:scale-150 transition-transform"></div>
-                <span className="text-[9px] text-white font-bold mt-1 absolute top-4 whitespace-nowrap">Zettelkasten Method</span>
-              </div>
+                {/* Spatial Node 1 */}
+                <motion.div 
+                  drag
+                  dragMomentum={false}
+                  whileDrag={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+                  className="absolute left-[1400px] top-[1400px] bg-white dark:bg-[#1E293B] p-3 rounded-2xl shadow-md border border-[#E5E8F5] dark:border-white/10 w-48 flex flex-col gap-2 cursor-pointer z-10"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-lg bg-[#F1F3FF] text-[#3525CD] flex items-center justify-center shrink-0">
+                      <span className="material-symbols-rounded text-[14px]">psychology</span>
+                    </div>
+                    <p className="text-xs font-bold text-[#181B25] dark:text-white leading-tight">AI Agents Memory</p>
+                  </div>
+                  <p className="text-[10px] text-[#464555] dark:text-gray-400">Notes from the Substack article on context-aware agents.</p>
+                </motion.div>
+
+                {/* Spatial Node 2 */}
+                <motion.div 
+                  drag
+                  dragMomentum={false}
+                  whileDrag={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+                  className="absolute left-[1550px] top-[1500px] bg-white dark:bg-[#1E293B] p-2 rounded-2xl shadow-md border border-[#E5E8F5] dark:border-white/10 w-40 flex flex-col gap-2 cursor-pointer z-10"
+                >
+                  <div className="w-full h-24 bg-gray-200 rounded-xl overflow-hidden relative">
+                    {/* Mock Image Placeholder */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#6366F1] to-[#EC4899] opacity-80"></div>
+                    <span className="absolute bottom-2 left-2 text-white font-bold text-xs shadow-sm">Moodboard</span>
+                  </div>
+                </motion.div>
+
+                {/* Spatial Node 3 */}
+                <motion.div 
+                  drag
+                  dragMomentum={false}
+                  whileDrag={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+                  className="absolute left-[1300px] top-[1550px] bg-[#10B981] p-3 rounded-2xl shadow-md text-white w-40 flex flex-col gap-1 cursor-pointer z-10"
+                >
+                  <span className="material-symbols-rounded text-[18px] opacity-80">task_alt</span>
+                  <p className="text-xs font-bold">Implement Life OS</p>
+                  <span className="text-[9px] bg-black/20 px-2 py-0.5 rounded-full w-max mt-1">Goal</span>
+                </motion.div>
+              </motion.div>
               
-              <div className="absolute bottom-3 right-3 flex items-center gap-1.5 text-[9px] font-bold text-gray-500">
-                <span className="material-symbols-rounded text-[12px]">drag_pan</span>
-                Interactive Graph
+              {/* Controls UI overlay */}
+              <div className="absolute bottom-3 right-3 flex flex-col gap-2 z-20">
+                <button onClick={() => triggerToast('Zoom functionality')} className="w-8 h-8 rounded-full bg-white dark:bg-[#1E293B] shadow-md border border-[#E5E8F5] dark:border-white/10 flex items-center justify-center text-[#181B25] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+                  <span className="material-symbols-rounded text-[16px]">add</span>
+                </button>
+                <button onClick={() => triggerToast('Zoom functionality')} className="w-8 h-8 rounded-full bg-white dark:bg-[#1E293B] shadow-md border border-[#E5E8F5] dark:border-white/10 flex items-center justify-center text-[#181B25] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+                  <span className="material-symbols-rounded text-[16px]">remove</span>
+                </button>
+              </div>
+              <div className="absolute top-3 left-3 flex items-center gap-1.5 text-[10px] font-bold text-[#464555] dark:text-gray-400 bg-white/80 dark:bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm">
+                <span className="material-symbols-rounded text-[14px]">pinch</span>
+                Pan & Drag Nodes
               </div>
             </div>
           )}
