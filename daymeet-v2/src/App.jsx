@@ -10,6 +10,7 @@ import { useTimeOfDay } from './hooks/useTimeOfDay';
 import PinFallbackModal from './components/modals/PinFallbackModal';
 import Confetti from './components/ui/Confetti';
 import AmbientMesh from './components/ui/AmbientMesh';
+import LockScreen from './components/LockScreen';
 
 // Handle ChunkLoadErrors gracefully
 const lazyWithRetry = (componentImport) =>
@@ -86,12 +87,12 @@ const PageTransition = ({ children }) => {
 };
 
 function App() {
+  const { initSync, activeProfile, setActiveProfile, setCurrentLocation, globalLockEnabled, detoxMode } = useAppStore();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [appLocked, setAppLocked] = useState(false);
+  const [appLocked, setAppLocked] = useState(globalLockEnabled);
   const timeOfDay = useTimeOfDay();
   const location = useLocation();
-  const { initSync, activeProfile, setActiveProfile, setCurrentLocation, globalLockEnabled, detoxMode } = useAppStore();
 
   useEffect(() => {
     // Dynamic Theming - Context Aware
@@ -300,72 +301,14 @@ function App() {
       <WindDownModal />
       <NightlyCleanupModal />
 
-      {/* Global Biometric Lock Overlay */}
+      {/* Global Lock Screen (AOD) */}
       <AnimatePresence>
         {appLocked && (
-          <motion.div 
-            initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
-            animate={{ opacity: 1, backdropFilter: 'blur(20px)' }}
-            exit={{ opacity: 0, backdropFilter: 'blur(0px)', scale: 1.05 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-[9999] bg-[#FAF9FF]/80 dark:bg-[#0F172A]/80 flex flex-col items-center justify-center p-6"
-          >
-            {/* Animated Scanner Ring */}
-            <div className="relative w-32 h-32 mb-8 flex items-center justify-center">
-              <motion.div 
-                animate={{ rotate: 360 }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 rounded-full border-2 border-dashed border-[#3525CD]/30 dark:border-[#818CF8]/30"
-              />
-              <motion.div 
-                animate={{ scale: [0.95, 1.05, 0.95], opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-2 rounded-full bg-gradient-to-tr from-[#3525CD]/20 to-[#673AB7]/20 blur-md"
-              />
-              
-              {/* Central Lock Icon with Sweeping Scanner Line */}
-              <div className="relative w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 shadow-xl flex items-center justify-center overflow-hidden border border-white/50 dark:border-slate-600">
-                <span className="material-symbols-rounded text-[32px] text-[#3525CD] dark:text-[#818CF8]">lock</span>
-                
-                {/* Laser Sweep */}
-                <motion.div 
-                  animate={{ top: ['-10%', '110%', '-10%'] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                  className="absolute left-0 right-0 h-0.5 bg-[#6FFBBE] shadow-[0_0_8px_2px_rgba(111,251,190,0.8)]"
-                />
-              </div>
-            </div>
-
-            <h2 className="text-3xl font-black text-[#181B25] dark:text-white mb-2 tracking-tight">DayMeet Vault</h2>
-            <p className="text-sm font-medium text-[#464555] dark:text-slate-400 text-center mb-10">
-              Hardware biometric scan required to resume.
-            </p>
-            
-            <button 
-              onClick={handleUnlock}
-              className="w-full max-w-xs h-14 rounded-2xl bg-[#181B25] text-white text-sm font-bold flex items-center justify-center gap-2 hover:bg-black transition shadow-[0_8px_24px_rgba(24,27,37,0.3)] active:scale-95"
-            >
-              <span className="material-symbols-rounded text-[20px]">fingerprint</span>
-              <span>Scan to Authenticate</span>
-            </button>
-
-            {/* Developer/Emergency Bypass */}
-            <div className="mt-6 flex flex-col items-center gap-4">
-              <button 
-                onClick={() => setShowPinModal(true)}
-                className="text-[10px] font-bold tracking-widest text-[#464555] hover:text-[#181B25] uppercase underline decoration-[#E5E8F5] underline-offset-4 active:scale-95 transition"
-              >
-                Master PIN Fallback
-              </button>
-              
-              <button 
-                onClick={() => setAppLocked(false)}
-                className="text-[10px] font-bold tracking-widest text-[#E53935] hover:text-[#B71C1C] uppercase active:scale-95 transition"
-              >
-                Direct Login (Dev Bypass)
-              </button>
-            </div>
-          </motion.div>
+          <LockScreen 
+            onUnlock={handleUnlock} 
+            onFallback={() => setShowPinModal(true)} 
+            onBypass={() => setAppLocked(false)} 
+          />
         )}
       </AnimatePresence>
       <PinFallbackModal 
