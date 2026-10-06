@@ -10,6 +10,8 @@ export default function HomeScreen() {
   const navigate = useNavigate();
   const { setModalOpen, setIsland, spending, dailyBudget, steps, stepsGoal, hydration, hydrationGoal, meditationStreak, exerciseStreak, tasks, activeProfile, currentLocation, setCurrentLocation, setActiveProfile, widgets } = useAppStore();
   const [isTravelMode, setIsTravelMode] = useState(true);
+  const [intercomTarget, setIntercomTarget] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
   const triggerHaptic = () => Haptics.impact({ style: ImpactStyle.Light }).catch(() => { });
 
   const filteredTasks = tasks.filter(t => !t.profile || t.profile === activeProfile);
@@ -206,6 +208,76 @@ export default function HomeScreen() {
       {/* 3. Predictive Smart Widgets (Personal / Rest Mode) */}
       {(activeProfile === 'Personal' || activeProfile === 'Family') && (
         <div className="space-y-4 animate-in slide-in-from-right-8 duration-500">
+          
+          {/* Multi-Player Family Presence (Only in Family Mode) */}
+          {activeProfile === 'Family' && (
+            <div className="glass-card rounded-[18px] p-4 premium-shadow border border-[#E5E8F5] relative overflow-hidden">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-1.5">
+                  <span className="material-symbols-rounded text-[#3525CD] text-[18px]">family_home</span>
+                  <h2 className="text-sm font-bold text-[#181B25]">Family Radar</h2>
+                </div>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#E8F5E9] text-[#2E7D32] flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] animate-pulse"></span>
+                  Live
+                </span>
+              </div>
+
+              <div className="flex justify-around items-center">
+                {/* Sarah (In Meeting) */}
+                <div 
+                  className="flex flex-col items-center gap-2 cursor-pointer group"
+                  onClick={() => { triggerHaptic(); setIntercomTarget('Sarah'); }}
+                >
+                  <div className="relative">
+                    <img src="https://i.pravatar.cc/150?img=47" alt="Sarah" className="w-14 h-14 rounded-full border-2 border-white shadow-md group-hover:scale-105 transition" />
+                    {/* Red Dot (Meeting) */}
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm">
+                      <div className="w-3.5 h-3.5 bg-[#E53935] rounded-full animate-pulse border border-white"></div>
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[11px] font-bold text-[#181B25]">Sarah</p>
+                    <p className="text-[9px] text-[#464555]">In Meeting</p>
+                  </div>
+                </div>
+
+                {/* Leo (Tracking Workout) */}
+                <div 
+                  className="flex flex-col items-center gap-2 cursor-pointer group"
+                  onClick={() => { triggerHaptic(); setIntercomTarget('Leo'); }}
+                >
+                  <div className="relative">
+                    {/* Pulsing Green Ring (Workout) */}
+                    <div className="absolute inset-0 rounded-full border-2 border-[#10B981] animate-ping opacity-50"></div>
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Leo" className="w-14 h-14 rounded-full border-2 border-[#10B981] shadow-md group-hover:scale-105 transition relative z-10" />
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm z-20">
+                      <span className="material-symbols-rounded text-[12px] text-[#10B981]">fitness_center</span>
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[11px] font-bold text-[#181B25]">Leo</p>
+                    <p className="text-[9px] text-[#10B981] font-bold">At Gym</p>
+                  </div>
+                </div>
+
+                {/* Mom (Available) */}
+                <div 
+                  className="flex flex-col items-center gap-2 cursor-pointer group"
+                  onClick={() => { triggerHaptic(); setIntercomTarget('Mom'); }}
+                >
+                  <div className="relative">
+                    <img src="https://i.pravatar.cc/150?img=5" alt="Mom" className="w-14 h-14 rounded-full border-2 border-white shadow-md group-hover:scale-105 transition" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[11px] font-bold text-[#181B25]">Mom</p>
+                    <p className="text-[9px] text-[#464555]">Home</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Wind Down Card */}
           <ParallaxCard>
             <div className="glass-card rounded-[18px] p-4 premium-shadow h-full" style={{ transformStyle: "preserve-3d" }}>
@@ -552,6 +624,40 @@ export default function HomeScreen() {
           </div>
         </div>
       </div>
+      {/* Drop-In Audio Intercom Modal */}
+      {intercomTarget && (
+        <div className="fixed inset-0 z-[1000] bg-[#181B25]/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
+          <div className="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl animate-in slide-in-from-bottom-8 duration-300">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-black text-[#181B25]">Drop-In Audio</h3>
+                <p className="text-xs text-[#464555]">Sending voice note to {intercomTarget}</p>
+              </div>
+              <button onClick={() => { setIntercomTarget(null); setIsRecording(false); }} className="w-8 h-8 bg-[#F1F3FF] rounded-full flex items-center justify-center text-[#464555] active:scale-95">
+                <span className="material-symbols-rounded text-[18px]">close</span>
+              </button>
+            </div>
+            
+            <div className="flex flex-col items-center justify-center py-6">
+              {isRecording ? (
+                <div className="relative flex items-center justify-center">
+                  <div className="absolute inset-0 bg-[#E53935]/20 rounded-full animate-ping"></div>
+                  <button onClick={() => { setIsRecording(false); setIntercomTarget(null); triggerToast(`Voice note sent to ${intercomTarget}!`); setIsland({ active: true, type: 'success', message: 'Audio Sent' }); }} className="w-20 h-20 bg-[#E53935] rounded-full flex items-center justify-center text-white shadow-xl hover:bg-[#D32F2F] active:scale-90 transition relative z-10">
+                    <span className="material-symbols-rounded text-[32px]">stop</span>
+                  </button>
+                </div>
+              ) : (
+                <button onClick={() => { triggerHaptic(); setIsRecording(true); }} className="w-20 h-20 bg-[#3525CD] rounded-full flex items-center justify-center text-white shadow-xl hover:bg-[#2B1DAE] active:scale-90 transition">
+                  <span className="material-symbols-rounded text-[32px]">mic</span>
+                </button>
+              )}
+              <p className={`mt-6 text-sm font-bold ${isRecording ? 'text-[#E53935] animate-pulse' : 'text-[#181B25]'}`}>
+                {isRecording ? 'Recording... Tap to send' : 'Tap to speak'}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
