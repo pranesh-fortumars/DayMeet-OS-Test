@@ -247,7 +247,12 @@ export default function HomeScreen() {
             
             {/* Daily Spending */}
             <ParallaxCard>
-              <div className="glass-card rounded-[18px] p-4 premium-shadow h-full" style={{ transformStyle: "preserve-3d" }}>
+              <motion.div 
+                layoutId="finance-hero" 
+                onClick={() => switchTab('finance')}
+                className="glass-card rounded-[18px] p-4 premium-shadow h-full cursor-pointer" 
+                style={{ transformStyle: "preserve-3d" }}
+              >
                 <div className="flex items-center gap-1.5 mb-2" style={{ transform: "translateZ(30px)" }}>
                   <span className="material-symbols-rounded text-[#E53935] text-[16px]">payments</span>
                   <h3 className="text-xs font-bold text-[#181B25]">Spent Today</h3>
@@ -258,7 +263,7 @@ export default function HomeScreen() {
                     <div className="bg-[#E53935] h-full rounded-full" style={{ width: `${Math.min((spending / dailyBudget) * 100, 100)}%` }}></div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </ParallaxCard>
           </div>
         </div>
@@ -279,7 +284,12 @@ export default function HomeScreen() {
       {/* 5. Hero Next Meeting Card (Only Work/Creative) */}
       {(activeProfile === 'Work' || activeProfile === 'Creative') && widgets.calendar && (
         <ParallaxCard>
-          <div className="glass-card rounded-[18px] p-4 premium-shadow h-full hover-lift" style={{ transformStyle: "preserve-3d" }}>
+          <motion.div 
+            layoutId="calendar-hero" 
+            onClick={() => switchTab('calendar')}
+            className="glass-card rounded-[18px] p-4 premium-shadow h-full hover-lift cursor-pointer" 
+            style={{ transformStyle: "preserve-3d" }}
+          >
             <div className="flex items-center justify-between" style={{ transform: "translateZ(30px)" }}>
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-[10px] bg-[#E2DFFF] flex items-center justify-center text-[#3525CD]">
@@ -310,7 +320,7 @@ export default function HomeScreen() {
                 <span>Join Meeting</span>
               </button>
             </div>
-          </div>
+          </motion.div>
         </ParallaxCard>
       )}
 

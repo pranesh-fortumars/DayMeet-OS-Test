@@ -4,6 +4,7 @@ import { useInteraction } from '../hooks/useInteraction';
 import { useAppStore } from '../store/useAppStore';
 import CalendarModal from './modals/CalendarModal';
 import MeetingWhispererModal from './modals/MeetingWhispererModal';
+import { motion } from 'framer-motion';
 
 export default function CalendarScreen() {
   const { interact } = useInteraction();
@@ -79,7 +80,7 @@ export default function CalendarScreen() {
   );
 
   return (
-    <div className="space-y-4">
+    <motion.div layoutId="calendar-hero" className="space-y-4">
       <div className="flex items-center justify-between pt-1">
         <div>
           <div className="flex items-center gap-2">
@@ -276,7 +277,7 @@ export default function CalendarScreen() {
 
       <CalendarModal isOpen={showCalendarModal} onClose={() => setShowCalendarModal(false)} />
       <MeetingWhispererModal isOpen={showWhispererModal} onClose={() => setShowWhispererModal(false)} />
-    </div>
+    </motion.div>
   );
 }
 
