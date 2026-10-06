@@ -5,11 +5,26 @@ import ReadinessChart from './charts/ReadinessChart';
 import { useInteraction } from '../hooks/useInteraction';
 import { useAppStore } from '../store/useAppStore';
 import { syncHealthData } from '../services/HealthService';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 
 export default function InsightsScreen() {
   const { interact } = useInteraction();
   const [syncing, setSyncing] = useState(false);
   const { triggerConfetti, sleepTime, sleepQuality, steps, stepsGoal, hydration, hydrationGoal, activeBurn, activeBurnGoal, meditationStreak, exerciseStreak } = useAppStore();
+
+  const [daysAgo, setDaysAgo] = useState(0);
+  const dragX = useMotionValue(0);
+
+  const scrubbedSleepQuality = Math.max(40, sleepQuality - daysAgo * 6);
+  const scrubbedSteps = Math.max(1000, steps - daysAgo * 1200);
+  const scrubbedHydration = Math.max(0.5, hydration - daysAgo * 0.3).toFixed(1);
+  const scrubbedActiveBurn = Math.max(100, activeBurn - daysAgo * 80);
+
+  const formatDaysAgo = () => {
+    if (daysAgo === 0) return 'Today';
+    if (daysAgo === 1) return 'Yesterday';
+    return `${daysAgo} Days Ago`;
+  };
 
   const handleSync = async () => {
     interact('Started Native Health Sync');
@@ -34,6 +49,39 @@ export default function InsightsScreen() {
             <span className={`material-symbols-rounded text-[16px] ${syncing ? 'animate-spin' : ''}`}>sync</span>
             {syncing ? 'Syncing...' : 'Sync Device'}
           </button>
+        </div>
+      </div>
+
+      {/* Time-Travel Scrubber (Jog Wheel) */}
+      <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm flex flex-col items-center overflow-hidden">
+        <p className="text-xs font-bold text-[#464555] mb-2 uppercase tracking-widest text-center">Time-Travel Scrubber</p>
+        <p className="text-xl font-black text-[#3525CD] mb-4 text-center">{formatDaysAgo()}</p>
+        
+        <div className="w-full relative h-12 flex items-center justify-center bg-[#F1F3FF] rounded-xl overflow-hidden touch-none select-none border border-[#E5E8F5] shadow-inner">
+          <motion.div
+            drag="x"
+            dragConstraints={{ left: -150, right: 0 }}
+            dragElastic={0.1}
+            dragMomentum={false}
+            style={{ x: dragX }}
+            onDrag={(e, info) => {
+              // Convert x position to days ago (0 to -150px mapped to 0 to 7 days)
+              const newDaysAgo = Math.min(7, Math.max(0, Math.floor(Math.abs(info.point.x / 20))));
+              if (newDaysAgo !== daysAgo) {
+                setDaysAgo(newDaysAgo);
+                if (window.navigator.vibrate) window.navigator.vibrate(10);
+              }
+            }}
+            className="w-[200%] flex items-center justify-end pr-20 cursor-grab active:cursor-grabbing"
+          >
+            {/* Timeline Tick Marks */}
+            {Array.from({ length: 40 }).map((_, i) => (
+              <div key={i} className={`h-${i % 5 === 0 ? '6' : '3'} w-0.5 bg-[#3525CD]/30 mx-2 rounded-full`} />
+            ))}
+          </motion.div>
+          
+          {/* Center Playhead Indicator */}
+          <div className="absolute top-0 bottom-0 left-1/2 w-1 bg-[#E53935] shadow-[0_0_10px_rgba(229,57,53,0.5)] z-10 pointer-events-none" />
         </div>
       </div>
       
@@ -93,46 +141,46 @@ export default function InsightsScreen() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div onClick={() => { interact('Sleep Metrics'); if (sleepQuality >= 85) triggerConfetti(); }}>
+        <div onClick={() => { interact('Sleep Metrics'); if (scrubbedSleepQuality >= 85) triggerConfetti(); }}>
           <HealthRing 
             title="Sleep Quality" 
-            value={`${sleepQuality}%`} 
+            value={`${scrubbedSleepQuality}%`} 
             unit="Optimal" 
             goal="85%" 
-            progress={sleepQuality} 
+            progress={scrubbedSleepQuality} 
             color="#3525CD" 
             icon="bedtime" 
           />
         </div>
-        <div onClick={() => { interact('Activity Metrics'); if (steps >= stepsGoal) triggerConfetti(); }}>
+        <div onClick={() => { interact('Activity Metrics'); if (scrubbedSteps >= stepsGoal) triggerConfetti(); }}>
           <HealthRing 
             title="Steps" 
-            value={steps.toLocaleString()} 
+            value={scrubbedSteps.toLocaleString()} 
             unit="steps" 
             goal={stepsGoal.toLocaleString()} 
-            progress={(steps / stepsGoal) * 100} 
+            progress={(scrubbedSteps / stepsGoal) * 100} 
             color="#10B981" 
             icon="directions_walk" 
           />
         </div>
-        <div onClick={() => { interact('Hydration'); if (hydration >= hydrationGoal) triggerConfetti(); }}>
+        <div onClick={() => { interact('Hydration'); if (scrubbedHydration >= hydrationGoal) triggerConfetti(); }}>
           <HealthRing 
             title="Hydration" 
-            value={`${hydration}L`} 
+            value={`${scrubbedHydration}L`} 
             unit="L" 
             goal={hydrationGoal} 
-            progress={(hydration / hydrationGoal) * 100} 
+            progress={(scrubbedHydration / hydrationGoal) * 100} 
             color="#0288D1" 
             icon="water_drop" 
           />
         </div>
-        <div onClick={() => { interact('Calories Burned'); if (activeBurn >= activeBurnGoal) triggerConfetti(); }}>
+        <div onClick={() => { interact('Calories Burned'); if (scrubbedActiveBurn >= activeBurnGoal) triggerConfetti(); }}>
           <HealthRing 
             title="Active Burn" 
-            value={activeBurn} 
+            value={scrubbedActiveBurn} 
             unit="kcal" 
             goal={activeBurnGoal} 
-            progress={(activeBurn / activeBurnGoal) * 100} 
+            progress={(scrubbedActiveBurn / activeBurnGoal) * 100} 
             color="#F59E0B" 
             icon="local_fire_department" 
           />
