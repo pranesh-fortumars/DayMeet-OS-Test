@@ -12,6 +12,7 @@ import Confetti from './components/ui/Confetti';
 import AmbientMesh from './components/ui/AmbientMesh';
 import LockScreen from './components/LockScreen';
 import AmbientStandbyCanvas from './components/AmbientStandbyCanvas';
+import SpatialRadarScreen from './components/SpatialRadarScreen';
 
 // Handle ChunkLoadErrors gracefully
 const lazyWithRetry = (componentImport) =>
@@ -281,6 +282,7 @@ function App() {
                   <Route path="/relationships" element={<PageTransition><RelationshipsScreen /></PageTransition>} />
                   <Route path="/profile" element={<PageTransition><ProfileScreen /></PageTransition>} />
                   <Route path="/household" element={<PageTransition><FamilySyncScreen /></PageTransition>} />
+                  <Route path="/spatial-radar" element={<PageTransition><SpatialRadarScreen /></PageTransition>} />
                 </Routes>
               </AnimatePresence>
             </Suspense>

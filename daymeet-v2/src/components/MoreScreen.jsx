@@ -134,6 +134,15 @@ export default function MoreScreen() {
           <p className="text-[10px] text-[#464555]">Decisions & Experiments</p>
         </div>
 
+        {/* Spatial Radar */}
+        <div onClick={() => navigate('/spatial-radar')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
+          <div className="w-8 h-8 rounded-xl bg-[#E8F5E9] text-[#2E7D32] flex items-center justify-center mb-2">
+            <span className="material-symbols-rounded text-[18px]">radar</span>
+          </div>
+          <p className="text-xs font-bold text-[#181B25]">Spatial Radar</p>
+          <p className="text-[10px] text-[#464555]">Location-based drops</p>
+        </div>
+
         {/* Relationships & Admin */}
         <div onClick={() => navigate('/relationships')} className="p-3.5 bg-white rounded-2xl border border-[#E5E8F5] shadow-xs hover:border-[#3525CD] cursor-pointer transition">
           <div className="w-8 h-8 rounded-xl bg-[#E8EAF6] text-[#3949AB] flex items-center justify-center mb-2">
