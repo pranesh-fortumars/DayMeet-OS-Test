@@ -11,6 +11,7 @@ import PinFallbackModal from './components/modals/PinFallbackModal';
 import Confetti from './components/ui/Confetti';
 import AmbientMesh from './components/ui/AmbientMesh';
 import LockScreen from './components/LockScreen';
+import AmbientStandbyCanvas from './components/AmbientStandbyCanvas';
 
 // Handle ChunkLoadErrors gracefully
 const lazyWithRetry = (componentImport) =>
@@ -87,7 +88,7 @@ const PageTransition = ({ children }) => {
 };
 
 function App() {
-  const { initSync, activeProfile, setActiveProfile, setCurrentLocation, globalLockEnabled, detoxMode } = useAppStore();
+  const { initSync, activeProfile, setActiveProfile, setCurrentLocation, globalLockEnabled, detoxMode, standbyMode } = useAppStore();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [appLocked, setAppLocked] = useState(globalLockEnabled);
@@ -316,6 +317,11 @@ function App() {
         onSuccess={() => { setShowPinModal(false); setAppLocked(false); }} 
         onCancel={() => setShowPinModal(false)} 
       />
+
+      {/* Global Ambient Standby Canvas */}
+      <AnimatePresence>
+        {standbyMode && <AmbientStandbyCanvas />}
+      </AnimatePresence>
     </div>
   );
 }

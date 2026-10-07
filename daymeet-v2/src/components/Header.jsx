@@ -4,7 +4,7 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Header() {
-  const { setModalOpen, activeProfile, setActiveProfile, islandState, setIsland } = useAppStore();
+  const { setModalOpen, activeProfile, setActiveProfile, islandState, setIsland, toggleStandbyMode } = useAppStore();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const toggleGlobalTheme = () => document.documentElement.classList.toggle('dark');
 
@@ -144,6 +144,9 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-1">
+            <button onClick={toggleStandbyMode} title="Standby Canvas" className="w-9 h-9 rounded-full flex items-center justify-center text-[#464555] dark:text-gray-400 hover:bg-[#EBEDFB] dark:hover:bg-slate-800 transition">
+              <span className="material-symbols-rounded text-[20px]">smart_display</span>
+            </button>
             <button onClick={toggleGlobalTheme} title="Toggle Theme" className="w-9 h-9 rounded-full flex items-center justify-center text-[#464555] dark:text-gray-400 hover:bg-[#EBEDFB] dark:hover:bg-slate-800 transition">
               <span className="material-symbols-rounded text-[20px]">dark_mode</span>
             </button>

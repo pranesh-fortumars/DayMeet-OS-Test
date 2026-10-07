@@ -35,6 +35,8 @@ export const useAppStore = create((set, get) => ({
   
   detoxMode: false,
   toggleDetoxMode: () => set((state) => ({ detoxMode: !state.detoxMode })),
+  standbyMode: false,
+  toggleStandbyMode: () => set((state) => ({ standbyMode: !state.standbyMode })),
   
   // Third Party Integrations & Real Live Calendar Sync
   googleCalConnected: false,
