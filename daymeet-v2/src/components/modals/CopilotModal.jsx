@@ -1,6 +1,47 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const HolographicOrb = ({ aiState }) => {
+  let color = 'from-[#3525CD] to-[#6FFBBE]'; // default idle
+  let borderRadius = ['50%', '40%', '60%', '50%'];
+  let scale = [1, 1.05, 1];
+  let duration = 4;
+
+  if (aiState === 'thinking') {
+    color = 'from-[#3525CD] to-[#818CF8]';
+    borderRadius = ['50%', '30%', '50%', '70%', '50%'];
+    scale = [1, 1.1, 0.9, 1];
+    duration = 2;
+  } else if (aiState === 'urgent') {
+    color = 'from-[#E53935] to-[#F59E0B]';
+    // Spiky/energetic effect
+    borderRadius = ['20%', '50%', '10%', '60%', '20%'];
+    scale = [1, 1.2, 0.8, 1.1, 1];
+    duration = 0.8;
+  } else if (aiState === 'calm') {
+    color = 'from-[#34D399] to-[#3B82F6]';
+    borderRadius = ['50%', '50%', '50%'];
+    scale = [1, 1.02, 1];
+    duration = 8;
+  }
+
+  return (
+    <div className="relative w-16 h-16 flex items-center justify-center">
+      <motion.div
+        animate={{ borderRadius, scale, rotate: 360 }}
+        transition={{ duration, repeat: Infinity, ease: 'easeInOut' }}
+        className={`absolute inset-0 bg-gradient-to-tr ${color} blur-md opacity-80 mix-blend-screen dark:mix-blend-plus-lighter`}
+      />
+      <motion.div
+        animate={{ borderRadius, scale: scale.map(s => s * 0.8), rotate: -360 }}
+        transition={{ duration: duration * 1.5, repeat: Infinity, ease: 'easeInOut' }}
+        className={`absolute inset-1 bg-gradient-to-bl ${color} opacity-90 shadow-[0_0_20px_rgba(255,255,255,0.5)]`}
+      />
+    </div>
+  );
+};
 
 export default function CopilotModal() {
   const { modals, setModalOpen, addTask } = useAppStore();
@@ -11,6 +52,7 @@ export default function CopilotModal() {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [aiState, setAiState] = useState('idle'); // idle, thinking, urgent, calm
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -32,6 +74,14 @@ export default function CopilotModal() {
          priority: 'High',
          profile: 'Work'
        });
+    }
+
+    if (lQuery.includes('urgent') || lQuery.includes('deadline') || lQuery.includes('late')) {
+      setAiState('urgent');
+    } else if (lQuery.includes('calm') || lQuery.includes('relax') || lQuery.includes('sleep') || lQuery.includes('wind down')) {
+      setAiState('calm');
+    } else {
+      setAiState('thinking');
     }
 
     try {
@@ -79,6 +129,13 @@ export default function CopilotModal() {
     
     setMessages(prev => [...prev, { sender: 'bot', text: reply }]);
     setLoading(false);
+    
+    // Revert back to idle or stay calm based on response context
+    if (reply.toLowerCase().includes('calm') || reply.toLowerCase().includes('relax')) {
+      setAiState('calm');
+    } else {
+      setTimeout(() => setAiState('idle'), 2000);
+    }
   };
 
   return (
@@ -87,17 +144,20 @@ export default function CopilotModal() {
       {/* GLASSMORPHIC CONTAINER */}
       <div className="bg-white/70 dark:bg-[#0F172A]/70 backdrop-blur-3xl w-full max-w-lg h-[85vh] sm:h-[650px] rounded-t-[32px] sm:rounded-[32px] flex flex-col shadow-[0_16px_40px_rgba(0,0,0,0.3)] border border-white dark:border-white/20 overflow-hidden animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-8 duration-300">
         
-        {/* Header - Transparent/Blurred Gradient */}
-        <div className="bg-gradient-to-r from-[#3525CD]/90 to-[#673AB7]/90 backdrop-blur-md p-4 text-white flex items-center justify-between shrink-0 border-b border-white/20">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shadow-inner">
-              <span className="material-symbols-rounded text-[#6FFBBE] text-[18px]">auto_awesome</span>
-            </div>
-            <h3 className="font-bold text-base tracking-tight">DayMeet Copilot</h3>
+        {/* Header - Transparent/Blurred Gradient with Holographic Orb */}
+        <div className="bg-[#181B25]/90 backdrop-blur-md p-6 text-white flex flex-col items-center justify-center shrink-0 border-b border-white/10 relative overflow-hidden">
+          
+          <div className="absolute top-4 right-4">
+            <button onClick={handleClose} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition shadow-inner">
+              <span className="material-symbols-rounded text-[18px]">close</span>
+            </button>
           </div>
-          <button onClick={handleClose} className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition shadow-inner">
-            <span className="material-symbols-rounded text-[18px]">close</span>
-          </button>
+
+          <HolographicOrb aiState={aiState} />
+          <h3 className="font-bold text-lg tracking-tight mt-3">DayMeet Copilot</h3>
+          <p className="text-[10px] text-white/50 uppercase tracking-widest mt-1">
+            {aiState === 'idle' ? 'Listening...' : aiState === 'thinking' ? 'Processing...' : aiState === 'urgent' ? 'High Priority Mode' : 'Calm Mode'}
+          </p>
         </div>
 
         {/* Chat Area */}
