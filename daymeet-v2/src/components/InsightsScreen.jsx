@@ -7,6 +7,90 @@ import { useAppStore } from '../store/useAppStore';
 import { syncHealthData } from '../services/HealthService';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 
+const GenerativeLandscape = ({ sleepQuality, activeBurn }) => {
+  // Generate a procedural 8x8 grid
+  const gridSize = 8;
+  const grid = Array.from({ length: gridSize }, (_, i) => 
+    Array.from({ length: gridSize }, (_, j) => {
+      // Create interesting procedural noise based on position
+      return Math.sin(i * 0.5) * Math.cos(j * 0.5) * 0.5 + 0.5 + (Math.random() * 0.2);
+    })
+  );
+  
+  // Dynamic aesthetic mapping based on biometrics
+  const isOptimal = sleepQuality > 70;
+  const bloomColor = isOptimal ? 'from-[#34D399] to-[#3B82F6]' : 'from-[#F43F5E] to-[#F59E0B]';
+  const shadowColor = isOptimal ? 'rgba(52, 211, 153, 0.4)' : 'rgba(244, 63, 94, 0.4)';
+  const heightMultiplier = Math.max(1, activeBurn / 200);
+
+  return (
+    <div className="relative w-full h-64 perspective-[800px] flex items-center justify-center overflow-hidden bg-black rounded-2xl border border-white/10 group cursor-grab active:cursor-grabbing">
+      {/* Dynamic Glow Background */}
+      <motion.div 
+        animate={{ opacity: [0.3, 0.5, 0.3] }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        className={`absolute inset-0 bg-gradient-to-tr ${bloomColor} blur-[80px] opacity-40`}
+      />
+      
+      <motion.div 
+        drag
+        dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+        dragElastic={0.2}
+        animate={{ rotateZ: 360 }}
+        transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
+        className="w-48 h-48 grid gap-[2px]"
+        style={{ 
+          transformStyle: 'preserve-3d', 
+          rotateX: 65,
+          gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
+          gridTemplateRows: `repeat(${gridSize}, 1fr)`
+        }}
+      >
+        {grid.map((row, i) => row.map((val, j) => {
+          const zHeight = val * heightMultiplier * 40;
+          return (
+            <motion.div
+              key={`${i}-${j}`}
+              initial={{ translateZ: 0 }}
+              animate={{ 
+                translateZ: [zHeight * 0.8, zHeight * 1.2, zHeight * 0.8] 
+              }}
+              transition={{ 
+                duration: 3 + (i * 0.2), 
+                repeat: Infinity, 
+                ease: 'easeInOut',
+                delay: j * 0.1
+              }}
+              className={`w-full h-full bg-gradient-to-br ${bloomColor} rounded-sm relative`}
+              style={{ transformStyle: 'preserve-3d' }}
+            >
+              {/* Pillar sides for 3D effect */}
+              <div 
+                className="absolute top-full left-0 w-full bg-white/20 origin-top"
+                style={{ height: `${zHeight}px`, transform: 'rotateX(-90deg)' }}
+              />
+              <div 
+                className="absolute top-0 left-full h-full bg-black/40 origin-left"
+                style={{ width: `${zHeight}px`, transform: 'rotateY(90deg)' }}
+              />
+            </motion.div>
+          );
+        }))}
+      </motion.div>
+
+      {/* Overlay Information */}
+      <div className="absolute top-4 left-4 z-10 pointer-events-none">
+        <h3 className="text-white text-xs font-bold uppercase tracking-widest">Generative Topography</h3>
+        <p className="text-white/60 text-[10px]">Based on biometrics & load</p>
+      </div>
+      <div className="absolute bottom-4 right-4 z-10 pointer-events-none flex items-center gap-2">
+        <span className="material-symbols-rounded text-white/40 text-[16px]">360</span>
+        <span className="text-white/40 text-[10px] font-bold tracking-widest uppercase">Drag to Pan</span>
+      </div>
+    </div>
+  );
+};
+
 export default function InsightsScreen() {
   const { interact } = useInteraction();
   const [syncing, setSyncing] = useState(false);
@@ -116,23 +200,22 @@ export default function InsightsScreen() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl p-4 border border-[#E5E8F5] shadow-sm space-y-3.5">
-        <h3 className="text-sm font-bold text-[#181B25]">Weekly Summary</h3>
-        <WeeklyTrendChart />
+      <div className="space-y-3.5">
+        <GenerativeLandscape sleepQuality={scrubbedSleepQuality} activeBurn={scrubbedActiveBurn} />
         
         {/* 3-Column Metrics Summary Grid */}
-        <div className="grid grid-cols-3 gap-2.5 pt-2 border-t border-[#E5E8F5]">
-          <div onClick={() => interact('View Tasks Velocity')} className="p-2.5 rounded-xl bg-[#F1F3FF] text-center border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
+        <div className="grid grid-cols-3 gap-2.5">
+          <div onClick={() => interact('View Tasks Velocity')} className="p-2.5 rounded-xl bg-white text-center border border-[#E5E8F5] shadow-sm cursor-pointer active:scale-95 transition">
             <p className="text-[10px] text-[#464555] font-medium">Tasks Velocity</p>
             <p className="text-base font-extrabold text-[#3525CD] mt-0.5">53 Done</p>
             <span className="text-[9px] font-bold text-[#10B981]">88% weekly goal</span>
           </div>
-          <div onClick={() => interact('View Habits')} className="p-2.5 rounded-xl bg-[#F1F3FF] text-center border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
+          <div onClick={() => interact('View Habits')} className="p-2.5 rounded-xl bg-white text-center border border-[#E5E8F5] shadow-sm cursor-pointer active:scale-95 transition">
             <p className="text-[10px] text-[#464555] font-medium">Habits Kept</p>
             <p className="text-base font-extrabold text-[#10B981] mt-0.5">32 / 35</p>
             <span className="text-[9px] font-bold text-[#10B981]">91% consistency</span>
           </div>
-          <div onClick={() => interact('View Total Spending')} className="p-2.5 rounded-xl bg-[#F1F3FF] text-center border border-[#E5E8F5] cursor-pointer active:scale-95 transition">
+          <div onClick={() => interact('View Total Spending')} className="p-2.5 rounded-xl bg-white text-center border border-[#E5E8F5] shadow-sm cursor-pointer active:scale-95 transition">
             <p className="text-[10px] text-[#464555] font-medium">Total Spending</p>
             <p className="text-base font-extrabold text-[#0288D1] mt-0.5">₹19,050</p>
             <span className="text-[9px] font-bold text-[#10B981]">₹15.9k under limit</span>
